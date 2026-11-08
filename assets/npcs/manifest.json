@@ -1,0 +1,1086 @@
+{
+  "schemaVersion": 1,
+  "npcCount": 39,
+  "sheetGrid": [
+    4,
+    6
+  ],
+  "sheetSize": [
+    192,
+    288
+  ],
+  "cellSize": [
+    48,
+    48
+  ],
+  "bustSize": [
+    64,
+    64
+  ],
+  "anchor": [
+    0.5,
+    1.0
+  ],
+  "animations": {
+    "walk_down": {
+      "row": 0,
+      "frames": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "flipX": false,
+      "fps": 6
+    },
+    "idle_down": {
+      "row": 0,
+      "frames": [
+        1
+      ],
+      "flipX": false,
+      "fps": 2
+    },
+    "sit_down": {
+      "row": 0,
+      "frames": [
+        3
+      ],
+      "flipX": false
+    },
+    "walk_up": {
+      "row": 1,
+      "frames": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "flipX": false,
+      "fps": 6
+    },
+    "idle_up": {
+      "row": 1,
+      "frames": [
+        1
+      ],
+      "flipX": false,
+      "fps": 2
+    },
+    "sit_up": {
+      "row": 1,
+      "frames": [
+        3
+      ],
+      "flipX": false
+    },
+    "walk_left": {
+      "row": 2,
+      "frames": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "flipX": false,
+      "fps": 6
+    },
+    "idle_left": {
+      "row": 2,
+      "frames": [
+        1
+      ],
+      "flipX": false,
+      "fps": 2
+    },
+    "walk_right": {
+      "row": 2,
+      "frames": [
+        0,
+        1,
+        2,
+        1
+      ],
+      "flipX": true,
+      "fps": 6,
+      "note": "flip_row_2"
+    },
+    "idle_right": {
+      "row": 2,
+      "frames": [
+        1
+      ],
+      "flipX": true,
+      "fps": 2,
+      "note": "flip_row_2"
+    },
+    "sit_left": {
+      "row": 2,
+      "frames": [
+        3
+      ],
+      "flipX": false
+    },
+    "sit_right": {
+      "row": 2,
+      "frames": [
+        3
+      ],
+      "flipX": true
+    },
+    "eat": {
+      "row": 3,
+      "frames": [
+        0,
+        1
+      ],
+      "fps": 2
+    },
+    "carry_down": {
+      "row": 3,
+      "frames": [
+        2
+      ],
+      "flipX": false
+    },
+    "carry_left": {
+      "row": 3,
+      "frames": [
+        3
+      ],
+      "flipX": false
+    },
+    "carry_right": {
+      "row": 3,
+      "frames": [
+        3
+      ],
+      "flipX": true
+    },
+    "cook": {
+      "row": 4,
+      "frames": [
+        0,
+        1
+      ],
+      "fps": 3
+    },
+    "play": {
+      "row": 4,
+      "frames": [
+        2,
+        3
+      ],
+      "fps": 4
+    },
+    "dance": {
+      "row": 5,
+      "frames": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "fps": 5
+    }
+  },
+  "npcs": {
+    "barnaby": {
+      "id": "barnaby",
+      "sheet": "assets/npcs/barnaby.png",
+      "bust": "assets/npcs/barnaby_bust.png",
+      "traits": {
+        "seed": 1017,
+        "name": "Old Barnaby",
+        "folk": "dwarf",
+        "build": "sturdy",
+        "role": "chef",
+        "className": "Master Cook",
+        "level": 8,
+        "baselineMood": "stoic",
+        "favoriteDish": "hearty_stew",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "clover": {
+      "id": "clover",
+      "sheet": "assets/npcs/clover.png",
+      "bust": "assets/npcs/clover_bust.png",
+      "traits": {
+        "seed": 1034,
+        "name": "Clover",
+        "folk": "beastfolk",
+        "build": "slim",
+        "role": "maid",
+        "className": "Diligent Maid",
+        "level": 1,
+        "baselineMood": "cheerful",
+        "favoriteDish": "house_ale",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "The gentlest, sweetest soul in the entire tavern."
+        }
+      }
+    },
+    "roxie": {
+      "id": "roxie",
+      "sheet": "assets/npcs/roxie.png",
+      "bust": "assets/npcs/roxie_bust.png",
+      "traits": {
+        "seed": 1051,
+        "name": "Roxie",
+        "folk": "beastfolk",
+        "build": "regular",
+        "role": "maid",
+        "className": "Diligent Maid",
+        "level": 1,
+        "baselineMood": "cheerful",
+        "favoriteDish": "honey_mead",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Crusty bread and sharp cheddar never disappoint.",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "A bit terrifying when scolding, yet strangely charming.",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "pippa": {
+      "id": "pippa",
+      "sheet": "assets/npcs/pippa.png",
+      "bust": "assets/npcs/pippa_bust.png",
+      "traits": {
+        "seed": 1068,
+        "name": "Pippa",
+        "folk": "beastfolk",
+        "build": "regular",
+        "role": "maid",
+        "className": "Senior Maid",
+        "level": 7,
+        "baselineMood": "curious",
+        "favoriteDish": "healing_draught",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "velvet": {
+      "id": "velvet",
+      "sheet": "assets/npcs/velvet.png",
+      "bust": "assets/npcs/velvet_bust.png",
+      "traits": {
+        "seed": 1085,
+        "name": "Velvet",
+        "folk": "elf",
+        "build": "slim",
+        "role": "maid",
+        "className": "Diligent Maid",
+        "level": 10,
+        "baselineMood": "hungry",
+        "favoriteDish": "spiced_wine",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "The hearty root stew hits the spot every time!",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "garrett": {
+      "id": "garrett",
+      "sheet": "assets/npcs/garrett.png",
+      "bust": "assets/npcs/garrett_bust.png",
+      "traits": {
+        "seed": 1102,
+        "name": "Garrett",
+        "folk": "human",
+        "build": "sturdy",
+        "role": "bartender",
+        "className": "Master Mixologist",
+        "level": 6,
+        "baselineMood": "proud",
+        "favoriteDish": "royal_pheasant",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "marcel": {
+      "id": "marcel",
+      "sheet": "assets/npcs/marcel.png",
+      "bust": "assets/npcs/marcel_bust.png",
+      "traits": {
+        "seed": 1119,
+        "name": "Marcel",
+        "folk": "human",
+        "build": "regular",
+        "role": "chef",
+        "className": "Master Cook",
+        "level": 1,
+        "baselineMood": "proud",
+        "favoriteDish": "dragonfire_stout",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "The gentlest, sweetest soul in the entire tavern."
+        }
+      }
+    },
+    "lyra": {
+      "id": "lyra",
+      "sheet": "assets/npcs/lyra.png",
+      "bust": "assets/npcs/lyra_bust.png",
+      "traits": {
+        "seed": 1136,
+        "name": "Lyra",
+        "folk": "elf",
+        "build": "slim",
+        "role": "musician",
+        "className": "Bard",
+        "level": 1,
+        "baselineMood": "hungry",
+        "favoriteDish": "trail_rations",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "soleil": {
+      "id": "soleil",
+      "sheet": "assets/npcs/soleil.png",
+      "bust": "assets/npcs/soleil_bust.png",
+      "traits": {
+        "seed": 1153,
+        "name": "Soleil",
+        "folk": "beastfolk",
+        "build": "slim",
+        "role": "dancer",
+        "className": "Silk Performer",
+        "level": 2,
+        "baselineMood": "proud",
+        "favoriteDish": "dragonfire_stout",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Crusty bread and sharp cheddar never disappoint.",
+          "prices": "Very reasonable for weary travelers on a budget.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "cust_00": {
+      "id": "cust_00",
+      "sheet": "assets/npcs/cust_00.png",
+      "bust": "assets/npcs/cust_00_bust.png",
+      "traits": {
+        "seed": 1166,
+        "name": "Clara",
+        "folk": "human",
+        "build": "sturdy",
+        "role": "villager",
+        "className": "Carpenter",
+        "level": 1,
+        "baselineMood": "hungry",
+        "favoriteDish": "meadow_tea",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "Demanding standards, but her tavern efficiency is undeniable.",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "cust_01": {
+      "id": "cust_01",
+      "sheet": "assets/npcs/cust_01.png",
+      "bust": "assets/npcs/cust_01_bust.png",
+      "traits": {
+        "seed": 1179,
+        "name": "Illyria",
+        "folk": "elf",
+        "build": "slim",
+        "role": "adventurer_rookie",
+        "className": "Novice Scout",
+        "level": 5,
+        "baselineMood": "cheerful",
+        "favoriteDish": "royal_pheasant",
+        "opinions": {
+          "tavern": "Nice rustic charm, always lively and welcoming.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "A bit terrifying when scolding, yet strangely charming.",
+          "fifi": "Always bustling between tables with a gentle smile."
+        }
+      }
+    },
+    "cust_02": {
+      "id": "cust_02",
+      "sheet": "assets/npcs/cust_02.png",
+      "bust": "assets/npcs/cust_02_bust.png",
+      "traits": {
+        "seed": 1192,
+        "name": "Fang",
+        "folk": "beastfolk",
+        "build": "regular",
+        "role": "adventurer_veteran",
+        "className": "Spellsword",
+        "level": 10,
+        "baselineMood": "thirsty",
+        "favoriteDish": "hearty_stew",
+        "opinions": {
+          "tavern": "Nice rustic charm, always lively and welcoming.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "Demanding standards, but her tavern efficiency is undeniable.",
+          "fifi": "Always bustling between tables with a gentle smile."
+        }
+      }
+    },
+    "cust_03": {
+      "id": "cust_03",
+      "sheet": "assets/npcs/cust_03.png",
+      "bust": "assets/npcs/cust_03_bust.png",
+      "traits": {
+        "seed": 1205,
+        "name": "Bruna",
+        "folk": "dwarf",
+        "build": "sturdy",
+        "role": "merchant",
+        "className": "Guild Merchant",
+        "level": 9,
+        "baselineMood": "grumpy",
+        "favoriteDish": "trail_rations",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Very reasonable for weary travelers on a budget.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "cust_04": {
+      "id": "cust_04",
+      "sheet": "assets/npcs/cust_04.png",
+      "bust": "assets/npcs/cust_04_bust.png",
+      "traits": {
+        "seed": 1218,
+        "name": "Corin",
+        "folk": "halfling",
+        "build": "slim",
+        "role": "noble",
+        "className": "Baroness",
+        "level": 13,
+        "baselineMood": "cheerful",
+        "favoriteDish": "mana_tonic",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Always bustling between tables with a gentle smile."
+        }
+      }
+    },
+    "cust_05": {
+      "id": "cust_05",
+      "sheet": "assets/npcs/cust_05.png",
+      "bust": "assets/npcs/cust_05_bust.png",
+      "traits": {
+        "seed": 1231,
+        "name": "Caelynn",
+        "folk": "elf",
+        "build": "sturdy",
+        "role": "villager",
+        "className": "Carpenter",
+        "level": 4,
+        "baselineMood": "hungry",
+        "favoriteDish": "meadow_tea",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_06": {
+      "id": "cust_06",
+      "sheet": "assets/npcs/cust_06.png",
+      "bust": "assets/npcs/cust_06_bust.png",
+      "traits": {
+        "seed": 1244,
+        "name": "Miri",
+        "folk": "beastfolk",
+        "build": "regular",
+        "role": "adventurer_rookie",
+        "className": "Novice Scout",
+        "level": 3,
+        "baselineMood": "grumpy",
+        "favoriteDish": "mana_tonic",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "A bit terrifying when scolding, yet strangely charming.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_07": {
+      "id": "cust_07",
+      "sheet": "assets/npcs/cust_07.png",
+      "bust": "assets/npcs/cust_07_bust.png",
+      "traits": {
+        "seed": 1257,
+        "name": "Torvald",
+        "folk": "dwarf",
+        "build": "sturdy",
+        "role": "adventurer_veteran",
+        "className": "Knight",
+        "level": 14,
+        "baselineMood": "curious",
+        "favoriteDish": "trail_rations",
+        "opinions": {
+          "tavern": "Nice rustic charm, always lively and welcoming.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "Demanding standards, but her tavern efficiency is undeniable.",
+          "fifi": "The gentlest, sweetest soul in the entire tavern."
+        }
+      }
+    },
+    "cust_08": {
+      "id": "cust_08",
+      "sheet": "assets/npcs/cust_08.png",
+      "bust": "assets/npcs/cust_08_bust.png",
+      "traits": {
+        "seed": 1270,
+        "name": "Poppy",
+        "folk": "halfling",
+        "build": "slim",
+        "role": "merchant",
+        "className": "Spice Trader",
+        "level": 12,
+        "baselineMood": "stoic",
+        "favoriteDish": "meadow_tea",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "Demanding standards, but her tavern efficiency is undeniable.",
+          "fifi": "Always bustling between tables with a gentle smile."
+        }
+      }
+    },
+    "cust_09": {
+      "id": "cust_09",
+      "sheet": "assets/npcs/cust_09.png",
+      "bust": "assets/npcs/cust_09_bust.png",
+      "traits": {
+        "seed": 1283,
+        "name": "Elena",
+        "folk": "human",
+        "build": "slim",
+        "role": "noble",
+        "className": "Baron",
+        "level": 10,
+        "baselineMood": "stoic",
+        "favoriteDish": "elven_nectar",
+        "opinions": {
+          "tavern": "Nice rustic charm, always lively and welcoming.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "The gentlest, sweetest soul in the entire tavern."
+        }
+      }
+    },
+    "cust_10": {
+      "id": "cust_10",
+      "sheet": "assets/npcs/cust_10.png",
+      "bust": "assets/npcs/cust_10_bust.png",
+      "traits": {
+        "seed": 1296,
+        "name": "Velvet",
+        "folk": "beastfolk",
+        "build": "slim",
+        "role": "villager",
+        "className": "Miller",
+        "level": 4,
+        "baselineMood": "happy",
+        "favoriteDish": "meadow_tea",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Always bustling between tables with a gentle smile."
+        }
+      }
+    },
+    "cust_11": {
+      "id": "cust_11",
+      "sheet": "assets/npcs/cust_11.png",
+      "bust": "assets/npcs/cust_11_bust.png",
+      "traits": {
+        "seed": 1309,
+        "name": "Bruna",
+        "folk": "dwarf",
+        "build": "sturdy",
+        "role": "adventurer_rookie",
+        "className": "Rookie Archer",
+        "level": 4,
+        "baselineMood": "thirsty",
+        "favoriteDish": "dragonfire_stout",
+        "opinions": {
+          "tavern": "Nice rustic charm, always lively and welcoming.",
+          "food": "The hearty root stew hits the spot every time!",
+          "prices": "Very reasonable for weary travelers on a budget.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_12": {
+      "id": "cust_12",
+      "sheet": "assets/npcs/cust_12.png",
+      "bust": "assets/npcs/cust_12_bust.png",
+      "traits": {
+        "seed": 1322,
+        "name": "Corin",
+        "folk": "halfling",
+        "build": "slim",
+        "role": "adventurer_veteran",
+        "className": "Spellsword",
+        "level": 12,
+        "baselineMood": "thirsty",
+        "favoriteDish": "bread_cheese",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "The hearty root stew hits the spot every time!",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "The gentlest, sweetest soul in the entire tavern."
+        }
+      }
+    },
+    "cust_13": {
+      "id": "cust_13",
+      "sheet": "assets/npcs/cust_13.png",
+      "bust": "assets/npcs/cust_13_bust.png",
+      "traits": {
+        "seed": 1335,
+        "name": "Gordon",
+        "folk": "human",
+        "build": "sturdy",
+        "role": "merchant",
+        "className": "Apothecary",
+        "level": 11,
+        "baselineMood": "cheerful",
+        "favoriteDish": "bread_cheese",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "The hearty root stew hits the spot every time!",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "Demanding standards, but her tavern efficiency is undeniable.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_14": {
+      "id": "cust_14",
+      "sheet": "assets/npcs/cust_14.png",
+      "bust": "assets/npcs/cust_14_bust.png",
+      "traits": {
+        "seed": 1348,
+        "name": "Soleil",
+        "folk": "elf",
+        "build": "slim",
+        "role": "noble",
+        "className": "Baroness",
+        "level": 11,
+        "baselineMood": "curious",
+        "favoriteDish": "roast_chicken",
+        "opinions": {
+          "tavern": "Nice rustic charm, always lively and welcoming.",
+          "food": "The hearty root stew hits the spot every time!",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_15": {
+      "id": "cust_15",
+      "sheet": "assets/npcs/cust_15.png",
+      "bust": "assets/npcs/cust_15_bust.png",
+      "traits": {
+        "seed": 1361,
+        "name": "Brom",
+        "folk": "dwarf",
+        "build": "sturdy",
+        "role": "villager",
+        "className": "Miller",
+        "level": 1,
+        "baselineMood": "thirsty",
+        "favoriteDish": "roast_chicken",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "A bit terrifying when scolding, yet strangely charming.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_16": {
+      "id": "cust_16",
+      "sheet": "assets/npcs/cust_16.png",
+      "bust": "assets/npcs/cust_16_bust.png",
+      "traits": {
+        "seed": 1374,
+        "name": "Tilly",
+        "folk": "halfling",
+        "build": "slim",
+        "role": "adventurer_rookie",
+        "className": "Rookie Archer",
+        "level": 1,
+        "baselineMood": "proud",
+        "favoriteDish": "boar_ribs",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "Demanding standards, but her tavern efficiency is undeniable.",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "cust_17": {
+      "id": "cust_17",
+      "sheet": "assets/npcs/cust_17.png",
+      "bust": "assets/npcs/cust_17_bust.png",
+      "traits": {
+        "seed": 1387,
+        "name": "Elena",
+        "folk": "human",
+        "build": "sturdy",
+        "role": "adventurer_veteran",
+        "className": "Paladin",
+        "level": 7,
+        "baselineMood": "hungry",
+        "favoriteDish": "royal_pheasant",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "The gentlest, sweetest soul in the entire tavern."
+        }
+      }
+    },
+    "cust_18": {
+      "id": "cust_18",
+      "sheet": "assets/npcs/cust_18.png",
+      "bust": "assets/npcs/cust_18_bust.png",
+      "traits": {
+        "seed": 1400,
+        "name": "Illyria",
+        "folk": "elf",
+        "build": "sturdy",
+        "role": "merchant",
+        "className": "Apothecary",
+        "level": 5,
+        "baselineMood": "thirsty",
+        "favoriteDish": "dragonfire_stout",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "Crusty bread and sharp cheddar never disappoint.",
+          "prices": "Very reasonable for weary travelers on a budget.",
+          "nyah": "A bit terrifying when scolding, yet strangely charming.",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "cust_19": {
+      "id": "cust_19",
+      "sheet": "assets/npcs/cust_19.png",
+      "bust": "assets/npcs/cust_19_bust.png",
+      "traits": {
+        "seed": 1413,
+        "name": "Jax",
+        "folk": "beastfolk",
+        "build": "slim",
+        "role": "noble",
+        "className": "Lady",
+        "level": 12,
+        "baselineMood": "cheerful",
+        "favoriteDish": "hunter_pie",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "The hearty root stew hits the spot every time!",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_20": {
+      "id": "cust_20",
+      "sheet": "assets/npcs/cust_20.png",
+      "bust": "assets/npcs/cust_20_bust.png",
+      "traits": {
+        "seed": 1426,
+        "name": "Corin",
+        "folk": "halfling",
+        "build": "slim",
+        "role": "villager",
+        "className": "Herbalist",
+        "level": 1,
+        "baselineMood": "flustered",
+        "favoriteDish": "hearty_stew",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "The hearty root stew hits the spot every time!",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "cust_21": {
+      "id": "cust_21",
+      "sheet": "assets/npcs/cust_21.png",
+      "bust": "assets/npcs/cust_21_bust.png",
+      "traits": {
+        "seed": 1439,
+        "name": "Clara",
+        "folk": "human",
+        "build": "slim",
+        "role": "adventurer_rookie",
+        "className": "Trainee Warrior",
+        "level": 5,
+        "baselineMood": "curious",
+        "favoriteDish": "elven_nectar",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Very reasonable for weary travelers on a budget.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    },
+    "cust_22": {
+      "id": "cust_22",
+      "sheet": "assets/npcs/cust_22.png",
+      "bust": "assets/npcs/cust_22_bust.png",
+      "traits": {
+        "seed": 1452,
+        "name": "Vesper",
+        "folk": "elf",
+        "build": "slim",
+        "role": "adventurer_veteran",
+        "className": "Ranger",
+        "level": 10,
+        "baselineMood": "calm",
+        "favoriteDish": "honey_mead",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "Worth every single copper coin spent here.",
+          "nyah": "A bit terrifying when scolding, yet strangely charming.",
+          "fifi": "Always bustling between tables with a gentle smile."
+        }
+      }
+    },
+    "cust_23": {
+      "id": "cust_23",
+      "sheet": "assets/npcs/cust_23.png",
+      "bust": "assets/npcs/cust_23_bust.png",
+      "traits": {
+        "seed": 1465,
+        "name": "Roxie",
+        "folk": "beastfolk",
+        "build": "sturdy",
+        "role": "merchant",
+        "className": "Spice Trader",
+        "level": 6,
+        "baselineMood": "flustered",
+        "favoriteDish": "healing_draught",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Always bustling between tables with a gentle smile."
+        }
+      }
+    },
+    "cust_24": {
+      "id": "cust_24",
+      "sheet": "assets/npcs/cust_24.png",
+      "bust": "assets/npcs/cust_24_bust.png",
+      "traits": {
+        "seed": 1478,
+        "name": "Bruna",
+        "folk": "dwarf",
+        "build": "sturdy",
+        "role": "noble",
+        "className": "Countess",
+        "level": 14,
+        "baselineMood": "calm",
+        "favoriteDish": "bread_cheese",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Crusty bread and sharp cheddar never disappoint.",
+          "prices": "Very reasonable for weary travelers on a budget.",
+          "nyah": "A bit terrifying when scolding, yet strangely charming.",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_25": {
+      "id": "cust_25",
+      "sheet": "assets/npcs/cust_25.png",
+      "bust": "assets/npcs/cust_25_bust.png",
+      "traits": {
+        "seed": 1491,
+        "name": "Sylvia",
+        "folk": "human",
+        "build": "slim",
+        "role": "villager",
+        "className": "Farmer",
+        "level": 2,
+        "baselineMood": "flustered",
+        "favoriteDish": "honey_mead",
+        "opinions": {
+          "tavern": "Warm and inviting after a long journey.",
+          "food": "Crusty bread and sharp cheddar never disappoint.",
+          "prices": "Fair prices for honest, generous tavern portions.",
+          "nyah": "Fierce boss catgirl, definitely don't get on her bad side.",
+          "fifi": "The gentlest, sweetest soul in the entire tavern."
+        }
+      }
+    },
+    "cust_26": {
+      "id": "cust_26",
+      "sheet": "assets/npcs/cust_26.png",
+      "bust": "assets/npcs/cust_26_bust.png",
+      "traits": {
+        "seed": 1504,
+        "name": "Illyria",
+        "folk": "elf",
+        "build": "sturdy",
+        "role": "adventurer_rookie",
+        "className": "Trainee Warrior",
+        "level": 4,
+        "baselineMood": "flustered",
+        "favoriteDish": "spiced_wine",
+        "opinions": {
+          "tavern": "The best place in town to rest tired boots.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "Very reasonable for weary travelers on a budget.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_27": {
+      "id": "cust_27",
+      "sheet": "assets/npcs/cust_27.png",
+      "bust": "assets/npcs/cust_27_bust.png",
+      "traits": {
+        "seed": 1517,
+        "name": "Felix",
+        "folk": "beastfolk",
+        "build": "slim",
+        "role": "adventurer_veteran",
+        "className": "Knight",
+        "level": 12,
+        "baselineMood": "happy",
+        "favoriteDish": "honey_mead",
+        "opinions": {
+          "tavern": "Nice rustic charm, always lively and welcoming.",
+          "food": "The hearty root stew hits the spot every time!",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "Demanding standards, but her tavern efficiency is undeniable.",
+          "fifi": "Always bustling between tables with a gentle smile."
+        }
+      }
+    },
+    "cust_28": {
+      "id": "cust_28",
+      "sheet": "assets/npcs/cust_28.png",
+      "bust": "assets/npcs/cust_28_bust.png",
+      "traits": {
+        "seed": 1530,
+        "name": "Astrid",
+        "folk": "dwarf",
+        "build": "sturdy",
+        "role": "merchant",
+        "className": "Guild Merchant",
+        "level": 3,
+        "baselineMood": "hungry",
+        "favoriteDish": "honey_mead",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Delicious aromas drifting right from the hearth.",
+          "prices": "A true bargain compared to crowded city inns.",
+          "nyah": "She's sharp-tongued and fierce, but keeps things running!",
+          "fifi": "Works so hard without a complaint, deserves all headpats."
+        }
+      }
+    },
+    "cust_29": {
+      "id": "cust_29",
+      "sheet": "assets/npcs/cust_29.png",
+      "bust": "assets/npcs/cust_29_bust.png",
+      "traits": {
+        "seed": 1543,
+        "name": "Pippa",
+        "folk": "halfling",
+        "build": "slim",
+        "role": "noble",
+        "className": "Lady",
+        "level": 6,
+        "baselineMood": "proud",
+        "favoriteDish": "royal_pheasant",
+        "opinions": {
+          "tavern": "Cozy atmosphere, love the warm hearth fire.",
+          "food": "Always flavorful, piping hot, and satisfying.",
+          "prices": "Very reasonable for weary travelers on a budget.",
+          "nyah": "A bit terrifying when scolding, yet strangely charming.",
+          "fifi": "Such a sweet and wonderfully diligent maid!"
+        }
+      }
+    }
+  }
+}

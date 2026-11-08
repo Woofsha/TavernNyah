@@ -1,0 +1,237 @@
+{
+  "archetypes": [
+    {
+      "id": "villager",
+      "name": "Townsfolk & Farmers",
+      "minRep": 0,
+      "requiredExpansion": null,
+      "levelRange": [
+        1,
+        3
+      ],
+      "goldRange": [
+        8,
+        32
+      ],
+      "patienceSec": 45.0,
+      "tipMultiplier": 0.12,
+      "repReward": 1.0,
+      "preferredCategories": [
+        "drink",
+        "food"
+      ],
+      "maxRecipeTier": 1,
+      "wantsQuestSupplies": 0.05,
+      "wantsRoomNight": 0.1,
+      "spawnWeightsByPhase": {
+        "morning": 1.4,
+        "afternoon": 1.2,
+        "evening": 0.8,
+        "night": 0.3
+      },
+      "outfitPool": [
+        "villager_farmer",
+        "villager_baker",
+        "villager_weaver",
+        "villager_woodcutter"
+      ]
+    },
+    {
+      "id": "adventurer_rookie",
+      "name": "Novice Adventurers",
+      "minRep": 12,
+      "requiredExpansion": null,
+      "levelRange": [
+        2,
+        6
+      ],
+      "goldRange": [
+        25,
+        85
+      ],
+      "patienceSec": 40.0,
+      "tipMultiplier": 0.18,
+      "repReward": 2.0,
+      "preferredCategories": [
+        "drink",
+        "food",
+        "ration"
+      ],
+      "maxRecipeTier": 2,
+      "wantsQuestSupplies": 0.45,
+      "wantsRoomNight": 0.35,
+      "spawnWeightsByPhase": {
+        "morning": 1.0,
+        "afternoon": 1.3,
+        "evening": 1.2,
+        "night": 0.6
+      },
+      "outfitPool": [
+        "rookie_scout",
+        "rookie_fighter",
+        "rookie_apprentice",
+        "rookie_thief"
+      ]
+    },
+    {
+      "id": "adventurer_veteran",
+      "name": "Seasoned Guild Veterans",
+      "minRep": 80,
+      "requiredExpansion": "exp_counter_shop",
+      "levelRange": [
+        7,
+        15
+      ],
+      "goldRange": [
+        75,
+        240
+      ],
+      "patienceSec": 35.0,
+      "tipMultiplier": 0.28,
+      "repReward": 2.4,
+      "preferredCategories": [
+        "drink",
+        "food",
+        "potion",
+        "ration"
+      ],
+      "maxRecipeTier": 3,
+      "wantsQuestSupplies": 0.7,
+      "wantsRoomNight": 0.5,
+      "spawnWeightsByPhase": {
+        "morning": 0.6,
+        "afternoon": 0.9,
+        "evening": 1.5,
+        "night": 1.2
+      },
+      "outfitPool": [
+        "veteran_knight",
+        "veteran_ranger",
+        "veteran_mage",
+        "veteran_berserker"
+      ]
+    },
+    {
+      "id": "merchant",
+      "name": "Caravan Traders & Factors",
+      "minRep": 260,
+      "requiredExpansion": "exp_main_hall",
+      "levelRange": [
+        5,
+        12
+      ],
+      "goldRange": [
+        150,
+        520
+      ],
+      "patienceSec": 50.0,
+      "tipMultiplier": 0.35,
+      "repReward": 3.0,
+      "preferredCategories": [
+        "drink",
+        "food"
+      ],
+      "maxRecipeTier": 3,
+      "wantsQuestSupplies": 0.2,
+      "wantsRoomNight": 0.75,
+      "spawnWeightsByPhase": {
+        "morning": 0.8,
+        "afternoon": 1.4,
+        "evening": 1.3,
+        "night": 0.5
+      },
+      "outfitPool": [
+        "merchant_spice",
+        "merchant_jewel",
+        "merchant_textile",
+        "merchant_peddler"
+      ]
+    },
+    {
+      "id": "noble",
+      "name": "Highborn Lords & Aristocrats",
+      "minRep": 900,
+      "requiredExpansion": "exp_upstairs",
+      "levelRange": [
+        8,
+        20
+      ],
+      "goldRange": [
+        350,
+        1200
+      ],
+      "patienceSec": 28.0,
+      "tipMultiplier": 0.55,
+      "repReward": 4.2,
+      "preferredCategories": [
+        "drink",
+        "food"
+      ],
+      "maxRecipeTier": 4,
+      "wantsQuestSupplies": 0.05,
+      "wantsRoomNight": 0.85,
+      "spawnWeightsByPhase": {
+        "morning": 0.3,
+        "afternoon": 0.7,
+        "evening": 1.6,
+        "night": 1.4
+      },
+      "outfitPool": [
+        "noble_lord",
+        "noble_lady",
+        "noble_courtier",
+        "noble_duchess"
+      ]
+    }
+  ],
+  "dayPhases": [
+    {
+      "id": "morning",
+      "startNorm": 0.0,
+      "endNorm": 0.25,
+      "spawnRateMult": 0.85,
+      "ambientTint": [
+        255,
+        235,
+        205,
+        0.06
+      ]
+    },
+    {
+      "id": "afternoon",
+      "startNorm": 0.25,
+      "endNorm": 0.55,
+      "spawnRateMult": 1.15,
+      "ambientTint": [
+        255,
+        255,
+        255,
+        0.0
+      ]
+    },
+    {
+      "id": "evening",
+      "startNorm": 0.55,
+      "endNorm": 0.8,
+      "spawnRateMult": 1.45,
+      "ambientTint": [
+        240,
+        160,
+        90,
+        0.14
+      ]
+    },
+    {
+      "id": "night",
+      "startNorm": 0.8,
+      "endNorm": 1.0,
+      "spawnRateMult": 0.75,
+      "ambientTint": [
+        30,
+        40,
+        95,
+        0.32
+      ]
+    }
+  ]
+}

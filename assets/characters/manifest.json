@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "canonRule": "Canon supplied assets. Never redraw, recolor, or resample at rest. Runtime uses nearest-neighbor rendering, horizontal canvas flip for missing East walk frames, vertical bob/offset for action states, and separate prop/emote overlays.",
+  "measuredScale": {
+    "worldCellSize": [48, 48],
+    "sheetGrid": [3, 4],
+    "sheetSize": [144, 192],
+    "visualHeightPx": [41, 44],
+    "visualWidthPx": [29, 46],
+    "footWidthPx": 20,
+    "proportionHeads": 2.0,
+    "chosenBaseTilePx": 32,
+    "anchor": [0.5, 1.0]
+  },
+  "styleDeviationsFromGeneratedArtRules": [
+    "nyah_world.png (144x192) and fifi_world.png (144x192) were downsampled from high-res sheets (660x880), yielding ~7,460-7,480 unique RGBA colors, pure black (0,0,0,255) pixels, and 1,984-2,444 semi-transparent edge pixels.",
+    "Portraits nyah_native.png and fifi_native.png (300x224) have binary alpha (0 semi-transparent pixels) and ~6,600-7,980 unique colors with baked rectangular frames.",
+    "Row 3 of both world sheets has an incomplete East walk cycle: cell (2,3) faces East, while (0,3) faces West and (1,3) faces South (Nyah) or West (Fifi). Runtime flips Row 2 (West) horizontally for full 3-frame East walking.",
+    "Generated tavern props (tools/gen_tavern_assets.py) and generated NPCs (tools/gen_npcs.py) strictly obey the 1x pixel-art QA rules (palette-only, zero pure black, alpha 0/255, closed 1px hue-shifted outlines) while matching Nyah and Fifi's 48x48 cell size, ~41-43px chibi 2-head proportions, and bold readable silhouettes."
+  ],
+  "characters": {
+    "nyah": {
+      "id": "nyah",
+      "displayName": "Nyah",
+      "role": "Head Maid & Boss",
+      "worldSheet": "character sprites/nyah_world.png",
+      "bigSheet": "character sprites/nyah_big.png",
+      "portraitNative": "portraits/nyah_native.png",
+      "portraitFull": "portraits/nyah_full.png",
+      "cellSize": [48, 48],
+      "anchor": [0.5, 1.0],
+      "portraitSize": [300, 224],
+      "visualNotes": "Black twintails, white frilled maid headdress, black cat ears with pink inner ear, yellow cat eyes, black cat tail, black-and-white maid dress, smug ':3' fang smile and bell collar in portrait.",
+      "animations": {
+        "walk_down": { "row": 0, "frames": [0, 1, 2, 1], "flipX": false, "fps": 6 },
+        "idle_down": { "row": 0, "frames": [1], "flipX": false, "fps": 2, "fallback": "bob" },
+        "walk_up": { "row": 1, "frames": [0, 1, 2, 1], "flipX": false, "fps": 6 },
+        "idle_up": { "row": 1, "frames": [1], "flipX": false, "fps": 2, "fallback": "bob" },
+        "walk_left": { "row": 2, "frames": [0, 1, 2, 1], "flipX": false, "fps": 6 },
+        "idle_left": { "row": 2, "frames": [1], "flipX": false, "fps": 2, "fallback": "bob" },
+        "walk_right": { "row": 2, "frames": [0, 1, 2, 1], "flipX": true, "fps": 6, "fallback": "flip_row_2" },
+        "idle_right": { "row": 3, "frames": [2], "flipX": false, "fps": 2, "altFlipRow2": true },
+        "carry": { "useDirectionWalk": true, "propOverlay": "ale_tray_three", "offsetY": -8, "fallback": "hold_plus_overlay" },
+        "scold": { "row": 0, "frames": [1], "flipX": false, "fallback": "hop_bob" }
+      }
+    },
+    "fifi": {
+      "id": "fifi",
+      "displayName": "Fifi",
+      "role": "Obedient Maid",
+      "worldSheet": "character sprites/fifi_world.png",
+      "bigSheet": "character sprites/fifi_big.png",
+      "portraitNative": "portraits/fifi_native.png",
+      "portraitFull": "portraits/fifi_full.png",
+      "cellSize": [48, 48],
+      "anchor": [0.5, 1.0],
+      "portraitSize": [300, 224],
+      "visualNotes": "Warm taupe-brown twin braids, darker brown floppy dog ears, brown tail, white maid headdress, rosy blush, vertical chibi dot eyes on world sprite and warm amber eyes in portrait.",
+      "animations": {
+        "walk_down": { "row": 0, "frames": [0, 1, 2, 1], "flipX": false, "fps": 6 },
+        "idle_down": { "row": 0, "frames": [1], "flipX": false, "fps": 2, "fallback": "bob" },
+        "walk_up": { "row": 1, "frames": [0, 1, 2, 1], "flipX": false, "fps": 6 },
+        "idle_up": { "row": 1, "frames": [1], "flipX": false, "fps": 2, "fallback": "bob" },
+        "walk_left": { "row": 2, "frames": [0, 1, 2, 1], "flipX": false, "fps": 6 },
+        "idle_left": { "row": 2, "frames": [1], "flipX": false, "fps": 2, "fallback": "bob" },
+        "walk_right": { "row": 2, "frames": [0, 1, 2, 1], "flipX": true, "fps": 6, "fallback": "flip_row_2" },
+        "idle_right": { "row": 3, "frames": [2], "flipX": false, "fps": 2, "altFlipRow2": true },
+        "carry": { "useDirectionWalk": true, "propOverlay": "ale_tray_three", "offsetY": -8, "fallback": "hold_plus_overlay" },
+        "flustered": { "row": 0, "frames": [1], "flipX": false, "fallback": "tremble_offset" }
+      }
+    }
+  },
+  "suppliedUi": {
+    "sheet": "Ui Elements/freeversion.png",
+    "size": [256, 256],
+    "buttonGrid": {
+      "origin": [0, 0],
+      "cellSize": [16, 16],
+      "cols": 16,
+      "rows": 8,
+      "iconsByPairCol": ["play", "pause", "plus", "check", "close", "minus", "help", "coin_dollar"],
+      "note": "Each 4x4 block (64x64) is one color theme; even columns are normal state, odd columns are pressed state."
+    },
+    "plaques": {
+      "woodBannerWide": [5, 128, 118, 48],
+      "woodBannerMedium": [129, 128, 62, 48],
+      "woodMedallion": [196, 131, 56, 56],
+      "arrowLeftWarm": [0, 181, 48, 24],
+      "arrowRightWarm": [64, 181, 48, 24],
+      "hangingSignSmall": [121, 194, 33, 29],
+      "hangingSignWide": [164, 194, 45, 29],
+      "arrowLeftDark": [0, 213, 48, 24],
+      "arrowRightDark": [64, 213, 48, 24],
+      "hammerIcon": [177, 229, 45, 23],
+      "checkMark": [232, 233, 17, 14]
+    }
+  }
+}

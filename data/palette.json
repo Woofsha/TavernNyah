@@ -1,0 +1,115 @@
+{
+  "count": 43,
+  "maxAllowed": 48,
+  "outlines": [
+    "OUTLINE_WARM",
+    "OUTLINE_COOL",
+    "OUTLINE_LEAF"
+  ],
+  "colors": {
+    "OUTLINE_WARM": "#2b1a12",
+    "OUTLINE_COOL": "#1d2033",
+    "OUTLINE_LEAF": "#162b1e",
+    "WOOD_DEEP": "#4a2c1d",
+    "WOOD_SHADOW": "#6e4228",
+    "WOOD_BASE": "#9c633b",
+    "WOOD_LIGHT": "#c78c59",
+    "STONE_DEEP": "#33384a",
+    "STONE_SHADOW": "#4d546b",
+    "STONE_BASE": "#737c94",
+    "STONE_LIGHT": "#9ea8bd",
+    "METAL_SHADOW": "#3f485c",
+    "METAL_BASE": "#6d7a91",
+    "METAL_LIGHT": "#b3c2d6",
+    "CLOTH_RED_SHADOW": "#6e1d2a",
+    "CLOTH_RED_BASE": "#a8323e",
+    "CLOTH_RED_LIGHT": "#db5a58",
+    "CLOTH_ACCENT_SHADOW": "#1f425c",
+    "CLOTH_ACCENT_BASE": "#326b8a",
+    "CLOTH_ACCENT_LIGHT": "#5ca3bd",
+    "GOLD_BASE": "#c98a2c",
+    "GOLD_LIGHT": "#f5cb5c",
+    "FLAME_EMBER": "#b83525",
+    "FLAME_ORANGE": "#eb7526",
+    "FLAME_YELLOW": "#ffe066",
+    "POTION_RED": "#e03c52",
+    "POTION_BLUE": "#3b8eea",
+    "POTION_GREEN": "#44bd68",
+    "POTION_PURPLE": "#9b54d6",
+    "POTION_YELLOW": "#f0c237",
+    "PARCHMENT_SHADOW": "#b89d7a",
+    "PARCHMENT_BASE": "#dec6a2",
+    "PARCHMENT_LIGHT": "#f5e6cc",
+    "CREAM_SHADOW": "#d6cfc2",
+    "CREAM_LIGHT": "#fff8eb",
+    "ALE_BASE": "#bd6819",
+    "ALE_LIGHT": "#f09f35",
+    "LEAF_SHADOW": "#285238",
+    "LEAF_BASE": "#46824c",
+    "LEAF_LIGHT": "#7ab865",
+    "ROAST_SHADOW": "#5c2b18",
+    "ROAST_BASE": "#964c26",
+    "ROAST_LIGHT": "#cc7d43"
+  },
+  "ramps": {
+    "wood": [
+      "WOOD_DEEP",
+      "WOOD_SHADOW",
+      "WOOD_BASE",
+      "WOOD_LIGHT"
+    ],
+    "stone": [
+      "STONE_DEEP",
+      "STONE_SHADOW",
+      "STONE_BASE",
+      "STONE_LIGHT"
+    ],
+    "metal": [
+      "METAL_SHADOW",
+      "METAL_BASE",
+      "METAL_LIGHT"
+    ],
+    "cloth_red": [
+      "CLOTH_RED_SHADOW",
+      "CLOTH_RED_BASE",
+      "CLOTH_RED_LIGHT"
+    ],
+    "cloth_accent": [
+      "CLOTH_ACCENT_SHADOW",
+      "CLOTH_ACCENT_BASE",
+      "CLOTH_ACCENT_LIGHT"
+    ],
+    "gold": [
+      "GOLD_BASE",
+      "GOLD_LIGHT"
+    ],
+    "flame": [
+      "FLAME_EMBER",
+      "FLAME_ORANGE",
+      "FLAME_YELLOW"
+    ],
+    "parchment": [
+      "PARCHMENT_SHADOW",
+      "PARCHMENT_BASE",
+      "PARCHMENT_LIGHT"
+    ],
+    "cream": [
+      "CREAM_SHADOW",
+      "CREAM_LIGHT"
+    ],
+    "ale": [
+      "ALE_BASE",
+      "ALE_LIGHT"
+    ],
+    "leaf": [
+      "LEAF_SHADOW",
+      "LEAF_BASE",
+      "LEAF_LIGHT"
+    ],
+    "roast": [
+      "ROAST_SHADOW",
+      "ROAST_BASE",
+      "ROAST_LIGHT"
+    ]
+  }
+}

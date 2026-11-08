@@ -1,0 +1,490 @@
+{
+  "namesByFolk": {
+    "human": {
+      "first": [
+        "Alden",
+        "Bram",
+        "Cedric",
+        "Doran",
+        "Elric",
+        "Garret",
+        "Harlan",
+        "Jorik",
+        "Kaelen",
+        "Leona",
+        "Merrick",
+        "Nesta",
+        "Orson",
+        "Rowan",
+        "Silas",
+        "Tobias"
+      ],
+      "last": [
+        "Ashford",
+        "Blackwood",
+        "Caldwell",
+        "Dunbar",
+        "Eastwick",
+        "Fairchild",
+        "Greystone",
+        "Hawthorne",
+        "Ironwood",
+        "Kingsley",
+        "Lockwood",
+        "Miller",
+        "Northgate",
+        "Oakheart",
+        "Pemberton",
+        "Redford"
+      ]
+    },
+    "dwarf": {
+      "first": [
+        "Balin",
+        "Brokk",
+        "Dain",
+        "Durnik",
+        "Fargrim",
+        "Gimrak",
+        "Harn",
+        "Korgan",
+        "Morgran",
+        "Norgrim",
+        "Orik",
+        "Rorik",
+        "Thalgor",
+        "Torvin",
+        "Ulfrik",
+        "Vondal"
+      ],
+      "last": [
+        "Anvilbrow",
+        "Barreltap",
+        "Coppervein",
+        "Deepdelver",
+        "Forgehammer",
+        "Goldseeker",
+        "Ironbreaker",
+        "Kegmaster",
+        "Minedelver",
+        "Oremantle",
+        "Rockcrusher",
+        "Shieldbearer",
+        "Stonebeard",
+        "Strongale",
+        "Thunderpick",
+        "Trueanvil"
+      ]
+    },
+    "elf": {
+      "first": [
+        "Aelion",
+        "Caelynn",
+        "Eldrin",
+        "Faelar",
+        "Gaelen",
+        "Ilyana",
+        "Kaelith",
+        "Lirael",
+        "Mirieth",
+        "Naerion",
+        "Orion",
+        "Quelen",
+        "Sylas",
+        "Thelas",
+        "Valen",
+        "Zephyr"
+      ],
+      "last": [
+        "Autumnwhisper",
+        "Brightbough",
+        "Dawnstrider",
+        "Featherbreeze",
+        "Gleamleaf",
+        "Moonshadow",
+        "Nightbreeze",
+        "Silverleaf",
+        "Starweaver",
+        "Sunstrider",
+        "Swiftbrook",
+        "Twilightfall",
+        "Whisperwind",
+        "Wildwillow",
+        "Willowshade",
+        "Windrunner"
+      ]
+    },
+    "halfling": {
+      "first": [
+        "Barris",
+        "Bramble",
+        "Clover",
+        "Drogo",
+        "Ello",
+        "Ferdie",
+        "Gillie",
+        "Hobbs",
+        "Jemmy",
+        "Kipp",
+        "Milo",
+        "Nob",
+        "Pip",
+        "Roscoe",
+        "Tilly",
+        "Wren"
+      ],
+      "last": [
+        "Applecheeks",
+        "Baggins",
+        "Buttercup",
+        "Cherryhill",
+        "Copperkettle",
+        "Elderberry",
+        "Goodbarrel",
+        "Greenbottle",
+        "Honeycake",
+        "Merryweather",
+        "Puddlefoot",
+        "Shortwick",
+        "Sweetwater",
+        "Tealeaf",
+        "Underhill",
+        "Warmhearth"
+      ]
+    },
+    "beastfolk": {
+      "first": [
+        "Boran",
+        "Fang",
+        "Gale",
+        "Kiba",
+        "Korak",
+        "Lobo",
+        "Luna",
+        "Mako",
+        "Nero",
+        "Rook",
+        "Sable",
+        "Talon",
+        "Ursa",
+        "Vex",
+        "Yasha",
+        "Zev"
+      ],
+      "last": [
+        "Bristlefur",
+        "Clawstride",
+        "Duskprowler",
+        "Fleetfoot",
+        "Frostmane",
+        "Ironpaw",
+        "Moonhowler",
+        "Nightstalker",
+        "Pouncestep",
+        "Shadowpelt",
+        "Silentstride",
+        "Softstep",
+        "Stormfang",
+        "Swiftfang",
+        "Thickhide",
+        "Whitetail"
+      ]
+    }
+  },
+  "liveThoughts": {
+    "entering": [
+      "Ah, {tavern}! Smells like roasted herbs and warm hearth smoke.",
+      "Stepping into {tavern} after a long march is pure bliss.",
+      "A seat near the fire at {tavern} would cure my road-weary bones.",
+      "I've heard great rumors about {tavern}... let's see if the hype holds.",
+      "Wiping my muddy boots at the door. Good to be at {tavern}.",
+      "Look at that cozy bustling room! {tavern} never fails to impress.",
+      "My coin pouch has {gold} gold ready to spend on a proper meal.",
+      "Hope there's an open table left in {tavern} today.",
+      "The aroma drifting from the {tavern} kitchen is absolutely heavenly.",
+      "Just stepped in, and the lively clink of mugs already lifted my spirits."
+    ],
+    "waiting_to_order": [
+      "Can't wait to order a hearty plate of {dish} today.",
+      "That maid with the dog ears looks busy, but she's so attentive!",
+      "Wonder if they still have that special {dish} on the menu.",
+      "Tapping my foot... I've got {gold} gold burning a hole in my pocket.",
+      "The menu at {tavern} has gotten so much bigger lately!",
+      "Should I order a pint of ale first, or dive straight into {dish}?",
+      "Patiently waiting for service... the cozy hearth keeps me warm.",
+      "Hope the catgirl manager doesn't catch me eyeing the dessert display.",
+      "Decisions, decisions... {dish} or a hot bowl of soup?",
+      "Waving my hand politely. I'm famished enough to eat an entire roast!"
+    ],
+    "waiting_for_food": [
+      "The sizzle from the kitchen is torturing my empty stomach!",
+      "Can smell my {dish} cooking over the iron griddle... hurry, please!",
+      "Watching other tables get their food while I wait for {dish} is true agony.",
+      "The cook in the back is moving fast, my {dish} should be up soon!",
+      "Paid my {gold} gold, now just dreamily watching the kitchen hatch.",
+      "I see the maid carrying a steaming platter... is that my {dish}?!",
+      "The anticipation makes {dish} taste twice as delicious anyway.",
+      "Polishing my fork and spoon while waiting for {dish}.",
+      "That aroma is definitely spiced garlic... my {dish} is almost here!",
+      "Patiently sipping water while the hearth works its magic on my order."
+    ],
+    "eating_happy": [
+      "Mmm! This {dish} is cooked to absolute golden perfection!",
+      "Every single bite of this {dish} was worth all {gold} gold!",
+      "Hands down the most flavorful {dish} in the entire province!",
+      "My compliments to {tavern}'s kitchen! This {dish} hits the spot.",
+      "I could eat this {dish} every single day and never get tired of it.",
+      "The gravy on this {dish} is liquid gold... scraping every drop!",
+      "Worth walking three leagues just to savor this warm plate of {dish}.",
+      "Full belly, warm hearth, exquisite {dish}... life is good at {tavern}.",
+      "That {dish} practically melted on my tongue! Pure culinary genius.",
+      "If heaven has a tavern, they serve this exact recipe of {dish}."
+    ],
+    "eating_unimpressed": [
+      "Hmm... this {dish} is a little lukewarm in the center.",
+      "I paid {gold} gold for this {dish}? Could've used a bit more seasoning.",
+      "A bit dry, honestly. The chef at {tavern} might be rushed today.",
+      "Not quite as flavorful as I remembered... needs a pinch of salt.",
+      "It's edible, but {tavern} usually serves a much better {dish}.",
+      "The crust is charred on one side... someone left this {dish} unattended.",
+      "For {gold} gold, I expected a more generous helping of {dish}.",
+      "Chewy... my jaw is getting a full workout on this meal.",
+      "I'll finish this {dish}, but I might order something else next visit.",
+      "A bit bland, but at least it fills an empty traveling stomach."
+    ],
+    "buying_supplies": [
+      "Stocking up my adventurer pack with fresh trail rations from {tavern}.",
+      "Spent {gold} gold on healing draughts and dried biscuits for the dungeon.",
+      "The supply counter here has better travel rations than the city merchant!",
+      "Packing extra cheese and jerky before braving the goblin caves.",
+      "Never venture into the dark woods without iron rations from {tavern}.",
+      "A flask of draught and hardtack for {gold} gold—a bargain for survival.",
+      "These rations stay fresh for weeks. Smart adventurers always buy here.",
+      "Tucking the trail supplies securely into my leather rucksack.",
+      "Ready for the road now that my supply satchel is brimming.",
+      "Good provisions make the difference between a triumphant quest and a disaster."
+    ],
+    "heading_on_quest": [
+      "Belly full of {dish}, pack full of supplies—time to hunt some beasts!",
+      "Heading toward the Whispering Ruins with high hopes and a sharp blade.",
+      "If I return victorious, I'm spending all my bounty {gold} gold right here!",
+      "The contract on the quest board looked dangerous, but fortune favors the bold.",
+      "Stepping out into the dawn mist with {tavern}'s breakfast fueling my stride.",
+      "Checking my scabbard and map. Time to earn my adventurer stripes!",
+      "My companions are waiting at the crossroads; glory awaits us!",
+      "With good food in my stomach, not even an ogre could slow me down.",
+      "Off to explore the ancient barrows! Wish me luck, {tavern}!",
+      "The road calls, but I'm already looking forward to my celebratory pint on return."
+    ],
+    "returned_from_quest": [
+      "We survived the dungeon! Bartender, bring {dish} and your strongest ale!",
+      "Covered in mud and goblin grime, but our sacks are stuffed with {gold} gold!",
+      "Nothing feels sweeter after a beast hunt than collapsing on a stool at {tavern}.",
+      "The dragon was fierce, but thoughts of hot {dish} kept my shield steady!",
+      "Back in one piece! First round of drinks is on my quest bounty!",
+      "Tossing the victory tokens on the table... we earned every single copper!",
+      "My armor is dented, but my appetite is in prime fighting condition!",
+      "Surviving the deep crypt calls for an immediate feast at {tavern}!",
+      "Count the bounty coins, order three platters of {dish}, and let's celebrate!",
+      "Safe and sound by the hearth fire after three treacherous nights in the wild."
+    ],
+    "renting_room": [
+      "A soft bed upstairs at {tavern} sounds like absolute paradise right now.",
+      "Handing over {gold} gold for a key to the upper floor room.",
+      "No sleeping on cold moss tonight—{tavern}'s goose-feather pillows await!",
+      "The upstairs rooms smell of fresh lavender and clean cedar wood.",
+      "Locking my travel chest in the corner and kicking off my boots.",
+      "Paid {gold} gold for the night; worth every penny for a warm, dry roof.",
+      "Can hear the faint murmur of tavern chatter below, very soothing.",
+      "A warm bath and a real mattress... best night's sleep in weeks.",
+      "Tucking the room brass key into my pocket and heading up the stairs.",
+      "Nothing beats resting your weary head under {tavern}'s cozy eaves."
+    ],
+    "sleeping": [
+      "Zzz... dreaming of endless platters of roasted {dish}... zzz...",
+      "Deep, blissful slumber under a heavy woolen quilt.",
+      "Snoring softly while the night wind howls harmlessly outside.",
+      "Zzz... dodging dungeon traps... counting shiny {gold} gold... zzz...",
+      "Such a comfortable mattress... my aching muscles are finally relaxing.",
+      "Dreaming of winning glory and returning to {tavern} as a champion.",
+      "Resting peacefully while the moon passes over {tavern}'s shingled roof.",
+      "Zzz... that dog-girl maid was so kind today... zzz...",
+      "Not even a thunderstorm could wake me from this cozy bed.",
+      "Recharging stamina for tomorrow's long trek along the king's highway."
+    ],
+    "enjoying_entertainment": [
+      "That melody is so catchy! Tapping my tankard in perfect rhythm!",
+      "The dancer's ribbons look like spinning firelight... truly mesmerizing!",
+      "Tossing a tip of {gold} gold onto the stage for that lively tavern tune!",
+      "Nothing lifts the tavern spirits like good music and cold ale!",
+      "Singing along with the chorus at the top of my lungs!",
+      "The bard at {tavern} really knows how to spin an epic ballad.",
+      "Watching the stage performance while savoring my favorite {dish}.",
+      "Even the grumpiest old mercenary at the corner table is smiling!",
+      "Clapping until my hands sting! Encore, encore!",
+      "This cheerful atmosphere makes {tavern} the best gathering spot in town."
+    ],
+    "leaving_happy": [
+      "Leaving {tavern} with a full belly and a happy heart!",
+      "Left a generous tip of {gold} gold on table four for wonderful service!",
+      "Can't wait to come back to {tavern} tomorrow for another round of {dish}.",
+      "Waving goodbye to the staff! Best tavern in the entire territory!",
+      "Feeling completely refreshed and ready to face the world.",
+      "The food was stellar, the atmosphere warm, and the prices fair!",
+      "Stepping out into the cool evening air feeling thoroughly content.",
+      "I'll be recommending {tavern} to every caravan that passes through.",
+      "Good food, great company, and zero complaints. Five stars!",
+      "Patted my full belly on the way out... {tavern} never disappoints."
+    ],
+    "leaving_upset": [
+      "Waited far too long for cold food... taking my business elsewhere!",
+      "Lost my patience! A patron shouldn't have to wait an hour for service.",
+      "Disappointed with the noise and sticky tables at {tavern} today.",
+      "Leaving in a huff! That catgirl manager didn't even look apologetic.",
+      "My boots got soaked by a roof leak... not coming back anytime soon.",
+      "Expected better quality for {gold} gold. What a letdown.",
+      "I asked for {dish} half an hour ago and barely got water! Farewell.",
+      "Storming out the door! Even the goblins run a tighter ship than this!",
+      "Too crowded, too slow, and my order got mixed up. Ugh.",
+      "I'll find another inn along the highway that actually values my time."
+    ],
+    "maid_working": [
+      "Balancing three tankards on one tray without spilling a single drop!",
+      "Wiping down the breadcrumbs from table five before the next party arrives.",
+      "Taking orders with a bright smile... tail wagging up a storm!",
+      "Miss Nyah said my posture was good today! Or was it just 'adequate'?",
+      "Carrying steaming hot {dish} carefully so nobody gets burned!",
+      "Sweeping up sawdust near the hearth... busy, busy, busy!",
+      "Checking the condiments and salt pinch bowls on every booth.",
+      "Polishing the pewter steins until they shine like polished silver.",
+      "Running back to the kitchen hatch—two fresh orders of {dish} ready!",
+      "A generous tip of {gold} gold left under a napkin! Hard work pays off!"
+    ],
+    "chef_working": [
+      "Searing the meats on high heat to lock in every drop of rich juice!",
+      "Stirring the cauldron of {dish}... the aroma is reaching perfection.",
+      "Seasoning with wild thyme and cracked pepper—that's the secret touch!",
+      "Order up! Fresh, piping hot {dish} ready on the service ledge!",
+      "Keeping the iron stove stoked and the broth simmering steadily.",
+      "Slicing fresh sourdough loaves into thick, hearty trenches.",
+      "Cooking twenty portions of {dish} during the rush is child's play!",
+      "Plating every garnish neatly... presentation matters in my kitchen!",
+      "The soup pot is bubbling happily alongside the roasting spit.",
+      "Nothing leaves my kitchen counter unless it looks fit for a king!"
+    ],
+    "entertainer_working": [
+      "Plucking the silver strings to weave a jaunty tavern jig!",
+      "Spinning gracefully between the tables, ribbons catching the lantern glow!",
+      "Singing the heroic refrain of the brave knight and the gentle dragon!",
+      "Watching the whole crowd clap their hands to the energetic tempo!",
+      "Building up the crescendo for the dramatic finale of the ballad!",
+      "Tuning the lute strings between verses while the crowd cheers.",
+      "A lively rhythm brings cheer, clinking tankards, and shiny tip coins!",
+      "Matching my steps to the lively fiddle beat across the wooden stage.",
+      "Reading the room—shifting from a gentle ballad into a festive stomp!",
+      "Bow low to the applause, take a sip of water, and launch the next set!"
+    ]
+  },
+  "opinions": {
+    "tavern": {
+      "low": [
+        "It's drafty, the roof drips when it rains, and spiderwebs lurk in the rafters.",
+        "Felt more like an abandoned barn than an inn; half the benches wobble.",
+        "Far too noisy, smelling faintly of old damp wood and stale smoke.",
+        "Needs a serious renovation before I'd call this place cozy."
+      ],
+      "mid": [
+        "A decent little roadside stop; rustic, simple, and keeps the rain off.",
+        "Not fancy by any means, but it has honest warmth and cheerful lighting.",
+        "Typical provincial tavern; nothing grand, but good enough for a pitstop.",
+        "It has a certain humble charm once you find a seat away from the drafts."
+      ],
+      "high": [
+        "The warmest, most welcoming tavern in the realm! True adventurer heaven.",
+        "Spotless floors, roaring hearths, and an atmosphere humming with lively joy!",
+        "A grand sanctuary that feels like home from the second you cross the threshold.",
+        "Easily the jewel of the Whispering Woods; every detail exudes festive charm!"
+      ]
+    },
+    "food": {
+      "low": [
+        "Bland, overcooked, and desperately crying out for a pinch of salt.",
+        "Felt like leftover camp rations reheated over a dying candle flame.",
+        "Tough enough to resole your boots with; deeply disappointing meal.",
+        "Lukewarm stew with mystery chunks that made me question my choices."
+      ],
+      "mid": [
+        "Hearty and filling enough to keep you marching, though nothing gourmet.",
+        "Solid tavern fare; warm bread, savory broth, and honest ingredients.",
+        "Satisfies an adventurer's hunger without doing anything extraordinary.",
+        "Good comfort food that hits the spot when you're cold and tired."
+      ],
+      "high": [
+        "Culinary bliss! Every bite bursts with rich, unforgettable flavor!",
+        "Fit for a high king's banquet! The chef here is a bona fide artist.",
+        "Golden roasted perfection that warmed my soul and cured my travel fatigue.",
+        "Unbelievably delicious; I would walk a hundred miles for another taste!"
+      ]
+    },
+    "prices": {
+      "low": [
+        "Highway robbery! Charging royal palace rates for muddy roadside gruel.",
+        "My coin pouch cried tears of agony; entirely overpriced for what you get.",
+        "Exorbitant markups that feel like they're trying to fund a fortress.",
+        "A scandalous rip-off that leaves you both hungry and penniless."
+      ],
+      "mid": [
+        "Fair and standard rates; about what you'd expect along the trade road.",
+        "Reasonably priced for travelers who just want a warm seat and a drink.",
+        "A modest bill that matches the honest quality of the establishment.",
+        "Neither cheap nor extortionate; decent value for hardworking folks."
+      ],
+      "high": [
+        "An unbelievable steal! You get an absolute feast for a handful of coppers!",
+        "Generous portions and luxury comfort at remarkably modest prices!",
+        "Best bargain in the whole territory; your gold goes impossibly far here.",
+        "Phenomenal value that makes you want to leave an extra-large tip every time!"
+      ]
+    },
+    "nyah": {
+      "low": [
+        "That catgirl owner strutted around barking orders and glared at my dirty boots!",
+        "Haughty, vain, and spent the whole afternoon napping on a sack of barley.",
+        "She acted like royalty in a peasant tavern and hissed when I asked for a discount.",
+        "More interested in admiring her own tail than helping paying customers."
+      ],
+      "mid": [
+        "A bit bossy and proud, but her quirky antics certainly liven up the room.",
+        "Pretends to be a grand duchess, but she clearly cares about her tavern.",
+        "Fierce personality! Entertaining to watch her dramatically supervise the room.",
+        "A little haughty around the edges, but she keeps the staff running like clockwork."
+      ],
+      "high": [
+        "The most charismatic and brilliant catgirl proprietor in all the lands!",
+        "Her regal confidence is legendary, and she turned this tavern into a masterpiece!",
+        "Hilariously majestic! You can't help but adore her fiery leadership.",
+        "An absolute visionary! Beneath that haughty swagger is genuine hospitality genius."
+      ]
+    },
+    "fifi": {
+      "low": [
+        "The dog-girl maid was so jittery she nearly dumped a tray of soup into my lap.",
+        "Looked completely overwhelmed and kept apologizing for things that weren't her fault.",
+        "Tripped over her own apron twice; sweet girl, but needs more confidence.",
+        "Seemed perpetually on the verge of a panic attack during the lunch rush."
+      ],
+      "mid": [
+        "Eager to please and hardworking, even if she gets flustered under pressure.",
+        "A dutiful pup who tries her best to keep every table clean and tidy.",
+        "Very polite and attentive, though she clearly walks on eggshells around her boss.",
+        "Sweeps like a whirlwind and always greets you with an earnest, nervous smile."
+      ],
+      "high": [
+        "The sweetest, most hardworking sweetheart ever! Her tail wagging warms your heart.",
+        "An angel in an apron! Never lets a mug run dry and treats every guest like family.",
+        "The true unsung heart of this tavern; boundless kindness and tireless devotion!",
+        "Incredible service! Attentive, delightful, and always brightening the whole room!"
+      ]
+    }
+  }
+}

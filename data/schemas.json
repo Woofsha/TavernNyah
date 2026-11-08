@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "files": {
+    "recipes.json": {
+      "rootKey": "recipes",
+      "minCount": 12,
+      "requiredFields": ["id", "name", "category", "station", "tier", "price", "cookTime", "unlockCost", "repRequired", "requiredExpansion", "icon", "worldProp", "desc"],
+      "enums": {
+        "category": ["drink", "food", "ration", "potion"],
+        "station": ["bar", "kitchen", "counter"],
+        "tier": [1, 2, 3, 4]
+      }
+    },
+    "upgrades.json": {
+      "rootKey": "upgrades",
+      "minCount": 24,
+      "requiredFields": ["id", "name", "tab", "kind", "baseCost", "costGrowth", "maxLevel", "repRequired", "requires", "icon", "effect", "nyahComment", "desc"],
+      "enums": {
+        "tab": ["tables", "building", "staff", "decor"],
+        "kind": ["repeatable", "one_off", "expansion", "staff_hire"]
+      }
+    },
+    "customers.json": {
+      "rootKeys": ["archetypes", "dayPhases"],
+      "requiredArchetypes": ["villager", "adventurer_rookie", "adventurer_veteran", "merchant", "noble"],
+      "requiredDayPhases": ["morning", "afternoon", "evening", "night"]
+    },
+    "staff.json": {
+      "rootKeys": ["canonStaff", "hireableStaff"],
+      "requiredCanonIds": ["nyah", "fifi", "barnaby"],
+      "requiredHirePersonalities": ["flustered", "defiant", "delighted", "unimpressed"]
+    },
+    "dialogue.json": {
+      "rootKeys": ["intro", "banter", "hireScenes", "offlineTemplates"],
+      "minBanterCount": 80,
+      "minIntroSeconds": 32,
+      "maxIntroSeconds": 50
+    },
+    "thoughts.json": {
+      "rootKeys": ["namesByFolk", "liveThoughts", "opinions"],
+      "minVariantsPerSituation": 8,
+      "requiredFolk": ["human", "dwarf", "elf", "halfling", "beastfolk"],
+      "requiredOpinionTopics": ["tavern", "food", "prices", "nyah", "fifi"]
+    }
+  }
+}

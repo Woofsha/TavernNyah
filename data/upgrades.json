@@ -1,0 +1,634 @@
+{
+  "upgrades": [
+    {
+      "id": "add_table",
+      "name": "Additional Table & Stools",
+      "tab": "tables",
+      "kind": "repeatable",
+      "baseCost": 25,
+      "costGrowth": 1.24,
+      "maxLevel": 10,
+      "repRequired": 0,
+      "requires": null,
+      "icon": "icon_upg_table",
+      "effect": {
+        "type": "add_table",
+        "value": 1
+      },
+      "nyahComment": "More chairs means more coin... and more spilled ale I have to wipe up. Don't look at me like that, Master!",
+      "desc": "Place an additional sturdy wooden dining table and stools in the common room."
+    },
+    {
+      "id": "train_maids",
+      "name": "Maid Hustle Drills",
+      "tab": "staff",
+      "kind": "repeatable",
+      "baseCost": 20,
+      "costGrowth": 1.18,
+      "maxLevel": 20,
+      "repRequired": 0,
+      "requires": null,
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "maid_speed",
+        "value": 0.05
+      },
+      "nyahComment": "Pick up those feet, Fifi! A slow maid is a useless maid! Balance that tray or no treats!",
+      "desc": "Pacing and balance drills that increase maid movement and service speed by 5% per rank."
+    },
+    {
+      "id": "train_chefs",
+      "name": "Kitchen Quick-Prep",
+      "tab": "staff",
+      "kind": "repeatable",
+      "baseCost": 28,
+      "costGrowth": 1.18,
+      "maxLevel": 20,
+      "repRequired": 0,
+      "requires": null,
+      "icon": "icon_stew",
+      "effect": {
+        "type": "chef_speed",
+        "value": 0.05
+      },
+      "nyahComment": "Faster with the skillets! Cold stew gets sent right back and I refuse to hear customer whining!",
+      "desc": "Sharpen knives and streamline cooking prep lines, boosting cooking speed by 5% per rank."
+    },
+    {
+      "id": "decor_polish",
+      "name": "Beeswax Wood Polish",
+      "tab": "decor",
+      "kind": "repeatable",
+      "baseCost": 18,
+      "costGrowth": 1.16,
+      "maxLevel": 20,
+      "repRequired": 0,
+      "requires": null,
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 1
+      },
+      "nyahComment": "Rub until it shines like glass. If I catch a single grease smudge on that wood, you're re-polishing it!",
+      "desc": "Fresh beeswax buffing and lavender water spray providing a cozy ambience bonus per rank."
+    },
+    {
+      "id": "town_crier",
+      "name": "Town Crier Pitch",
+      "tab": "building",
+      "kind": "repeatable",
+      "baseCost": 35,
+      "costGrowth": 1.2,
+      "maxLevel": 15,
+      "repRequired": 0,
+      "requires": null,
+      "icon": "icon_rep_star",
+      "effect": {
+        "type": "patron_spawn_rate",
+        "value": 0.06
+      },
+      "nyahComment": "Slip five copper coins to that loudmouth herald by the square. Everyone in the valley should smell our stew!",
+      "desc": "Bribe town criers to shout about tavern specials, boosting customer arrival rates by 6% per rank."
+    },
+    {
+      "id": "table_tier_2",
+      "name": "Sturdy Pine Furnishings",
+      "tab": "tables",
+      "kind": "one_off",
+      "baseCost": 140,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 10,
+      "requires": null,
+      "icon": "icon_upg_table",
+      "effect": {
+        "type": "table_tier",
+        "value": 2
+      },
+      "nyahComment": "Smooth planed pine with iron corner brackets. At least drunk mercenaries won't crack these in half.",
+      "desc": "Replace primitive rough-hewn benches with solid pine tables and back-supported chairs."
+    },
+    {
+      "id": "table_tier_3",
+      "name": "Polished Oak Furnishings",
+      "tab": "tables",
+      "kind": "one_off",
+      "baseCost": 2600,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 110,
+      "requires": "table_tier_2",
+      "icon": "icon_upg_table",
+      "effect": {
+        "type": "table_tier",
+        "value": 3
+      },
+      "nyahComment": "Ooh, dark stained oak! Master, if someone tries carving their stupid initials into these, I am scratching them.",
+      "desc": "Upgrade all tables to lustrous stained oak tables fitted with comfortable tufted cushions."
+    },
+    {
+      "id": "table_tier_4",
+      "name": "Royal Mahogany Suites",
+      "tab": "tables",
+      "kind": "one_off",
+      "baseCost": 36000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 1350,
+      "requires": "table_tier_3",
+      "icon": "icon_upg_table",
+      "effect": {
+        "type": "table_tier",
+        "value": 4
+      },
+      "nyahComment": "Imported mahogany and crushed crimson velvet! Even the prissiest nobles can't turn their noses up now.",
+      "desc": "Install lavish royal mahogany dining tables with gilded brass trim and velvet armchairs."
+    },
+    {
+      "id": "exp_kitchen",
+      "name": "Kitchen Expansion",
+      "tab": "building",
+      "kind": "expansion",
+      "baseCost": 420,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 15,
+      "requires": null,
+      "icon": "icon_roast_chicken",
+      "effect": {
+        "type": "unlock_room",
+        "value": "kitchen"
+      },
+      "nyahComment": "Finally! A real brick hearth and double iron stove so Fifi can stop dicing onions on the tap counter!",
+      "desc": "Knock through the rear partition to construct a fully equipped commercial kitchen wing."
+    },
+    {
+      "id": "exp_counter_shop",
+      "name": "Adventurer Supply Counter",
+      "tab": "building",
+      "kind": "expansion",
+      "baseCost": 1100,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 45,
+      "requires": "exp_kitchen",
+      "icon": "icon_potion_red",
+      "effect": {
+        "type": "unlock_room",
+        "value": "counter_shop"
+      },
+      "nyahComment": "Adventurers will literally throw gold sacks at red glass bottles and dried meat. Pure profit, Master!",
+      "desc": "Build an expedition outfitting counter selling potions, elixirs, and field rations to questing parties."
+    },
+    {
+      "id": "exp_main_hall",
+      "name": "Great Timber Hall",
+      "tab": "building",
+      "kind": "expansion",
+      "baseCost": 5500,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 220,
+      "requires": "exp_counter_shop",
+      "icon": "icon_upg_build",
+      "effect": {
+        "type": "unlock_room",
+        "value": "main_hall"
+      },
+      "nyahComment": "Look at all this room! High timber ceiling, stone archways... we can seat whole caravans at once!",
+      "desc": "Double the main tavern floorplan with grand oak trusses, carved pillars, and expanded table capacity."
+    },
+    {
+      "id": "exp_upstairs",
+      "name": "Upstairs Lodging Wing",
+      "tab": "building",
+      "kind": "expansion",
+      "baseCost": 14000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 550,
+      "requires": "exp_main_hall",
+      "icon": "icon_bed",
+      "effect": {
+        "type": "unlock_room",
+        "value": "upstairs"
+      },
+      "nyahComment": "Second floor traveler rooms! Weary merchants paying twenty gold pieces just to sleep off their ale.",
+      "desc": "Construct an upper floor featuring clean overnight lodging suites and private traveler beds."
+    },
+    {
+      "id": "bed_tier_2",
+      "name": "Goose-Down Featherbeds",
+      "tab": "building",
+      "kind": "one_off",
+      "baseCost": 28000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 1100,
+      "requires": "exp_upstairs",
+      "icon": "icon_bed",
+      "effect": {
+        "type": "bed_tier",
+        "value": 2
+      },
+      "nyahComment": "Replaced the scratchy straw sacks with plush goose featherbeds. Don't get comfortable, Master, you're working!",
+      "desc": "Upgrade upstairs lodging beds to cloud-soft goose-down mattresses and fine woven linen sheets."
+    },
+    {
+      "id": "exp_cellar",
+      "name": "Deep Stone Wine Cellar",
+      "tab": "building",
+      "kind": "expansion",
+      "baseCost": 42000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 1500,
+      "requires": "exp_upstairs",
+      "icon": "icon_wine",
+      "effect": {
+        "type": "unlock_room",
+        "value": "cellar"
+      },
+      "nyahComment": "A cool subterranean vault for aging reserve vintages. Make sure Old Barnaby stays out of the elven casks!",
+      "desc": "Excavate a cool limestone barrel cellar to age premium wines, imperial stouts, and elven nectars."
+    },
+    {
+      "id": "exp_stage",
+      "name": "Bardic Performance Stage",
+      "tab": "building",
+      "kind": "expansion",
+      "baseCost": 92000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 2700,
+      "requires": "exp_cellar",
+      "icon": "emote_music",
+      "effect": {
+        "type": "unlock_room",
+        "value": "stage"
+      },
+      "nyahComment": "An elevated stage with brass footlights! Now minstrels can perform without getting ale splashed over them.",
+      "desc": "Build an acoustic timber performance stage with curtained backdrop and ambient lantern footlights."
+    },
+    {
+      "id": "exp_garden",
+      "name": "Verdant Garden Terrace",
+      "tab": "building",
+      "kind": "expansion",
+      "baseCost": 195000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 5200,
+      "requires": "exp_stage",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "unlock_room",
+        "value": "garden"
+      },
+      "nyahComment": "An open-air garden terrace with wisteria arbors and stone fountains! It is... actually beautiful, Master.",
+      "desc": "Open an outdoor flagstone garden terrace with blooming trellises, lanterns, and courtyard seating."
+    },
+    {
+      "id": "hire_maid_clover",
+      "name": "Hire Clover (Maid)",
+      "tab": "staff",
+      "kind": "staff_hire",
+      "baseCost": 150,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 10,
+      "requires": null,
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "hire_staff",
+        "value": "clover"
+      },
+      "nyahComment": "She gets flustered if a customer sneezes near her, but she sprints like lightning when panicked. She's hired.",
+      "desc": "Hire Clover, an anxious but astonishingly fast junior rabbit-folk maid to assist with service."
+    },
+    {
+      "id": "hire_maid_roxie",
+      "name": "Hire Roxie (Maid)",
+      "tab": "staff",
+      "kind": "staff_hire",
+      "baseCost": 480,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 25,
+      "requires": "hire_maid_clover",
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "hire_staff",
+        "value": "roxie"
+      },
+      "nyahComment": "She rolled her eyes right at me during the interview! I will break that sassy attitude, Master, just watch!",
+      "desc": "Hire Roxie, a bold tomboy maid who handles rude customers with fearless intimidation."
+    },
+    {
+      "id": "hire_chef_marcel",
+      "name": "Hire Chef Marcel (Sous-Chef)",
+      "tab": "staff",
+      "kind": "staff_hire",
+      "baseCost": 1800,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 75,
+      "requires": "exp_kitchen",
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "hire_staff",
+        "value": "marcel"
+      },
+      "nyahComment": "He waves his ladle around singing dramatic opera, but his roasted meats smell heavenly. Get to work, monsieur!",
+      "desc": "Hire Chef Marcel, an eccentric culinary artisan who dramatically boosts food preparation output."
+    },
+    {
+      "id": "hire_bartender_garrett",
+      "name": "Hire Garrett (Bartender)",
+      "tab": "staff",
+      "kind": "staff_hire",
+      "baseCost": 3600,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 150,
+      "requires": null,
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "hire_staff",
+        "value": "garrett"
+      },
+      "nyahComment": "He hasn't smiled once in twenty years. One stare from him and brawl-starters apologize and drink quietly.",
+      "desc": "Hire Garrett, a towering stoic barkeep who dispenses ales and suppresses trouble with absolute calm."
+    },
+    {
+      "id": "hire_maid_pippa",
+      "name": "Hire Pippa (Maid)",
+      "tab": "staff",
+      "kind": "staff_hire",
+      "baseCost": 8500,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 360,
+      "requires": "hire_maid_roxie",
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "hire_staff",
+        "value": "pippa"
+      },
+      "nyahComment": "She bounces on her tiptoes and giggles at everything. It's sickeningly cute, but patrons tip her like crazy.",
+      "desc": "Hire Pippa, an irrepressibly cheerful squirrel-folk maid whose bubbly warmth earns huge gratuities."
+    },
+    {
+      "id": "hire_maid_velvet",
+      "name": "Hire Velvet (Maid)",
+      "tab": "staff",
+      "kind": "staff_hire",
+      "baseCost": 24000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 950,
+      "requires": "hire_maid_pippa",
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "hire_staff",
+        "value": "velvet"
+      },
+      "nyahComment": "She looks down her nose at everyone like we're dirt under her shoes. Naturally, nobles pay double to be insulted.",
+      "desc": "Hire Velvet, an aristocratic fallen heiress whose haughty elegance fascinates highborn patrons."
+    },
+    {
+      "id": "hire_musician_lyra",
+      "name": "Hire Lyra (Minstrel)",
+      "tab": "staff",
+      "kind": "staff_hire",
+      "baseCost": 78000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 3000,
+      "requires": "exp_stage",
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "hire_staff",
+        "value": "lyra"
+      },
+      "nyahComment": "Her harp melodies make half the room tear up and the other half buy expensive vintage wine to celebrate. Pure art!",
+      "desc": "Hire Lyra, a renowned elven minstrel whose stirring melodies soothe the crowd and boost tavern patience."
+    },
+    {
+      "id": "hire_dancer_soleil",
+      "name": "Hire Soleil (Dancer)",
+      "tab": "staff",
+      "kind": "staff_hire",
+      "baseCost": 115000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 3900,
+      "requires": "exp_stage",
+      "icon": "icon_upg_staff",
+      "effect": {
+        "type": "hire_staff",
+        "value": "soleil"
+      },
+      "nyahComment": "Her ribbon spins had three wealthy merchants drop their coin pouches on the floor. Don't look too closely, Master!",
+      "desc": "Hire Soleil, a radiant silk-ribbon dancer whose mesmerizing shows keep patrons drinking and tipping."
+    },
+    {
+      "id": "decor_candles",
+      "name": "Tabletop Tallow Candles",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 45,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 0,
+      "requires": null,
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 2
+      },
+      "nyahComment": "Warm flickers on every table. Try not to singe your apron strings, Master, I won't sew them back.",
+      "desc": "Hand-dipped tallow candles in pressed tin holders casting a warm glow across dinner tables."
+    },
+    {
+      "id": "decor_hearth",
+      "name": "Stone Hearth Logs",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 95,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 5,
+      "requires": "decor_candles",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 3
+      },
+      "nyahComment": "Crackling birch logs in the corner fireplace. If I curl up right in front of it during break, do NOT bother me.",
+      "desc": "Install cast-iron fire dogs and fragrant slow-cured birch logs in the tavern fireplace."
+    },
+    {
+      "id": "decor_rug_red",
+      "name": "Woven Crimson Runner",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 180,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 12,
+      "requires": "decor_hearth",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 4
+      },
+      "nyahComment": "A lovely red wool runner down the aisle. Tell those muddy adventurers to scrape their boots first or else!",
+      "desc": "Durable hand-woven crimson runner quieting muddy boots along the tavern's central aisle."
+    },
+    {
+      "id": "decor_herbs",
+      "name": "Hanging Herb Bundles",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 340,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 22,
+      "requires": "decor_rug_red",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 5
+      },
+      "nyahComment": "Bundles of dried lavender, sage, and mint from the rafters. Covers up the musk of sweaty mercenaries nicely.",
+      "desc": "Suspended aromatic herb bouquets drying from timber ceiling rafters, filling the air with pleasant scents."
+    },
+    {
+      "id": "decor_plants",
+      "name": "Potted Broadleaf Ferns",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 620,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 38,
+      "requires": "decor_herbs",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 6
+      },
+      "nyahComment": "Potted greenery in the dark corners. If anyone dumps leftover ale into the potting soil, they wash dishes all night.",
+      "desc": "Terracotta planters with lush evergreen ferns bringing forest freshness into the hall."
+    },
+    {
+      "id": "decor_banners",
+      "name": "Guild Crest Banners",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 2200,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 100,
+      "requires": "decor_plants",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 8
+      },
+      "nyahComment": "Gold-fringed silken wall banners. Now we actually look like a legitimate establishment of repute, Master!",
+      "desc": "Rich embroidered fabric banners emblazoned with tavern motifs draped along structural beams."
+    },
+    {
+      "id": "decor_rug_accent",
+      "name": "Southern Medallion Carpet",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 6500,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 280,
+      "requires": "decor_banners",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 10
+      },
+      "nyahComment": "An opulent central carpet imported from southern oasis markets. Soft enough to nap on... not that I would!",
+      "desc": "Intricately patterned artisan carpet placed under premier central dining tables."
+    },
+    {
+      "id": "decor_painting",
+      "name": "Gilded Mountain Landscape",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 16000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 680,
+      "requires": "decor_rug_accent",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 14
+      },
+      "nyahComment": "A majestic oil painting of the snowy peaks. The traveling artist traded it for a month of free stew. Fair deal!",
+      "desc": "Gilded framed oil canvas showcasing the surrounding crags and moonlit pine forests."
+    },
+    {
+      "id": "decor_armor",
+      "name": "Antique Plate Display",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 38000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 1650,
+      "requires": "decor_painting",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 18
+      },
+      "nyahComment": "A full suit of tournament plate armor by the door. I keep mistaking it for an intruder and hissing at it.",
+      "desc": "Flawlessly polished antique steel suit of armor standing vigilant guard beside the entrance."
+    },
+    {
+      "id": "decor_trophy",
+      "name": "Mounted Wyvern Trophy",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 72000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 3100,
+      "requires": "decor_armor",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 24
+      },
+      "nyahComment": "A stuffed highland wyvern head above the arch! Look at those sharp fangs... almost as intimidating as mine.",
+      "desc": "Dramatically mounted horned wyvern head trophy overlooking the main tavern hall."
+    },
+    {
+      "id": "decor_chandelier",
+      "name": "Grand Brass Chandelier",
+      "tab": "decor",
+      "kind": "one_off",
+      "baseCost": 135000,
+      "costGrowth": 1.0,
+      "maxLevel": 1,
+      "repRequired": 4600,
+      "requires": "decor_trophy",
+      "icon": "icon_upg_decor",
+      "effect": {
+        "type": "ambience_bonus",
+        "value": 32
+      },
+      "nyahComment": "A two-tier brass chandelier with forty wax pillars! We look like a royal palace ballroom now, Master!",
+      "desc": "Magnificent wrought brass wheel chandelier illuminating the tavern in radiant golden brilliance."
+    }
+  ]
+}

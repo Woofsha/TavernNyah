@@ -1,0 +1,1067 @@
+{
+  "intro": [
+    {
+      "speaker": "narrator",
+      "portrait": null,
+      "mood": "neutral",
+      "durationSec": 3.5,
+      "text": "On the sun-dappled crossroads near the Whispering Woods stands a weathered, dust-laden tavern that has seen better centuries..."
+    },
+    {
+      "speaker": "nyah",
+      "portrait": "nyah",
+      "mood": "proud",
+      "durationSec": 4.5,
+      "text": "Behold, Fifi! Witness our grand destiny! As supreme proprietor and senior partner, I have exercised my visionary executive authority!"
+    },
+    {
+      "speaker": "fifi",
+      "portrait": "fifi",
+      "mood": "worried",
+      "durationSec": 3.0,
+      "text": "E-executive authority?! Miss Nyah, please tell me you didn't touch our life savings pouch..."
+    },
+    {
+      "speaker": "nyah",
+      "portrait": "nyah",
+      "mood": "smug",
+      "durationSec": 4.0,
+      "text": "Touch it? I invested it! Every last sparkling copper! We now possess the sole deed to this legendary historic establishment!"
+    },
+    {
+      "speaker": "fifi",
+      "portrait": "fifi",
+      "mood": "panic",
+      "durationSec": 4.0,
+      "text": "L-legendary?! Miss Nyah, there are spiderwebs the size of blankets hanging from the beams, and the roof is leaking right onto the hearth!"
+    },
+    {
+      "speaker": "fifi",
+      "portrait": "fifi",
+      "mood": "worried",
+      "durationSec": 4.0,
+      "text": "Half the stools only have two legs! The cellar door is bolted shut with a rusted spoon, and we have zero coins left to buy flour or ale!"
+    },
+    {
+      "speaker": "fifi",
+      "portrait": "fifi",
+      "mood": "protest",
+      "durationSec": 4.5,
+      "text": "If hungry adventurers march through that door demanding hot stew, all we have to serve them is two chipped wooden cups and cold well water!"
+    },
+    {
+      "speaker": "nyah",
+      "portrait": "nyah",
+      "mood": "glare",
+      "durationSec": 3.5,
+      "text": "..."
+    },
+    {
+      "speaker": "fifi",
+      "portrait": "fifi",
+      "mood": "resigned",
+      "durationSec": 3.5,
+      "text": "Y-yes, Miss Nyah... I'll get the mop."
+    },
+    {
+      "speaker": "nyah",
+      "portrait": "nyah",
+      "mood": "happy",
+      "durationSec": 5.0,
+      "text": "Excellent! Chin up, ears forward, tail wagging! Today cobwebs, tomorrow the crowning jewel of the realm! Throw open the tavern doors!"
+    }
+  ],
+  "banter": [
+    {
+      "id": "bnt_idle_01",
+      "trigger": "idle",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 30,
+      "text": "Fifi! Report! Are the floorboards sufficiently dust-free to reflect my regal countenance?",
+      "replyText": "I've scrubbed them three times, Miss Nyah! But they're rough pine, so they mostly just reflect splinters..."
+    },
+    {
+      "id": "bnt_idle_02",
+      "trigger": "idle",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 25,
+      "text": "Miss Nyah, shouldn't we fold the napkins into fancy swans like the high-class city inns do?",
+      "replyText": "Swans?! Preposterous! In my tavern, we fold them into majestic stalking cats or not at all!"
+    },
+    {
+      "id": "bnt_idle_03",
+      "trigger": "idle",
+      "speaker": "nyah",
+      "cooldownSec": 28,
+      "text": "I am not taking an afternoon nap. I am conducting an acoustic evaluation of this flour sack."
+    },
+    {
+      "id": "bnt_idle_04",
+      "trigger": "idle",
+      "speaker": "fifi",
+      "cooldownSec": 24,
+      "text": "If I keep polishing this tankard, I think I'll be able to see my own tail in the pewter!"
+    },
+    {
+      "id": "bnt_idle_05",
+      "trigger": "idle",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 32,
+      "text": "That spider in the corner has been staring at my tail for ten minutes. Evict it, Fifi!",
+      "replyText": "Aww, but Miss Nyah, his name is Barnaby Junior and he catches all the fruit flies!"
+    },
+    {
+      "id": "bnt_idle_06",
+      "trigger": "idle",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 35,
+      "text": "Miss Nyah, someone left half a biscuit on table two... can I, um, dispose of it?",
+      "replyText": "By 'dispose of it', you mean scarf it down in one gulp! Go wash your hands first!"
+    },
+    {
+      "id": "bnt_idle_07",
+      "trigger": "idle",
+      "speaker": "nyah",
+      "cooldownSec": 40,
+      "text": "A quiet tavern simply means the world is pausing in anticipation of my next stroke of genius."
+    },
+    {
+      "id": "bnt_idle_08",
+      "trigger": "idle",
+      "speaker": "fifi",
+      "cooldownSec": 22,
+      "text": "Sweep to the left, sweep to the right... if only sweeping burned away tavern debts..."
+    },
+    {
+      "id": "bnt_idle_09",
+      "trigger": "idle",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 26,
+      "text": "Fifi, where is my royal ledger quill? The fluffy one with the peacock feather?",
+      "replyText": "Um... you batted it off the counter earlier because you said it made an insulting breeze..."
+    },
+    {
+      "id": "bnt_idle_10",
+      "trigger": "idle",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 30,
+      "text": "Miss Nyah, I think the cellar cat is actually just a very chubby raccoon.",
+      "replyText": "Nonsense! Any creature that lounges rent-free in my cellar is an honorary feline!"
+    },
+    {
+      "id": "bnt_idle_11",
+      "trigger": "idle",
+      "speaker": "nyah",
+      "cooldownSec": 38,
+      "text": "Notice the elegant tilt of my ears today. Perfect 45-degree angle. Peak managerial posture."
+    },
+    {
+      "id": "bnt_idle_12",
+      "trigger": "idle",
+      "speaker": "fifi",
+      "cooldownSec": 20,
+      "text": "Table four has a slight wobble... maybe I can wedge a folded piece of parchment under it."
+    },
+    {
+      "id": "bnt_idle_13",
+      "trigger": "idle",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 34,
+      "text": "Why do travelers always ask for 'room temperature' ale? The room is cold! Drink it cold!",
+      "replyText": "I think they just mean they don't want frost floating in the mug, Miss Nyah..."
+    },
+    {
+      "id": "bnt_idle_14",
+      "trigger": "idle",
+      "speaker": "nyah",
+      "cooldownSec": 42,
+      "text": "If a stray sunbeam falls upon the counter, it is my executive duty to inspect its warmth."
+    },
+    {
+      "id": "bnt_idle_15",
+      "trigger": "idle",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 28,
+      "text": "Miss Nyah, do you think adventurers will write songs about our cozy little tavern someday?",
+      "replyText": "Someday?! They should already be humming epic choruses about my unparalleled leadership!"
+    },
+    {
+      "id": "bnt_rush_01",
+      "trigger": "rush",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 20,
+      "text": "Wah! Three tables sat down at once! Two mutton stews and four tankards of cider needed right now!",
+      "replyText": "Panic is unbecoming of my senior staff! Deploy trays with martial feline precision!"
+    },
+    {
+      "id": "bnt_rush_02",
+      "trigger": "rush",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 22,
+      "text": "Look at this stampede! They hunger for my realm's hospitality! Double the tray stacks, Fifi!",
+      "replyText": "I only have two hands, Miss Nyah! If I stack a third tray, I'll crash into the hearth!"
+    },
+    {
+      "id": "bnt_rush_03",
+      "trigger": "rush",
+      "speaker": "fifi",
+      "cooldownSec": 18,
+      "text": "Order coming through! Watch your elbows, please! Hot gravy and cold ale on the move!"
+    },
+    {
+      "id": "bnt_rush_04",
+      "trigger": "rush",
+      "speaker": "nyah",
+      "cooldownSec": 25,
+      "text": "Move, move, move! Every second a mug sits empty is an affront to my royal treasury!"
+    },
+    {
+      "id": "bnt_rush_05",
+      "trigger": "rush",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 24,
+      "text": "Miss Nyah! Table six is waving their spoons impatiently!",
+      "replyText": "Give them the patented Nyah dazzle! If that fails, tell them the stew is aging like fine wine!"
+    },
+    {
+      "id": "bnt_rush_06",
+      "trigger": "rush",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 26,
+      "text": "Hear the glorious chime of coppers rolling into the till! Faster, Fifi, fill the chests!",
+      "replyText": "My hands are running so fast I'm practically sliding across the floorboards!"
+    },
+    {
+      "id": "bnt_rush_07",
+      "trigger": "rush",
+      "speaker": "fifi",
+      "cooldownSec": 20,
+      "text": "Four orders of roast chicken! Who has the chicken?! Oh goodness, don't drop the platter!"
+    },
+    {
+      "id": "bnt_rush_08",
+      "trigger": "rush",
+      "speaker": "nyah",
+      "cooldownSec": 28,
+      "text": "This is not chaos, this is a symphony of commerce, and I am the maestro with the whiskers!"
+    },
+    {
+      "id": "bnt_rush_09",
+      "trigger": "rush",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 22,
+      "text": "A party of dwarves just ordered seven platters of sausages!",
+      "replyText": "Tell the kitchen to stoke the fires to volcanic temperatures! No dwarf leaves hungry!"
+    },
+    {
+      "id": "bnt_rush_10",
+      "trigger": "rush",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 25,
+      "text": "Stand tall, Fifi! A full house is proof of our absolute tavern dominance!",
+      "replyText": "I'm standing as tall as I can, Miss Nyah, but this heavy tray is bending my knees!"
+    },
+    {
+      "id": "bnt_complaint_01",
+      "trigger": "complaint",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 30,
+      "text": "Miss Nyah... the traveler by the window says his porridge has a hair in it...",
+      "replyText": "Preposterous slander! It is a certified strand of good luck spun from royal angora! Tell him to be grateful!"
+    },
+    {
+      "id": "bnt_complaint_02",
+      "trigger": "complaint",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 32,
+      "text": "Who dared to complain about the temperature of the stew?! I will personally challenge them to single combat!",
+      "replyText": "Miss Nyah, please! He just asked for some pepper! Put the rolling pin down!"
+    },
+    {
+      "id": "bnt_complaint_03",
+      "trigger": "complaint",
+      "speaker": "fifi",
+      "cooldownSec": 28,
+      "text": "Oh dear... someone said the draft by the front entrance is chilly. I'll fetch an extra woolen blanket right away!"
+    },
+    {
+      "id": "bnt_complaint_04",
+      "trigger": "complaint",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 35,
+      "text": "A complaint about my pricing?! In this economy?! Do they know what top-grade salmon costs?!",
+      "replyText": "We don't serve salmon to patrons, Miss Nyah... that's just your personal private lunch stash..."
+    },
+    {
+      "id": "bnt_complaint_05",
+      "trigger": "complaint",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 30,
+      "text": "The merchant at booth one says his mug was chipped on the rim...",
+      "replyText": "It's called rustic antiquity! Tell him emperors in the First Age drank from skulls, so a chipped rim builds character!"
+    },
+    {
+      "id": "bnt_complaint_06",
+      "trigger": "complaint",
+      "speaker": "nyah",
+      "cooldownSec": 40,
+      "text": "Unsatisfied customers merely suffer from underdeveloped aesthetic sensibilities. Obviously."
+    },
+    {
+      "id": "bnt_complaint_07",
+      "trigger": "complaint",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 34,
+      "text": "Table three grumbled that the music was too loud for their strategic map meeting...",
+      "replyText": "If their strategy cannot withstand an epic lute solo, their adventuring party is doomed anyway!"
+    },
+    {
+      "id": "bnt_complaint_08",
+      "trigger": "complaint",
+      "speaker": "fifi",
+      "cooldownSec": 25,
+      "text": "I apologized profusely and offered him a complimentary warm bread roll... whew, crisis averted!"
+    },
+    {
+      "id": "bnt_upgrade_01",
+      "trigger": "upgrade",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 28,
+      "text": "Behold our latest upgrade! Every penny spent was an undeniable masterstroke of my visionary leadership!",
+      "replyText": "It really does look wonderful, Miss Nyah! The new tables don't wobble even a tiny bit!"
+    },
+    {
+      "id": "bnt_upgrade_02",
+      "trigger": "upgrade",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 26,
+      "text": "Look at the new kitchen prep counter! The pots hang in neat rows and everything smells like cedar!",
+      "replyText": "Of course! Only the finest culinary architecture for my royal tavern staff!"
+    },
+    {
+      "id": "bnt_upgrade_03",
+      "trigger": "upgrade",
+      "speaker": "nyah",
+      "cooldownSec": 30,
+      "text": "With this upgrade, our tavern's prestige ascends yet another rung on the ladder of eternity!"
+    },
+    {
+      "id": "bnt_upgrade_04",
+      "trigger": "upgrade",
+      "speaker": "fifi",
+      "cooldownSec": 24,
+      "text": "The new hearth bellows make the fire roar so bright! My ears are warm all the way to the tips!"
+    },
+    {
+      "id": "bnt_upgrade_05",
+      "trigger": "upgrade",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 32,
+      "text": "Fifi, observe the luster on this new brass trim! Who approved this upgrade? I did! Bow down!",
+      "replyText": "I'm bowing, Miss Nyah! But also, thank you for picking such shiny handles, they're so easy to clean!"
+    },
+    {
+      "id": "bnt_upgrade_06",
+      "trigger": "upgrade",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 35,
+      "text": "The new cellar shelving means no more crawling behind barrels to find the spiced blackberry wine!",
+      "replyText": "And more importantly, no more cobwebs tangling in my exquisite whiskers!"
+    },
+    {
+      "id": "bnt_upgrade_07",
+      "trigger": "upgrade",
+      "speaker": "nyah",
+      "cooldownSec": 38,
+      "text": "An empire is not built in a day, but with upgrades this sharp, we'll conquer the highway by Friday!"
+    },
+    {
+      "id": "bnt_upgrade_08",
+      "trigger": "upgrade",
+      "speaker": "fifi",
+      "cooldownSec": 25,
+      "text": "I can carry four tankards at once with the upgraded trays! My balance training is finally paying off!"
+    },
+    {
+      "id": "bnt_upgrade_09",
+      "trigger": "upgrade",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 30,
+      "text": "Do you feel that, Fifi? That is the palpable aura of an establishment growing wealthier by the minute!",
+      "replyText": "I mostly feel the breeze from the new chimney vent, but it's very refreshing!"
+    },
+    {
+      "id": "bnt_upgrade_10",
+      "trigger": "upgrade",
+      "speaker": "nyah",
+      "cooldownSec": 42,
+      "text": "Every gold coin reinvested into this establishment is a direct compliment to my peerless taste."
+    },
+    {
+      "id": "bnt_expansion_01",
+      "trigger": "expansion",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 35,
+      "text": "THE WALLS HAVE EXPANDED! Gaze upon the boundless horizon of our burgeoning empire!",
+      "replyText": "Miss Nyah, my hands ache just thinking about how much more floor there is to mop now!"
+    },
+    {
+      "id": "bnt_expansion_02",
+      "trigger": "expansion",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 32,
+      "text": "A whole new wing! We can fit three more parties and even host returning adventurer guilds!",
+      "replyText": "Exactly! And more patrons means more tribute paid directly to the feline throne!"
+    },
+    {
+      "id": "bnt_expansion_03",
+      "trigger": "expansion",
+      "speaker": "nyah",
+      "cooldownSec": 40,
+      "text": "More rooms, more rafters, more prime sleeping perches! This expansion was entirely my genius!"
+    },
+    {
+      "id": "bnt_expansion_04",
+      "trigger": "expansion",
+      "speaker": "fifi",
+      "cooldownSec": 28,
+      "text": "I'll need to set out fresh lanterns in the new corridor so nobody bumps their toes in the dark!"
+    },
+    {
+      "id": "bnt_expansion_05",
+      "trigger": "expansion",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 38,
+      "text": "Look at the high arched ceiling in the new hall! The acoustics will make my orders carry twice as far!",
+      "replyText": "Oh boy... my floppy ears are already twitching in anticipation of the volume..."
+    },
+    {
+      "id": "bnt_expansion_06",
+      "trigger": "expansion",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 30,
+      "text": "The carpentry smells like fresh sweet pine! The patrons are already peeking through the archway!",
+      "replyText": "Tell them entrance into the grand pavilion requires reverence and deep coin purses!"
+    },
+    {
+      "id": "bnt_expansion_07",
+      "trigger": "expansion",
+      "speaker": "nyah",
+      "cooldownSec": 45,
+      "text": "From a dusty shack to a sprawling roadside fortress! Truly, my strategic acumen knows no mortal bounds."
+    },
+    {
+      "id": "bnt_expansion_08",
+      "trigger": "expansion",
+      "speaker": "fifi",
+      "cooldownSec": 30,
+      "text": "We have an upstairs now! Real stairs! No more climbing that creaky wooden ladder to check the rafters!"
+    },
+    {
+      "id": "bnt_big_tip_01",
+      "trigger": "big_tip",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 25,
+      "text": "Miss Nyah! Look! That paladin left a pouch with five shining gold pieces on table one!",
+      "replyText": "Of course he did! He was utterly enchanted by my aloof majesty behind the counter!"
+    },
+    {
+      "id": "bnt_big_tip_02",
+      "trigger": "big_tip",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 28,
+      "text": "A massive tip! See, Fifi? Generosity is the natural human reaction to divine feline leadership!",
+      "replyText": "Actually, he said the extra gold was because I refilled his cider mug before he even asked..."
+    },
+    {
+      "id": "bnt_big_tip_03",
+      "trigger": "big_tip",
+      "speaker": "fifi",
+      "cooldownSec": 22,
+      "text": "A whole shiny gold piece just for being polite! My tail is wagging so hard it's fanning the soup!"
+    },
+    {
+      "id": "bnt_big_tip_04",
+      "trigger": "big_tip",
+      "speaker": "nyah",
+      "cooldownSec": 35,
+      "text": "The gold coins jingle in the tip jar like celestial bells! More, mortals! Shower us in wealth!"
+    },
+    {
+      "id": "bnt_big_tip_05",
+      "trigger": "big_tip",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 26,
+      "text": "Miss Nyah, with tips like this, we can afford the special glazed salmon you've been eyeing at the market!",
+      "replyText": "Did... did you hear that, Fifi?! Salmon?! You are hereby promoted to Senior Treat Officer!"
+    },
+    {
+      "id": "bnt_big_tip_06",
+      "trigger": "big_tip",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 30,
+      "text": "Clink, clank, clink! That is the sound of patrons acknowledging our superior hospitality!",
+      "replyText": "I'll write it down in the ledger under 'Very Generous Customers We Must Never Forget'!"
+    },
+    {
+      "id": "bnt_big_tip_07",
+      "trigger": "big_tip",
+      "speaker": "fifi",
+      "cooldownSec": 24,
+      "text": "The merchant tipped an extra silver and said this was the coziest inn between here and the capital!"
+    },
+    {
+      "id": "bnt_big_tip_08",
+      "trigger": "big_tip",
+      "speaker": "nyah",
+      "cooldownSec": 40,
+      "text": "Good taste must be rewarded with gracious acceptance. Deposit the heavy coins into my royal coffer!"
+    },
+    {
+      "id": "bnt_morning_01",
+      "trigger": "morning",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 30,
+      "text": "Good morning, Miss Nyah! The sun is peeking over the treetops and the kettle is already whistling!",
+      "replyText": "Ugh... morning has arrived far too early. Why must the sun invade my private quarters without an appointment?"
+    },
+    {
+      "id": "bnt_morning_02",
+      "trigger": "morning",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 35,
+      "text": "Fifi... my morning milk bowl. Warm. Not scalding, not lukewarm. Exactly 38 degrees.",
+      "replyText": "Already poured and waiting on your velvet coaster, Miss Nyah! Right next to your daily ledger!"
+    },
+    {
+      "id": "bnt_morning_03",
+      "trigger": "morning",
+      "speaker": "fifi",
+      "cooldownSec": 25,
+      "text": "Unlocking the front latch and letting in the crisp morning air! Let's make today wonderful!"
+    },
+    {
+      "id": "bnt_morning_04",
+      "trigger": "nyah",
+      "cooldownSec": 42,
+      "text": "A grand proprietor does not wake up; she merely deigns to grace the world with her consciousness."
+    },
+    {
+      "id": "bnt_morning_05",
+      "trigger": "morning",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 28,
+      "text": "The bread delivery arrived! Warm sourdough loaves and fresh churned sweet butter!",
+      "replyText": "Inspect the crusts! If the baker shortchanged us by half an inch, I'll send him a strongly hissed letter!"
+    },
+    {
+      "id": "bnt_morning_06",
+      "trigger": "morning",
+      "speaker": "fifi",
+      "cooldownSec": 24,
+      "text": "Sweeping the doorstep clean before the morning merchant caravans pull up to the hitching post!"
+    },
+    {
+      "id": "bnt_morning_07",
+      "trigger": "morning",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 32,
+      "text": "I have drafted fourteen new administrative initiatives for today. Number one: nap at noon.",
+      "replyText": "Miss Nyah, you drafted that same initiative yesterday... and the day before that!"
+    },
+    {
+      "id": "bnt_morning_08",
+      "trigger": "morning",
+      "speaker": "nyah",
+      "cooldownSec": 38,
+      "text": "The morning light hits my coat splendidly today. Prepare for a day of dazzling customer engagement."
+    },
+    {
+      "id": "bnt_night_01",
+      "trigger": "night",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 30,
+      "text": "The stars are out, Miss Nyah! Last call for the evening rush has wound down nicely.",
+      "replyText": "Finally! Lock the tavern doors before another pack of thirsty mercenaries wanders in!"
+    },
+    {
+      "id": "bnt_night_02",
+      "trigger": "night",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 35,
+      "text": "Fifi, count the till! If we are short by even a single copper, I will interrogate every mouse in the cellar!",
+      "replyText": "Every copper is accounted for, Miss Nyah! In fact, we made extra on room rentals tonight!"
+    },
+    {
+      "id": "bnt_night_03",
+      "trigger": "night",
+      "speaker": "fifi",
+      "cooldownSec": 26,
+      "text": "Banking the hearth coals so the embers stay cozy until sunrise. Goodnight, warm fireplace."
+    },
+    {
+      "id": "bnt_night_04",
+      "trigger": "night",
+      "speaker": "nyah",
+      "cooldownSec": 40,
+      "text": "Night falls, and with it, my glorious daily reign enters its well-deserved resting phase."
+    },
+    {
+      "id": "bnt_night_05",
+      "trigger": "night",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 32,
+      "text": "All the upstairs guest doors are quietly locked, and everyone is snoring softly.",
+      "replyText": "Good. If any guest snores too loud, throw a boot at their door. Royal orders."
+    },
+    {
+      "id": "bnt_night_06",
+      "trigger": "night",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 28,
+      "text": "Fifi, bring my embroidered cushion. Not the cotton one. The silk one with golden tassels.",
+      "replyText": "It's already fluffed and sitting in your favorite chair by the warm chimney corner, Miss Nyah."
+    },
+    {
+      "id": "bnt_night_07",
+      "trigger": "night",
+      "speaker": "fifi",
+      "cooldownSec": 22,
+      "text": "Dowsing the outer lanterns. The crickets in the meadow outside are playing such a peaceful song."
+    },
+    {
+      "id": "bnt_night_08",
+      "trigger": "night",
+      "speaker": "nyah",
+      "cooldownSec": 45,
+      "text": "Another victorious day in the chronicles of Nyah's magnificent tavern. Sleep well, my subjects."
+    },
+    {
+      "id": "bnt_night_09",
+      "trigger": "night",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 30,
+      "text": "I'll finish drying the last pewter cup and turn down the wick... goodnight, Miss Nyah!",
+      "replyText": "Goodnight, Fifi. You did... acceptable today. Don't let it go to your floppy ears."
+    },
+    {
+      "id": "bnt_music_01",
+      "trigger": "music",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 26,
+      "text": "Listen to that jaunty tune! It makes my feet want to tap all across the tavern floor!",
+      "replyText": "Watch your balance, Fifi! A dancing maid with three full mugs of ale is an insurance catastrophe!"
+    },
+    {
+      "id": "bnt_music_02",
+      "trigger": "music",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 30,
+      "text": "The musician plays with acceptable flair, though their tempo lacks my natural feline grace.",
+      "replyText": "You could always go up on stage and do a cat dance, Miss Nyah!"
+    },
+    {
+      "id": "bnt_music_03",
+      "trigger": "music",
+      "speaker": "fifi",
+      "cooldownSec": 24,
+      "text": "The whole tavern is humming along with the chorus! Such a joyful evening!"
+    },
+    {
+      "id": "bnt_music_04",
+      "trigger": "music",
+      "speaker": "nyah",
+      "cooldownSec": 38,
+      "text": "Lively music makes patrons stay longer, which makes them drink more, which enriches my coffer. A splendid loop!"
+    },
+    {
+      "id": "bnt_music_05",
+      "trigger": "music",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 28,
+      "text": "Look at the dwarf at table five! Even his braided beard is swaying to the rhythm!",
+      "replyText": "Dwarves only sway when the ale is good and the music is loud. We have provided both!"
+    },
+    {
+      "id": "bnt_music_06",
+      "trigger": "music",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 34,
+      "text": "Tell the bard to play something with more dramatic crescendo! Like the triumphant roar of a mountain lion!",
+      "replyText": "I think she mostly knows drinking songs and ballads about lost sheep, Miss Nyah..."
+    },
+    {
+      "id": "bnt_music_07",
+      "trigger": "music",
+      "speaker": "fifi",
+      "cooldownSec": 22,
+      "text": "Clapping my hands between serving tables! Music makes the heaviest tray feel light as a feather!"
+    },
+    {
+      "id": "bnt_music_08",
+      "trigger": "music",
+      "speaker": "nyah",
+      "cooldownSec": 40,
+      "text": "Ah, the sweet melody of merriment, punctuated by the clinking of gold coins in the tip jar."
+    },
+    {
+      "id": "bnt_quest_return_01",
+      "trigger": "quest_return",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 28,
+      "text": "Miss Nyah! The adventuring party from table three returned from the crypts alive and kicking!",
+      "replyText": "Of course they did! They were fortified by our high-protein rations! Prepare the victory feast!"
+    },
+    {
+      "id": "bnt_quest_return_02",
+      "trigger": "quest_return",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 32,
+      "text": "Welcome back, mighty dungeon slayers! Present your monster spoils and, more importantly, your gold coins!",
+      "replyText": "Miss Nyah! First let them sit down and take their heavy iron armor off!"
+    },
+    {
+      "id": "bnt_quest_return_03",
+      "trigger": "quest_return",
+      "speaker": "fifi",
+      "cooldownSec": 24,
+      "text": "Bringing out warm wet towels for the returning heroes! They look so exhausted but so proud!"
+    },
+    {
+      "id": "bnt_quest_return_04",
+      "trigger": "quest_return",
+      "speaker": "nyah",
+      "cooldownSec": 36,
+      "text": "Surviving a dark dungeon merely earns you the privilege of spending your loot at my fine establishment."
+    },
+    {
+      "id": "bnt_quest_return_05",
+      "trigger": "quest_return",
+      "speaker": "fifi",
+      "replySpeaker": "nyah",
+      "cooldownSec": 30,
+      "text": "They said our travel rations saved them when they got trapped behind a cave-in!",
+      "replyText": "Hah! Nyah's Provisions save the day once again! Add a twenty percent heroism surcharge to the bill!"
+    },
+    {
+      "id": "bnt_quest_return_06",
+      "trigger": "quest_return",
+      "speaker": "nyah",
+      "replySpeaker": "fifi",
+      "cooldownSec": 35,
+      "text": "Look at the size of that ruby they brought back! Fifi, offer them our top-tier suite immediately!",
+      "replyText": "I already aired out the master bedroom and fluffed the pillows, Miss Nyah!"
+    },
+    {
+      "id": "bnt_quest_return_07",
+      "trigger": "quest_return",
+      "speaker": "fifi",
+      "cooldownSec": 22,
+      "text": "Another quest completed safely! I'm so glad everyone made it back in one piece."
+    },
+    {
+      "id": "bnt_quest_return_08",
+      "trigger": "quest_return",
+      "speaker": "nyah",
+      "cooldownSec": 40,
+      "text": "Heroes march into the shadows, but they always return to Nyah's warm hearth. It is the law of nature."
+    }
+  ],
+  "hireScenes": {
+    "clover": [
+      {
+        "speaker": "nyah",
+        "text": "Welcome to my majestic domain, Clover! Kneel before your supreme tavern sovereign and memorize the eleven golden rules of feline hospitality!",
+        "emote": "proud"
+      },
+      {
+        "speaker": "clover",
+        "text": "W-waah! Eleven rules?! Wait, are they written down somewhere? My hands are shaking so much I'm going to drop this tray!",
+        "emote": "sweat"
+      },
+      {
+        "speaker": "nyah",
+        "text": "Rule one: keep my tea warm! Rule two: do not step on my majestic tail! Rule three—",
+        "emote": "bossy"
+      },
+      {
+        "speaker": "fifi",
+        "text": "Miss Nyah, please don't overwhelm her on minute one! Clover, deep breaths... here, take this apron, I'll show you where the mugs are kept!",
+        "emote": "worried"
+      },
+      {
+        "speaker": "clover",
+        "text": "Thank goodness for you, Miss Fifi... I thought my ears were going to spin right off!",
+        "emote": "relieved"
+      }
+    ],
+    "roxie": [
+      {
+        "speaker": "nyah",
+        "text": "Halt right there, rookie! Under my supreme command, maids report with a crisp salute and three reverent bows before touching a broom!",
+        "emote": "command"
+      },
+      {
+        "speaker": "roxie",
+        "text": "Yeah, how about 'no'? I clean tables, I carry pints, and I don't bow to anyone who takes three-hour naps on flour sacks.",
+        "emote": "smirk"
+      },
+      {
+        "speaker": "nyah",
+        "text": "WHAT?! Insolence! Fifi, fetch the disciplinary scratching post immediately!",
+        "emote": "shock"
+      },
+      {
+        "speaker": "fifi",
+        "text": "Eep! We don't have a disciplinary post, Miss Nyah! Roxie, please, she just gets cranky before her afternoon milk saucer!",
+        "emote": "panic"
+      },
+      {
+        "speaker": "roxie",
+        "text": "Fine. Just keep her hands off my apron and we won't have a problem.",
+        "emote": "cool"
+      }
+    ],
+    "pippa": [
+      {
+        "speaker": "nyah",
+        "text": "Ahem! Bow down and tremble, recruit! You stand in the regal presence of Nyah, master strategist and—",
+        "emote": "grand"
+      },
+      {
+        "speaker": "pippa",
+        "text": "EEEEEK! You have the fluffiest cat ears I have EVER seen in my entire life! Can I touch them?! Just one tiny squeeze?!",
+        "emote": "sparkle"
+      },
+      {
+        "speaker": "nyah",
+        "text": "H-HEY! Keep your hands to yourself! Personal bubble! Fifi, restrain this hyperactive creature!",
+        "emote": "blush"
+      },
+      {
+        "speaker": "fifi",
+        "text": "Miss Pippa, please! Miss Nyah's ears are strictly off-limits unless she's being bribed with glazed salmon!",
+        "emote": "protect"
+      },
+      {
+        "speaker": "pippa",
+        "text": "Salmon bribes?! Noted! Oh, we are going to be best friends, I can already tell!",
+        "emote": "happy"
+      }
+    ],
+    "velvet": [
+      {
+        "speaker": "nyah",
+        "text": "Gaze upon our magnificent enterprise, Velvet! Through my dazzling genius, this tavern shall become the legend of the century!",
+        "emote": "boast"
+      },
+      {
+        "speaker": "velvet",
+        "text": "...There's a puddle under table three, your left ear is dusted with flour, and the front welcome mat is upside down.",
+        "emote": "deadpan"
+      },
+      {
+        "speaker": "nyah",
+        "text": "That is... that is deliberate avant-garde tavern aesthetic! Fifi, tell her it's artistic!",
+        "emote": "flustered"
+      },
+      {
+        "speaker": "fifi",
+        "text": "Um, actually, Miss Nyah knocked the flour bin over five minutes ago while trying to catch a moth...",
+        "emote": "sheepish"
+      },
+      {
+        "speaker": "velvet",
+        "text": "Mmh. Hand me the rag. Clearly someone competent needs to run this floor.",
+        "emote": "sigh"
+      }
+    ],
+    "marcel": [
+      {
+        "speaker": "nyah",
+        "text": "Attention in the galley, Chef Marcel! My refined palate requires nothing less than culinary perfection on every pewter plate!",
+        "emote": "grand"
+      },
+      {
+        "speaker": "marcel",
+        "text": "Hahaha! Fear not, Mademoiselle Nyah! A true maestro cooks with pure passion and operatic soul! Tonight we flambé with glory!",
+        "emote": "jolly"
+      },
+      {
+        "speaker": "nyah",
+        "text": "Wait, flambé?! No fire near my tail! Fifi, ensure this culinary maniac doesn't ignite the kitchen curtains!",
+        "emote": "shock"
+      },
+      {
+        "speaker": "fifi",
+        "text": "Chef Marcel, your roasted garlic pastries smell incredible! Miss Nyah just worries because her whiskers are sensitive to smoke!",
+        "emote": "cheer"
+      },
+      {
+        "speaker": "marcel",
+        "text": "Magnifique! The pup understands true culinary art! A complimentary pastry for our devoted little maid!",
+        "emote": "laugh"
+      }
+    ],
+    "garrett": [
+      {
+        "speaker": "nyah",
+        "text": "Behold your station, Garrett! Behind this polished oak counter, you shall dispense liquid euphoria under my watchful royal gaze!",
+        "emote": "command"
+      },
+      {
+        "speaker": "garrett",
+        "text": "...Mugs are clean. Taps are oiled. Keep out of my pouring lane and nobody gets soaked.",
+        "emote": "stoic"
+      },
+      {
+        "speaker": "nyah",
+        "text": "Did he just give ME orders?! In my own tavern?! Fifi, docked rations! One sausage penalty!",
+        "emote": "pout"
+      },
+      {
+        "speaker": "fifi",
+        "text": "Miss Nyah, please! Garrett poured five foaming tankards in ten seconds without spilling a single drop! He's amazing!",
+        "emote": "amazed"
+      },
+      {
+        "speaker": "garrett",
+        "text": "...Just doing my job. Line up the mugs, pup.",
+        "emote": "nod"
+      }
+    ],
+    "lyra": [
+      {
+        "speaker": "nyah",
+        "text": "Musician Lyra! Your strings must echo my regal elegance! Write twelve epic ballads detailing my triumphs over the cobwebs!",
+        "emote": "demand"
+      },
+      {
+        "speaker": "lyra",
+        "text": "Twelve ballads about cobwebs? Sweetheart, I play for heartbreak, glory, and wanderlust, not housecleaning.",
+        "emote": "strum"
+      },
+      {
+        "speaker": "nyah",
+        "text": "Sweetheart?! Housecleaning?! That was a heroic conquest of arachnid trespassers! Sing it with high drama!",
+        "emote": "hiss"
+      },
+      {
+        "speaker": "fifi",
+        "text": "Miss Lyra, please play something cheerful! Adventurers tip twice as much when their boots are tapping!",
+        "emote": "pray"
+      },
+      {
+        "speaker": "lyra",
+        "text": "Now that's a tune I can get behind! One jaunty reel coming up, boss-cat.",
+        "emote": "wink"
+      }
+    ],
+    "soleil": [
+      {
+        "speaker": "nyah",
+        "text": "Welcome to center stage, Soleil! Remember that while your spins may captivate the crowd, I remain the main attraction!",
+        "emote": "pose"
+      },
+      {
+        "speaker": "soleil",
+        "text": "Of course, darling! But when the silken ribbons fly, even the quietest dwarf puts down his tankard to watch!",
+        "emote": "twirl"
+      },
+      {
+        "speaker": "nyah",
+        "text": "Hmph! If anyone stares at you longer than they admire my counter poise, I'll challenge you to a leap contest!",
+        "emote": "challenge"
+      },
+      {
+        "speaker": "fifi",
+        "text": "Miss Nyah, remember last week when you leaped from the bar and landed headfirst in the laundry basket?!",
+        "emote": "worry"
+      },
+      {
+        "speaker": "soleil",
+        "text": "Haha! Keep the laundry basket handy then, little pup! The show is about to begin!",
+        "emote": "laugh"
+      }
+    ]
+  },
+  "offlineTemplates": [
+    {
+      "minMinutes": 1,
+      "nyahText": "You stepped away for a mere {minutes} minutes?! Unacceptable! Though I suppose collecting {gold} gold from {customers} patrons softens the blow.",
+      "fifiText": "Welcome back! In just {minutes} minutes, we served {customers} thirsty folks and collected {gold} gold! Miss Nyah checked the door every thirty seconds!"
+    },
+    {
+      "minMinutes": 15,
+      "nyahText": "Fifteen whole minutes without my royal supervision? Luckily, my sheer aura kept {customers} patrons orderly, yielding {gold} gold in {minutes} minutes!",
+      "fifiText": "You were gone for {minutes} minutes! We took care of {customers} patrons and made {gold} gold! I had to sweep table two twice because of breadcrumbs!"
+    },
+    {
+      "minMinutes": 60,
+      "nyahText": "An entire hour! {minutes} minutes of me bravely guarding the cash box! {customers} customers visited and coughed up {gold} gold under my stern glare!",
+      "fifiText": "An hour flew by! Over {minutes} minutes, {customers} hungry travelers arrived, and we banked {gold} gold! Miss Nyah only took three tiny catnaps!"
+    },
+    {
+      "minMinutes": 180,
+      "nyahText": "Three hours?! {minutes} minutes of endless clattering tankards! But behold: {customers} patrons parted with {gold} gold for my treasury!",
+      "fifiText": "Goodness, {minutes} minutes! {customers} guests kept us running, and we earned {gold} gold! My tail hasn't stopped wagging since the afternoon rush!"
+    },
+    {
+      "minMinutes": 360,
+      "nyahText": "{minutes} minutes away! Six whole hours! Did you forget who runs this realm? At least {customers} generous patrons contributed {gold} gold to my greatness!",
+      "fifiText": "Six hours! In {minutes} minutes, we tended to {customers} adventurers and counted {gold} gold! The cellar was practically cleaned out of cider barrels!"
+    },
+    {
+      "minMinutes": 480,
+      "nyahText": "A full eight-hour shift of {minutes} minutes! I worked to the bone overseeing {customers} travelers who surrendered {gold} gold! Where is my celebratory salmon platter?!",
+      "fifiText": "You're back! After {minutes} minutes and {customers} lovely customers, the ledger shows an extra {gold} gold! Miss Nyah worked so hard her whiskers twitched!"
+    }
+  ]
+}

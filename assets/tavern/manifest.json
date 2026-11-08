@@ -1,0 +1,2071 @@
+{
+  "schemaVersion": 1,
+  "baseTile": 32,
+  "assetCount": 102,
+  "assets": {
+    "fireplace_1": {
+      "file": "assets/tavern/fireplace_1.png",
+      "size": [
+        64,
+        80
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bar_counter_taps": {
+      "file": "assets/tavern/bar_counter_taps.png",
+      "size": [
+        96,
+        56
+      ],
+      "footprint": [
+        3,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "keg_rack": {
+      "file": "assets/tavern/keg_rack.png",
+      "size": [
+        64,
+        56
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "table_round": {
+      "file": "assets/tavern/table_round.png",
+      "size": [
+        64,
+        48
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "roast_chicken_platter": {
+      "file": "assets/tavern/roast_chicken_platter.png",
+      "size": [
+        32,
+        24
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "tabletop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "ale_tray_three": {
+      "file": "assets/tavern/ale_tray_three.png",
+      "size": [
+        28,
+        22
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "tabletop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "potion_display": {
+      "file": "assets/tavern/potion_display.png",
+      "size": [
+        64,
+        64
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "armor_stand": {
+      "file": "assets/tavern/armor_stand.png",
+      "size": [
+        32,
+        56
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "sign_tavern": {
+      "file": "assets/tavern/sign_tavern.png",
+      "size": [
+        40,
+        40
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "quest_board_full": {
+      "file": "assets/tavern/quest_board_full.png",
+      "size": [
+        64,
+        56
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "drying_rack_herbs": {
+      "file": "assets/tavern/drying_rack_herbs.png",
+      "size": [
+        48,
+        32
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "rug_red_tl": {
+      "file": "assets/tavern/rug_red_tl.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "rug",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": "rug_red",
+      "multiPos": [
+        0,
+        0
+      ]
+    },
+    "rug_red_tr": {
+      "file": "assets/tavern/rug_red_tr.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "rug",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": "rug_red",
+      "multiPos": [
+        1,
+        0
+      ]
+    },
+    "rug_red_bl": {
+      "file": "assets/tavern/rug_red_bl.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "rug",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": "rug_red",
+      "multiPos": [
+        0,
+        1
+      ]
+    },
+    "rug_red_br": {
+      "file": "assets/tavern/rug_red_br.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "rug",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": "rug_red",
+      "multiPos": [
+        1,
+        1
+      ]
+    },
+    "floor_wood_planks": {
+      "file": "assets/tavern/floor_wood_planks.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "floor",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "floor_stone": {
+      "file": "assets/tavern/floor_stone.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "floor",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "floor_kitchen": {
+      "file": "assets/tavern/floor_kitchen.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "floor",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "floor_cellar": {
+      "file": "assets/tavern/floor_cellar.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "floor",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "floor_grass": {
+      "file": "assets/tavern/floor_grass.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "floor",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "floor_cobble": {
+      "file": "assets/tavern/floor_cobble.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "floor",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "wall_timber_mid": {
+      "file": "assets/tavern/wall_timber_mid.png",
+      "size": [
+        32,
+        64
+      ],
+      "footprint": [
+        1,
+        2
+      ],
+      "layer": "wall",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "wall_timber_window": {
+      "file": "assets/tavern/wall_timber_window.png",
+      "size": [
+        32,
+        64
+      ],
+      "footprint": [
+        1,
+        2
+      ],
+      "layer": "wall",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "wall_stone_mid": {
+      "file": "assets/tavern/wall_stone_mid.png",
+      "size": [
+        32,
+        64
+      ],
+      "footprint": [
+        1,
+        2
+      ],
+      "layer": "wall",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "wall_corner_l": {
+      "file": "assets/tavern/wall_corner_l.png",
+      "size": [
+        32,
+        64
+      ],
+      "footprint": [
+        1,
+        2
+      ],
+      "layer": "wall",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "wall_corner_r": {
+      "file": "assets/tavern/wall_corner_r.png",
+      "size": [
+        32,
+        64
+      ],
+      "footprint": [
+        1,
+        2
+      ],
+      "layer": "wall",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": true,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "door_front": {
+      "file": "assets/tavern/door_front.png",
+      "size": [
+        64,
+        64
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stairs_up": {
+      "file": "assets/tavern/stairs_up.png",
+      "size": [
+        64,
+        64
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stairs_down": {
+      "file": "assets/tavern/stairs_down.png",
+      "size": [
+        64,
+        48
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "chair": {
+      "file": "assets/tavern/chair.png",
+      "size": [
+        24,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stool": {
+      "file": "assets/tavern/stool.png",
+      "size": [
+        20,
+        24
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bench": {
+      "file": "assets/tavern/bench.png",
+      "size": [
+        64,
+        28
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "chest": {
+      "file": "assets/tavern/chest.png",
+      "size": [
+        32,
+        28
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "crates_sacks": {
+      "file": "assets/tavern/crates_sacks.png",
+      "size": [
+        48,
+        40
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "shelves_bottles": {
+      "file": "assets/tavern/shelves_bottles.png",
+      "size": [
+        64,
+        56
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "table_t1_bare": {
+      "file": "assets/tavern/table_t1_bare.png",
+      "size": [
+        64,
+        48
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "table_t2_polished": {
+      "file": "assets/tavern/table_t2_polished.png",
+      "size": [
+        64,
+        48
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "table_t3_clothed": {
+      "file": "assets/tavern/table_t3_clothed.png",
+      "size": [
+        64,
+        48
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "table_t4_ornate": {
+      "file": "assets/tavern/table_t4_ornate.png",
+      "size": [
+        64,
+        48
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bed_t1": {
+      "file": "assets/tavern/bed_t1.png",
+      "size": [
+        48,
+        56
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bed_t2": {
+      "file": "assets/tavern/bed_t2.png",
+      "size": [
+        48,
+        56
+      ],
+      "footprint": [
+        2,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "facade_t1": {
+      "file": "assets/tavern/facade_t1.png",
+      "size": [
+        128,
+        96
+      ],
+      "footprint": [
+        4,
+        2
+      ],
+      "layer": "exterior",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "facade_t2": {
+      "file": "assets/tavern/facade_t2.png",
+      "size": [
+        128,
+        96
+      ],
+      "footprint": [
+        4,
+        2
+      ],
+      "layer": "exterior",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "facade_t3": {
+      "file": "assets/tavern/facade_t3.png",
+      "size": [
+        128,
+        96
+      ],
+      "footprint": [
+        4,
+        2
+      ],
+      "layer": "exterior",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "facade_t4": {
+      "file": "assets/tavern/facade_t4.png",
+      "size": [
+        128,
+        96
+      ],
+      "footprint": [
+        4,
+        2
+      ],
+      "layer": "exterior",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "tree_oak": {
+      "file": "assets/tavern/tree_oak.png",
+      "size": [
+        64,
+        80
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "exterior",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bush_berry": {
+      "file": "assets/tavern/bush_berry.png",
+      "size": [
+        32,
+        28
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "exterior",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "lamppost": {
+      "file": "assets/tavern/lamppost.png",
+      "size": [
+        24,
+        64
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "exterior",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stove_cauldron": {
+      "file": "assets/tavern/stove_cauldron.png",
+      "size": [
+        64,
+        56
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "prep_counter": {
+      "file": "assets/tavern/prep_counter.png",
+      "size": [
+        64,
+        44
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "spit_roast": {
+      "file": "assets/tavern/spit_roast.png",
+      "size": [
+        64,
+        48
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "pantry": {
+      "file": "assets/tavern/pantry.png",
+      "size": [
+        48,
+        60
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stage_small": {
+      "file": "assets/tavern/stage_small.png",
+      "size": [
+        96,
+        56
+      ],
+      "footprint": [
+        3,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "prop_lute": {
+      "file": "assets/tavern/prop_lute.png",
+      "size": [
+        24,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "prop_harp": {
+      "file": "assets/tavern/prop_harp.png",
+      "size": [
+        28,
+        40
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "candles_cluster": {
+      "file": "assets/tavern/candles_cluster.png",
+      "size": [
+        20,
+        20
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "tabletop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "plant_pot": {
+      "file": "assets/tavern/plant_pot.png",
+      "size": [
+        24,
+        36
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "lantern_wall": {
+      "file": "assets/tavern/lantern_wall.png",
+      "size": [
+        16,
+        24
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "string_lights": {
+      "file": "assets/tavern/string_lights.png",
+      "size": [
+        64,
+        20
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "banner_red": {
+      "file": "assets/tavern/banner_red.png",
+      "size": [
+        24,
+        48
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "banner_accent": {
+      "file": "assets/tavern/banner_accent.png",
+      "size": [
+        24,
+        48
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "painting_landscape": {
+      "file": "assets/tavern/painting_landscape.png",
+      "size": [
+        32,
+        28
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "trophy_stag": {
+      "file": "assets/tavern/trophy_stag.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "chandelier": {
+      "file": "assets/tavern/chandelier.png",
+      "size": [
+        48,
+        40
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "rug_accent_tl": {
+      "file": "assets/tavern/rug_accent_tl.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "rug",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": "rug_accent",
+      "multiPos": [
+        0,
+        0
+      ]
+    },
+    "rug_accent_tr": {
+      "file": "assets/tavern/rug_accent_tr.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "rug",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": "rug_accent",
+      "multiPos": [
+        1,
+        0
+      ]
+    },
+    "rug_accent_bl": {
+      "file": "assets/tavern/rug_accent_bl.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "rug",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": "rug_accent",
+      "multiPos": [
+        0,
+        1
+      ]
+    },
+    "rug_accent_br": {
+      "file": "assets/tavern/rug_accent_br.png",
+      "size": [
+        32,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "rug",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": "rug_accent",
+      "multiPos": [
+        1,
+        1
+      ]
+    },
+    "icon_ale": {
+      "file": "assets/tavern/icon_ale.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_tea": {
+      "file": "assets/tavern/icon_tea.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_bread_cheese": {
+      "file": "assets/tavern/icon_bread_cheese.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_stew": {
+      "file": "assets/tavern/icon_stew.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_mead": {
+      "file": "assets/tavern/icon_mead.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_roast_chicken": {
+      "file": "assets/tavern/icon_roast_chicken.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_wine": {
+      "file": "assets/tavern/icon_wine.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_pie": {
+      "file": "assets/tavern/icon_pie.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_nectar": {
+      "file": "assets/tavern/icon_nectar.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_ribs": {
+      "file": "assets/tavern/icon_ribs.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_stout": {
+      "file": "assets/tavern/icon_stout.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_pheasant": {
+      "file": "assets/tavern/icon_pheasant.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_ration": {
+      "file": "assets/tavern/icon_ration.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_potion_red": {
+      "file": "assets/tavern/icon_potion_red.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_potion_blue": {
+      "file": "assets/tavern/icon_potion_blue.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_coin": {
+      "file": "assets/tavern/icon_coin.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_rep_star": {
+      "file": "assets/tavern/icon_rep_star.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_upg_table": {
+      "file": "assets/tavern/icon_upg_table.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_upg_build": {
+      "file": "assets/tavern/icon_upg_build.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_upg_staff": {
+      "file": "assets/tavern/icon_upg_staff.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_upg_decor": {
+      "file": "assets/tavern/icon_upg_decor.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "icon_bed": {
+      "file": "assets/tavern/icon_bed.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "emote_heart": {
+      "file": "assets/tavern/emote_heart.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "emote_exclaim": {
+      "file": "assets/tavern/emote_exclaim.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "emote_question": {
+      "file": "assets/tavern/emote_question.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "emote_anger": {
+      "file": "assets/tavern/emote_anger.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "emote_zzz": {
+      "file": "assets/tavern/emote_zzz.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "emote_sparkle": {
+      "file": "assets/tavern/emote_sparkle.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "emote_music": {
+      "file": "assets/tavern/emote_music.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "emote_coin": {
+      "file": "assets/tavern/emote_coin.png",
+      "size": [
+        16,
+        16
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "icon",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "ui_panel_wood": {
+      "file": "assets/tavern/ui_panel_wood.png",
+      "size": [
+        24,
+        24
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "ui",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "ui_panel_parchment": {
+      "file": "assets/tavern/ui_panel_parchment.png",
+      "size": [
+        24,
+        24
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "ui",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "ui_button_wood": {
+      "file": "assets/tavern/ui_button_wood.png",
+      "size": [
+        24,
+        24
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "ui",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "ui_button_gold": {
+      "file": "assets/tavern/ui_button_gold.png",
+      "size": [
+        24,
+        24
+      ],
+      "footprint": [
+        0,
+        0
+      ],
+      "layer": "ui",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": true,
+      "multiGroup": null,
+      "multiPos": null
+    }
+  }
+}

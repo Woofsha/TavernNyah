@@ -1,0 +1,127 @@
+{
+  "canonStaff": [
+    {
+      "id": "nyah",
+      "name": "Nyah",
+      "role": "maid",
+      "personality": "tsundere_boss",
+      "moveSpeed": 76.0,
+      "workSpeed": 1.30,
+      "tipBonus": 0.12,
+      "seed": 1001,
+      "bio": "Head maid, tavern co-owner, and absolute terror of anyone slacking off. Loudly scolds slow workers, claims she only does it for Master's sake."
+    },
+    {
+      "id": "fifi",
+      "name": "Fifi",
+      "role": "maid",
+      "personality": "meek_loyal",
+      "moveSpeed": 70.0,
+      "workSpeed": 1.15,
+      "tipBonus": 0.08,
+      "seed": 1002,
+      "bio": "Sweet, tireless doggirl maid who carries heavy serving platters without complaint while gently talking Nyah down from starting brawls."
+    },
+    {
+      "id": "barnaby",
+      "name": "Old Barnaby",
+      "role": "chef",
+      "personality": "grumpy_vet",
+      "moveSpeed": 58.0,
+      "workSpeed": 1.10,
+      "tipBonus": 0.05,
+      "seed": 1003,
+      "bio": "Grizzled retired camp-cook who mans the hearth skillet and starter taps, silencing rowdy tables with one glare."
+    }
+  ],
+  "hireableStaff": [
+    {
+      "id": "clover",
+      "name": "Clover",
+      "role": "maid",
+      "personality": "flustered",
+      "moveSpeed": 84.0,
+      "workSpeed": 1.05,
+      "tipBonus": 0.06,
+      "seed": 2001,
+      "bio": "An anxious rabbit-folk maid who panics if a customer speaks too loudly, but dashes across the common room with unbelievable agility."
+    },
+    {
+      "id": "roxie",
+      "name": "Roxie",
+      "role": "maid",
+      "personality": "defiant",
+      "moveSpeed": 74.0,
+      "workSpeed": 1.20,
+      "tipBonus": 0.10,
+      "seed": 2002,
+      "bio": "A tomboy maid with crossed arms and a sharp tongue who takes zero nonsense from rude patrons and dares them to complain."
+    },
+    {
+      "id": "marcel",
+      "name": "Chef Marcel",
+      "role": "chef",
+      "personality": "jolly",
+      "moveSpeed": 62.0,
+      "workSpeed": 1.35,
+      "tipBonus": 0.07,
+      "seed": 2003,
+      "bio": "A portly, exuberant culinary artist who belts operatic arias while flambeeing game meats and reducing rich wine sauces."
+    },
+    {
+      "id": "garrett",
+      "name": "Garrett",
+      "role": "bartender",
+      "personality": "stoic",
+      "moveSpeed": 60.0,
+      "workSpeed": 1.25,
+      "tipBonus": 0.08,
+      "seed": 2004,
+      "bio": "A stone-faced veteran barkeep whose unyielding calm and disciplined tap precision keep high-volume rushes flowing seamlessly."
+    },
+    {
+      "id": "pippa",
+      "name": "Pippa",
+      "role": "maid",
+      "personality": "delighted",
+      "moveSpeed": 78.0,
+      "workSpeed": 1.18,
+      "tipBonus": 0.15,
+      "seed": 2005,
+      "bio": "A bubbly squirrel-folk maid whose infectious laughter and bouncy demeanor melt grumpy hearts and coax out massive gratuities."
+    },
+    {
+      "id": "velvet",
+      "name": "Velvet",
+      "role": "maid",
+      "personality": "unimpressed",
+      "moveSpeed": 72.0,
+      "workSpeed": 1.25,
+      "tipBonus": 0.18,
+      "seed": 2006,
+      "bio": "A former highborn lady-in-waiting who serves with icy aristocratic elegance; patrons eagerly tip extra just hoping for a nod of approval."
+    },
+    {
+      "id": "lyra",
+      "name": "Lyra",
+      "role": "musician",
+      "personality": "dramatic",
+      "moveSpeed": 64.0,
+      "workSpeed": 1.20,
+      "tipBonus": 0.16,
+      "seed": 2007,
+      "bio": "A virtuoso elven harpist whose sweeping ballads and dramatic refrains soothe waiting patrons and elevate the tavern's prestige."
+    },
+    {
+      "id": "soleil",
+      "name": "Soleil",
+      "role": "dancer",
+      "personality": "graceful",
+      "moveSpeed": 82.0,
+      "workSpeed": 1.25,
+      "tipBonus": 0.20,
+      "seed": 2008,
+      "bio": "A radiant sun-dancer whose fluid silk ribbon routines captivate the entire room, keeping patrons ordering rounds late into the night."
+    }
+  ]
+}
