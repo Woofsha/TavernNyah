@@ -2,6 +2,9 @@
 
 A cozy, fully offline HTML5 Canvas 2D pixel-art idle tavern-management diorama game starring bossy catgirl head-maid **Nyah** and her loyal, easily flustered dog-girl maid **Fifi**.
 
+- **Play Live on GitHub Pages**: https://woofsha.github.io/TavernNyah/
+- **Repository**: https://github.com/Woofsha/TavernNyah
+
 ## Quick Start (One Command, Zero Build Step)
 
 From this repository root:
