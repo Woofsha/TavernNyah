@@ -91,3 +91,14 @@
   - `node tools/soak_test.mjs` -> **exit 0** (`8.0h / 288,000 ticks in 0.89s, 20,258 served, 0 stuck actors, 0 NaN, 4.84% heap growth < 20%`)
   - `node tools/browser_qa.mjs` -> **exit 0** (`0 console errors, 0 page exceptions, 0 HTTP failures, 2x integer pixel scaling`)
   - Raw hex scan outside `tools/palette.py` (`data/palette.json`) & `tools/palette_chars.py` -> **0 violations**.
+
+### Post-Review Batch 1 — Guest Flow Retune (`B1` + `B4`), Sprite Identity (`A1`) & Layout Fixes (`A2` + `A3`)
+- **Status**: COMPLETE
+- **Changes & Verification**:
+  - **Guest Flow & Reputation Ramp (`#1`: `B1` + `B4`)**: Decoupled guest spawn rate from `seatCap` in `src/sim.js` (`getTargetGuestsPerMin()`), driving arrivals by fame (`reputation`), `ambience`, unlocked building expansions, and `dayPhase` with a `10.0s` opening delay. Retuned `repReward`, `minRep`, and phase weights in `data/customers.json`, plus upgrade/recipe progression costs in `data/upgrades.json` and `data/recipes.json`.
+    - `0–3 min`: **`2.67 guests/min`** (`2–3/min` target), **`100%` Villagers**, **`6.4%` average seat occupancy** (`<=35%` target; buying tables leaves visible open seats).
+    - `3–10 min`: **`3.57 guests/min`** (`3–5/min` target), first **Rookie Adventurer** arrives at **`6.52m`** (`6–8m` target).
+    - `Post-Kitchen`: **`7.27 guests/min`** (`5–8/min` target), **`36.8%` adventurer share** (`~33%` target).
+    - All 4 economy gates pass (`First buy 34.0s`, `1–10m avg gap 48.3s`, `Kitchen 10.50m`, `Full unlock 5.44h`).
+  - **Guest Sprite & Folk Identity (`#2`: `A1`)**: Updated `generateCustomerProfile` in `src/npc_traits.js` to select from the 6 pre-generated sheets dedicated to each `archetypeSpec.id` (`cust_00..cust_29`) and bind the exact `folk` rendered on that sprite (`9,889 / 9,889 = 100%` match verified).
+  - **Layout Fixes (`A2` + `A3`)**: Ordered `candidateTableCoords` in `src/layout.js` strictly along the expansion dependency chain so existing tables never shift slots when expansions unlock, and kept `maidIdleSpots[4]` inside the main room until `counter_shop` is unlocked.

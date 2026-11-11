@@ -19,12 +19,22 @@ export function pickSeeded(rng, arr) {
 
 const FOLK_LIST = ['human', 'dwarf', 'elf', 'halfling', 'beastfolk'];
 
+// Exact archetype & folk index order used by tools/gen_npcs.py for cust_00..cust_29
+const SHEET_ARCHETYPES = [
+  'villager',
+  'adventurer_rookie',
+  'adventurer_veteran',
+  'merchant',
+  'noble',
+];
+const SHEET_FOLK_TYPES = ['human', 'elf', 'beastfolk', 'dwarf', 'halfling'];
+
 const CLASS_BY_ARCHETYPE = {
-  villager: ['Miller', 'Herbalist', 'Blacksmith', 'Cooper', 'Weaver', 'Farrier', 'beekeeper', 'Woodcutter'],
-  adventurer_rookie: ['Squire', 'Scout', 'Hedge Apprentice', 'fletcher', 'Torchbearer', 'Dungeon Delver'],
+  villager: ['Miller', 'Herbalist', 'Blacksmith', 'Cooper', 'Weaver', 'Farrier', 'Beekeeper', 'Woodcutter'],
+  adventurer_rookie: ['Squire', 'Scout', 'Hedge Apprentice', 'Fletcher', 'Torchbearer', 'Dungeon Delver'],
   adventurer_veteran: ['Knight Errant', 'Battle Cleric', 'Spellsword', 'Ranger Captain', 'Wyvern Slayer', 'Arcanist'],
   merchant: ['Spice Factor', 'Silk Trader', 'Gem Appraiser', 'Guild Quartermaster', 'Wine Broker', 'Cartographer'],
-  noble: ['Viscount', ' Baroness', 'Court Envoy', 'High Chamberlain', 'Royal Patron', 'Margrave'],
+  noble: ['Viscount', 'Baroness', 'Court Envoy', 'High Chamberlain', 'Royal Patron', 'Margrave'],
 };
 
 const TRAIT_QUIRKS = [
@@ -40,7 +50,13 @@ const TRAIT_QUIRKS = [
 
 export function generateCustomerProfile(seed, archetypeSpec, data) {
   const rng = mulberry32(seed);
-  const folk = pickSeeded(rng, FOLK_LIST);
+
+  // Pick one of the 6 pre-generated sheets dedicated to this exact archetype
+  const archIndex = Math.max(0, SHEET_ARCHETYPES.indexOf(archetypeSpec.id));
+  const variantIndex = Math.floor(rng() * 6) % 6;
+  const spriteIndex = variantIndex * 5 + archIndex; // 0..29, matches cust_00..cust_29
+  const folk = SHEET_FOLK_TYPES[(spriteIndex + Math.floor(spriteIndex / 5)) % 5] || pickSeeded(rng, FOLK_LIST);
+
   const folkNames = data.thoughts.namesByFolk[folk] || data.thoughts.namesByFolk.human;
   const first = pickSeeded(rng, folkNames.first);
   const last = pickSeeded(rng, folkNames.last);
@@ -77,7 +93,7 @@ export function generateCustomerProfile(seed, archetypeSpec, data) {
     baselineMood,
     favoriteDishId: favRecipe.id,
     favoriteDishName: favRecipe.name,
-    spriteIndex: Math.abs(seed) % 30,
+    spriteIndex,
   };
 }
 

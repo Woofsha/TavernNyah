@@ -54,7 +54,24 @@ const unlockedStaffHires = new Set();
 const unlockedOneOffs = new Set();
 
 let firstKitchenTimeSec = null;
+let firstCounterTimeSec = null;
 let fullProgressionTimeSec = null;
+let firstRookieSpawnSec = null;
+
+const seenCustomerIds = new Set();
+let spawns0to3m = 0;
+let nonVillagerSpawns0to3m = 0;
+let spawns3to10m = 0;
+let spawnsPostKitchen = 0;
+let advSpawnsPostKitchen = 0;
+let postKitchenWindowSec = 0;
+let spriteIdentityMatches = 0;
+let spriteIdentityTotal = 0;
+let seatOccSampleSum0to3m = 0;
+let seatOccSampleCount0to3m = 0;
+
+const EXPECTED_ARCH_ORDER = ['villager', 'adventurer_rookie', 'adventurer_veteran', 'merchant', 'noble'];
+const EXPECTED_FOLK_ORDER = ['human', 'elf', 'beastfolk', 'dwarf', 'halfling'];
 
 function checkProgressionComplete(sim) {
   if (unlockedExpansions.size !== allExpansionIds.size) return false;
@@ -115,12 +132,13 @@ function evaluateAndPurchase(sim) {
     });
   }
 
-  // Look-ahead: save up when an eligible milestone is within ~2.5x current gold or <90s of avgGoldPerSec
+  // Look-ahead: save up when an eligible milestone is within ~3.0x current gold or <160s of avgGoldPerSec
   const rate = Math.max(0.15, sim.stats.avgGoldPerSec);
   const inReachMilestones = eligibleMilestones.filter((m) => {
     if (m.canBuy) return true;
     const diff = m.cost - sim.gold;
-    return m.cost <= sim.gold * 2.5 || diff <= rate * 90;
+    const horizonSec = m.kind === 'expansion' ? 180 : 120;
+    return m.cost <= sim.gold * 3.0 || diff <= rate * horizonSec;
   });
 
   // If any milestones are purchasable right now, pick the highest-priority one
@@ -236,6 +254,9 @@ function recordPurchase(sim, item) {
   if (item.id === 'exp_kitchen' && firstKitchenTimeSec === null) {
     firstKitchenTimeSec = timeSec;
   }
+  if (item.id === 'exp_counter_shop' && firstCounterTimeSec === null) {
+    firstCounterTimeSec = timeSec;
+  }
   if (allExpansionIds.has(item.id)) unlockedExpansions.add(item.id);
   if (allStaffHireIds.has(item.id)) unlockedStaffHires.add(item.id);
   if (allOneOffIds.has(item.id)) unlockedOneOffs.add(item.id);
@@ -250,6 +271,50 @@ const startWallMs = Date.now();
 
 for (let tick = 1; tick <= TOTAL_TICKS; tick++) {
   sim.step(SIM_DT);
+
+  const tSec = sim.state.totalTimeSec;
+  if (tSec <= 180 && tick % 10 === 0) {
+    const cap = Math.max(1, sim.getTotalSeatCapacity());
+    let seated = 0;
+    for (const tb of sim.layout.tables) {
+      for (const s of tb.seats) {
+        if (s.occupiedBy) seated++;
+      }
+    }
+    seatOccSampleSum0to3m += seated / cap;
+    seatOccSampleCount0to3m += 1;
+  }
+
+  if (firstKitchenTimeSec !== null && firstCounterTimeSec === null) {
+    postKitchenWindowSec += SIM_DT;
+  }
+
+  for (const c of sim.customers) {
+    if (!seenCustomerIds.has(c.id)) {
+      seenCustomerIds.add(c.id);
+      const sIdx = c.spriteIndex;
+      const expectedArch = EXPECTED_ARCH_ORDER[sIdx % 5];
+      const expectedFolk = EXPECTED_FOLK_ORDER[(sIdx + Math.floor(sIdx / 5)) % 5];
+      spriteIdentityTotal += 1;
+      if (c.archetype.id === expectedArch && c.folk === expectedFolk) {
+        spriteIdentityMatches += 1;
+      }
+
+      if (c.archetype.id === 'adventurer_rookie' && firstRookieSpawnSec === null) {
+        firstRookieSpawnSec = tSec;
+      }
+      if (tSec <= 180) {
+        spawns0to3m += 1;
+        if (c.archetype.id !== 'villager') nonVillagerSpawns0to3m += 1;
+      } else if (tSec <= 600) {
+        spawns3to10m += 1;
+      }
+      if (firstKitchenTimeSec !== null && firstCounterTimeSec === null) {
+        spawnsPostKitchen += 1;
+        if (c.archetype.id.startsWith('adventurer')) advSpawnsPostKitchen += 1;
+      }
+    }
+  }
 
   if (tick % PURCHASE_INTERVAL_TICKS === 0) {
     evaluateAndPurchase(sim);
@@ -292,6 +357,19 @@ console.log(`One-offs Unlocked: ${unlockedOneOffs.size}/${allOneOffIds.size}`);
 console.log(`Final Gold: ${sim.gold}`);
 console.log(`Final Reputation: ${sim.reputation}`);
 console.log(`Final Customers Served: ${sim.stats.customersServed}`);
+
+const rate0to3m = spawns0to3m / 3.0;
+const avgOcc0to3m = seatOccSampleCount0to3m > 0 ? (seatOccSampleSum0to3m / seatOccSampleCount0to3m) * 100 : 0;
+const rate3to10m = spawns3to10m / 7.0;
+const firstRookieMin = firstRookieSpawnSec !== null ? firstRookieSpawnSec / 60 : null;
+const ratePostKitchen = postKitchenWindowSec > 0 ? (spawnsPostKitchen / (postKitchenWindowSec / 60)) : 0;
+const advSharePostKitchen = spawnsPostKitchen > 0 ? (advSpawnsPostKitchen / spawnsPostKitchen) * 100 : 0;
+
+console.log('\n--- GUEST FLOW & SPRITE IDENTITY AUDIT (BATCH 1) ---');
+console.log(`0-3m Flow: ${rate0to3m.toFixed(2)} guests/min (Target 2-3/min), Non-Villagers: ${nonVillagerSpawns0to3m}, Avg Seat Occupancy: ${avgOcc0to3m.toFixed(1)}% (Target <=35%)`);
+console.log(`3-10m Flow: ${rate3to10m.toFixed(2)} guests/min (Target 3-5/min), First Rookie Adventurer: ${firstRookieMin !== null ? firstRookieMin.toFixed(2) + 'm' : 'NONE'} (Target 6-8m)`);
+console.log(`Post-Kitchen Flow: ${ratePostKitchen.toFixed(2)} guests/min (Target 5-8/min), Adventurer Share: ${advSharePostKitchen.toFixed(1)}% (Target ~33%)`);
+console.log(`Sprite/Folk Identity Match (A1): ${spriteIdentityMatches}/${spriteIdentityTotal} (100% required)`);
 
 // Gate 1: First purchase time <= 60s
 const gate1Pass = firstPurchaseSec <= 60;

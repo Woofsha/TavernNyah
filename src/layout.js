@@ -3,6 +3,33 @@
 
 export const TILE = 32;
 
+export const TABLE_TIER_SEAT_CONFIGS = {
+  1: [
+    { dx: 0, dy: -26, facing: 'S', chairType: 'chair' },
+    { dx: 0, dy: 16, facing: 'N', chairType: 'chair' },
+    { dx: -34, dy: -6, facing: 'E', chairType: 'chair' },
+    { dx: 34, dy: -6, facing: 'W', chairType: 'chair' },
+  ],
+  2: [
+    { dx: 0, dy: -26, facing: 'S', chairType: 'chair' },
+    { dx: 0, dy: 16, facing: 'N', chairType: 'chair' },
+    { dx: -34, dy: -6, facing: 'E', chairType: 'chair' },
+    { dx: 34, dy: -6, facing: 'W', chairType: 'chair' },
+  ],
+  3: [
+    { dx: 0, dy: -26, facing: 'S', chairType: 'chair' },
+    { dx: 0, dy: 16, facing: 'N', chairType: 'chair' },
+    { dx: -34, dy: -6, facing: 'E', chairType: 'chair' },
+    { dx: 34, dy: -6, facing: 'W', chairType: 'chair' },
+  ],
+  4: [
+    { dx: 0, dy: -26, facing: 'S', chairType: 'chair' },
+    { dx: 0, dy: 16, facing: 'N', chairType: 'chair' },
+    { dx: -34, dy: -6, facing: 'E', chairType: 'chair' },
+    { dx: 34, dy: -6, facing: 'W', chairType: 'chair' },
+  ],
+};
+
 // World coordinate origin: starter shack occupies tiles x=8..17, y=5..11 (so expansions can grow up, left, right, down!)
 export function buildTavernLayout(state, data) {
   const unlockedRooms = state.unlockedRooms || new Set();
@@ -179,9 +206,9 @@ export function buildTavernLayout(state, data) {
     { id: 'main_bar', asset: 'bar_counter_taps', x: barX, y: barY, shadow: true },
     { id: 'bar_keg', asset: 'keg_rack', x: 14 * TILE + 16, y: 6 * TILE + 18, shadow: true },
     { id: 'bar_shelves', asset: 'shelves_bottles', x: 12 * TILE + 12, y: 6 * TILE + 18, shadow: true },
-    { id: 'bar_stool_1', asset: 'stool', x: barX - 28, y: barY + 10, shadow: true },
-    { id: 'bar_stool_2', asset: 'stool', x: barX, y: barY + 10, shadow: true },
-    { id: 'bar_stool_3', asset: 'stool', x: barX + 28, y: barY + 10, shadow: true },
+    { id: 'bar_stool_1', asset: 'stool_s', x: barX - 28, y: barY + 10, shadow: true },
+    { id: 'bar_stool_2', asset: 'stool_s', x: barX, y: barY + 10, shadow: true },
+    { id: 'bar_stool_3', asset: 'stool_s', x: barX + 28, y: barY + 10, shadow: true },
     { id: 'front_door', asset: 'door_front', x: (doorTileX + 1) * TILE, y: (doorTileY + 1) * TILE, shadow: false },
   );
   wallMounts.push(
@@ -229,22 +256,23 @@ export function buildTavernLayout(state, data) {
     wallMounts.push({ asset: 'chandelier', x: 12 * TILE, y: 5 * TILE + 8, foreground: true, lightPool: true });
   }
 
-  // Dining Table Slots (starter 2 tables + `add_table` repeatable upgrade, capped by current hall capacity!)
+  // Dining Table Slots (starter 2 tables + `add_table` repeatable upgrade, ordered strictly by unlock chain so tables never shift)
   const candidateTableCoords = [
     { x: 9 * TILE + 16, y: 8 * TILE + 24, zone: 'main' },
     { x: 12 * TILE + 16, y: 9 * TILE + 16, zone: 'main' },
     { x: 9 * TILE + 16, y: 10 * TILE + 24, zone: 'main' },
     { x: 15 * TILE + 16, y: 10 * TILE + 16, zone: 'main' },
-    // Unlocked with Great Timber Hall
+    { x: 15 * TILE + 16, y: 8 * TILE + 24, zone: 'main' },
+    // Unlocked with Supply Counter (requires Kitchen)
+    { x: 6 * TILE + 24, y: 9 * TILE + 4, zone: 'counter', req: 'counter_shop' },
+    // Unlocked with Great Timber Hall (requires Supply Counter)
     { x: 9 * TILE + 16, y: 13 * TILE + 4, zone: 'hall', req: 'main_hall' },
     { x: 12 * TILE + 16, y: 12 * TILE + 20, zone: 'hall', req: 'main_hall' },
     { x: 15 * TILE + 16, y: 13 * TILE + 4, zone: 'hall', req: 'main_hall' },
     { x: 6 * TILE + 24, y: 12 * TILE + 16, zone: 'hall', req: 'main_hall' },
-    // Unlocked with Supply Counter / Stage / Garden
-    { x: 6 * TILE + 24, y: 9 * TILE + 4, zone: 'counter', req: 'counter_shop' },
+    // Unlocked with Verdant Garden Terrace (requires Stage -> Cellar -> Upstairs -> Hall)
     { x: 2 * TILE + 16, y: 5 * TILE + 12, zone: 'garden', req: 'garden' },
     { x: 2 * TILE + 16, y: 7 * TILE + 8, zone: 'garden', req: 'garden' },
-    { x: 15 * TILE + 16, y: 8 * TILE + 24, zone: 'main' },
   ];
 
   const availableSlots = candidateTableCoords.filter((s) => !s.req || unlockedRooms.has(s.req));
@@ -266,28 +294,34 @@ export function buildTavernLayout(state, data) {
     const slot = availableSlots[i];
     const tx = slot.x;
     const ty = slot.y;
-    const seatOffsets = [
-      { dx: -34, dy: -6, dir: 'right', chairAsset: 'chair' },
-      { dx: 34, dy: -6, dir: 'left', chairAsset: 'chair' },
-      { dx: -14, dy: -22, dir: 'down', chairAsset: 'stool' },
-      { dx: 14, dy: -22, dir: 'down', chairAsset: 'stool' },
-    ].slice(0, seatsPerTable);
+    const seatConfigs = TABLE_TIER_SEAT_CONFIGS[tableTier] || TABLE_TIER_SEAT_CONFIGS[1];
 
-    const seats = seatOffsets.map((so, sIdx) => {
+    const seats = seatConfigs.map((so, sIdx) => {
+      const chairAsset = `${so.chairType || 'chair'}_${so.facing.toLowerCase()}`;
+      const cx = tx + so.dx;
+      const cy = ty + so.dy;
+      let sortY = cy - 2;
+      if (so.facing === 'S') sortY = cy - 4;
+      else if (so.facing === 'N') sortY = cy + 4;
+
       props.push({
         id: `table_${i}_chair_${sIdx}`,
-        asset: so.chairAsset,
-        x: tx + so.dx,
-        y: ty + so.dy + 4,
+        asset: chairAsset,
+        x: cx,
+        y: cy,
+        sortY,
         shadow: true,
       });
+
+      const dir = so.facing === 'S' ? 'down' : so.facing === 'N' ? 'up' : so.facing === 'E' ? 'right' : 'left';
       return {
         id: `t${i}_s${sIdx}`,
         tableIndex: i,
         seatIndex: sIdx,
-        x: tx + so.dx,
-        y: ty + so.dy + 2,
-        dir: so.dir,
+        x: cx,
+        y: cy,
+        facing: so.facing,
+        dir,
         occupiedBy: null,
       };
     });
@@ -342,7 +376,9 @@ export function buildTavernLayout(state, data) {
       { x: 11 * TILE + 8, y: 8 * TILE + 16 },
       { x: 14 * TILE + 24, y: 9 * TILE + 12 },
       { x: 10 * TILE + 16, y: 11 * TILE + 8 },
-      { x: 7 * TILE + 24, y: 8 * TILE + 16 },
+      hasCounter
+        ? { x: 7 * TILE + 24, y: 8 * TILE + 16 }
+        : { x: 11 * TILE + 24, y: 10 * TILE + 16 },
       { x: 13 * TILE + 16, y: 11 * TILE + 12 },
     ],
     stageSpot,
@@ -357,6 +393,8 @@ export function buildTavernLayout(state, data) {
   return {
     tavernTier,
     facadeAsset: `facade_t${tavernTier}`,
+    doorTileX,
+    doorTileY,
     floors,
     walls,
     rugs,

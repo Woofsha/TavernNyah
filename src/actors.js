@@ -52,6 +52,7 @@ export class CustomerActor {
     this.mood = Math.min(96, profile.baselineMood + Math.min(14, sim.ambience * 0.25));
     this.favoriteDishId = profile.favoriteDishId;
     this.favoriteDishName = profile.favoriteDishName;
+    this.spriteIndex = profile.spriteIndex;
     this.spriteKey = `cust_${String(profile.spriteIndex).padStart(2, '0')}`;
 
     const rngRoll = ((seed >>> 3) % 100) / 100;

@@ -52,6 +52,8 @@ export class TavernSim {
     this.dayPhaseSpec = this.data.customers.dayPhases[0];
     this.isMusicianPerforming = false;
     this.isDancerPerforming = false;
+    this.doorOpenTimer = 0;
+    this.isDoorOpen = false;
 
     this.layout = buildTavernLayout(this.state, this.data);
     this.banter = new BanterSystem(this.data.dialogue);
@@ -66,7 +68,8 @@ export class TavernSim {
 
     this.nextCustomerNum = 1;
     this.nextOrderId = 1;
-    this.spawnTimer = 1.2;   // first patron arrives right away!
+    this.spawnTimer = 10.0;  // cozy quiet start: first villager walks in around ~10s
+    this.hasSpawnedFirstRookie = false;
 
     this.stats = {
       customersServed: 0,
@@ -517,24 +520,93 @@ export class TavernSim {
   }
 
   chooseSpawnArchetype() {
+    const hasKitchen = this.isUpgradeOwned('exp_kitchen');
     const eligible = this.data.customers.archetypes.filter((a) => {
       if (this.reputation < (a.minRep || 0)) return false;
       if (a.requiredExpansion && !this.isUpgradeOwned(a.requiredExpansion)) return false;
+      // Keep the opening 6 minutes strictly local villagers
+      if (a.id !== 'villager' && this.state.totalTimeSec < 360) return false;
       return true;
     });
     const pool = eligible.length > 0 ? eligible : [this.data.customers.archetypes[0]];
+
+    // Guarantee the milestone first Rookie Adventurer sighting once eligible around minute 6-8
+    if (!this.hasSpawnedFirstRookie) {
+      const rookieSpec = pool.find((a) => a.id === 'adventurer_rookie');
+      if (rookieSpec) {
+        this.hasSpawnedFirstRookie = true;
+        return rookieSpec;
+      }
+    }
+
     let totalWeight = 0;
     const weights = pool.map((a) => {
-      const w = Math.max(0.05, a.spawnWeightsByPhase?.[this.dayPhase] ?? 1.0);
+      let w = Math.max(0.05, a.spawnWeightsByPhase?.[this.dayPhase] ?? 1.0);
+      // Before Kitchen expansion, rookie adventurers are a rare sighting (~15-18%)
+      if (a.id === 'adventurer_rookie' && !hasKitchen) {
+        w *= 0.38;
+      }
       totalWeight += w;
       return w;
     });
     let roll = (Math.abs(this.nextSeed()) % 10000) / 10000 * totalWeight;
     for (let i = 0; i < pool.length; i++) {
       roll -= weights[i];
-      if (roll <= 0) return pool[i];
+      if (roll <= 0) {
+        if (pool[i].id === 'adventurer_rookie') this.hasSpawnedFirstRookie = true;
+        return pool[i];
+      }
     }
-    return pool[pool.length - 1];
+    const chosen = pool[pool.length - 1];
+    if (chosen.id === 'adventurer_rookie') this.hasSpawnedFirstRookie = true;
+    return chosen;
+  }
+
+  getTargetGuestsPerMin() {
+    // 1. Cozy opening baseline: ~2.3 guests/min (first 3m averages ~2.4-2.7/min)
+    let rate = 2.25;
+
+    // 2. Fame (reputation) & Ambience contribution (never driven by table/seat count!)
+    const rep = Math.max(0, this.reputation);
+    const repBoost = Math.min(2.2, Math.sqrt(rep) * 0.34) + Math.min(9.0, rep * 0.004);
+    const ambienceBoost = Math.min(3.6, this.ambience * 0.045);
+    rate += repBoost + ambienceBoost;
+
+    // 3. Building Expansion traffic boosts
+    const rooms = this.state.unlockedRooms;
+    if (rooms.has('kitchen')) rate += 1.65;       // Pushes post-Kitchen into 5-8 guests/min
+    if (rooms.has('counter_shop')) rate += 1.45;  // Supply counter attracts questing traffic
+    if (rooms.has('main_hall')) rate += 2.4;
+    if (rooms.has('upstairs')) rate += 1.8;
+    if (rooms.has('cellar')) rate += 1.6;
+    if (rooms.has('stage')) rate += 2.0;
+    if (rooms.has('garden')) rate += 2.2;
+
+    // 4. Town Crier / marketing multiplier (gentle before Kitchen so early tavern stays cozy)
+    const crierMult = rooms.has('kitchen')
+      ? this.patronSpawnMult
+      : 1 + (this.patronSpawnMult - 1) * 0.45;
+    rate *= crierMult;
+
+    // 5. Time-of-day modulation (evening rush hours surge once Supply Counter is open)
+    let phaseMult = this.dayPhaseSpec?.spawnRateMult || 1.0;
+    if (this.dayPhase === 'evening' && rooms.has('counter_shop')) {
+      phaseMult *= 1.25;
+    }
+    rate *= phaseMult;
+
+    // Enforce target pacing envelopes per progression stage
+    if (!rooms.has('kitchen')) {
+      if (this.state.totalTimeSec < 180) {
+        rate = Math.min(3.0, Math.max(2.1, rate));
+      } else {
+        rate = Math.min(5.0, Math.max(3.0, rate));
+      }
+    } else if (!rooms.has('counter_shop')) {
+      rate = Math.min(8.0, Math.max(5.0, rate));
+    }
+
+    return Math.max(1.8, Math.min(32.0, rate));
   }
 
   spawnCustomer() {
@@ -586,16 +658,14 @@ export class TavernSim {
       this.stats.recentWindowSec = 0;
     }
 
-    // Spawn logic scaled by seat capacity, time of day, and marketing upgrades
+    // Spawn logic driven by fame (reputation), ambience, expansions, and time of day (never seat count!)
     this.spawnTimer -= dt;
     if (this.spawnTimer <= 0) {
       this.spawnCustomer();
-      const seatCap = Math.max(4, this.getTotalSeatCapacity());
-      const phaseMult = this.dayPhaseSpec?.spawnRateMult || 1.0;
-      const baseInterval = 11.5 / (1 + (seatCap - 4) * 0.16);
-      const interval = Math.max(1.3, baseInterval / (phaseMult * this.patronSpawnMult));
-      const jitter = 0.85 + ((Math.abs(this.nextSeed()) % 30) / 100);
-      this.spawnTimer = interval * jitter;
+      const guestsPerMin = this.getTargetGuestsPerMin();
+      const baseInterval = 60.0 / guestsPerMin;
+      const jitter = 0.88 + ((Math.abs(this.nextSeed()) % 25) / 100);
+      this.spawnTimer = Math.max(1.6, baseInterval * jitter);
     }
 
     // Update staff & track entertainer flags
@@ -625,6 +695,26 @@ export class TavernSim {
       }
     }
     this.stats.recoveriesTotal += recoveries;
+
+    // Door open/close tracking: doors swing open as patrons enter or leave
+    const doorTileX = this.layout.doorTileX ?? 12;
+    const doorTileY = this.layout.doorTileY ?? 11;
+    const doorX = (doorTileX + 1) * 32;
+    const doorY = (doorTileY + 1) * 32 - 16;
+    let actorNearDoor = false;
+    for (let i = 0; i < this.customers.length; i++) {
+      const c = this.customers[i];
+      if (Math.abs(c.x - doorX) < 48 && Math.abs(c.y - doorY) < 64) {
+        actorNearDoor = true;
+        break;
+      }
+    }
+    if (actorNearDoor) {
+      this.doorOpenTimer = 0.8;
+    } else if (this.doorOpenTimer > 0) {
+      this.doorOpenTimer = Math.max(0, this.doorOpenTimer - dt);
+    }
+    this.isDoorOpen = this.doorOpenTimer > 0;
 
     // Update floating texts
     for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
