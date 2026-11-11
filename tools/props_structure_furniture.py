@@ -615,6 +615,66 @@ def gen_door_front() -> Image.Image:
     return finalize_prop(img, "OUTLINE_WARM")
 
 
+def gen_door_front_open() -> Image.Image:
+    """64x64 arched oak tavern entrance with doors swung open to the sides.
+    The center doorway aperture is 100% transparent (see-through) revealing the tavern interior floor.
+    """
+    img = new_canvas(64, 64)
+
+    # 1. Stone masonry arch surround (cx=31.5, cy=30.0, outer_r=26.0, inner_r=18.0)
+    for y in range(4, 31):
+        for x in range(6, 58):
+            nx_out = (x - 31.5) / 26.0
+            ny_out = (y - 30.0) / 26.0
+            d_out = nx_out * nx_out + ny_out * ny_out
+            nx_in = (x - 31.5) / 18.0
+            ny_in = (y - 30.0) / 18.0
+            d_in = nx_in * nx_in + ny_in * ny_in
+            if d_out <= 1.0 and d_in > 1.0:
+                px(img, x, y, "STONE_BASE")
+
+    # Side stone pillars (y=30..57)
+    rect(img, 6, 30, 8, 28, "STONE_BASE")
+    rect(img, 6, 30, 2, 28, "STONE_LIGHT")
+    rect(img, 13, 30, 1, 28, "STONE_DEEP")
+    rect(img, 50, 30, 8, 28, "STONE_SHADOW")
+    rect(img, 50, 30, 1, 28, "STONE_DEEP")
+    rect(img, 56, 30, 2, 28, "STONE_DEEP")
+
+    # Stone arch highlights & inner shadow
+    ellipse(img, 31.5, 30.0, 26.0, 26.0, "STONE_LIGHT", filled=False)
+    ellipse(img, 31.5, 30.0, 18.0, 18.0, "STONE_DEEP", filled=False)
+
+    # 2. Open oak doors swung to sides
+    # Left door leaf (x=14..18, y=18..57)
+    rect(img, 14, 20, 5, 38, "WOOD_BASE")
+    rect(img, 14, 18, 4, 2, "WOOD_BASE")
+    rect(img, 14, 18, 1, 40, "WOOD_DEEP")
+    rect(img, 15, 18, 1, 40, "WOOD_LIGHT")
+    rect(img, 18, 20, 1, 38, "WOOD_DEEP")
+    rect(img, 12, 26, 4, 2, "METAL_LIGHT")
+    rect(img, 12, 48, 4, 2, "METAL_LIGHT")
+
+    # Right door leaf (x=45..49, y=18..57)
+    rect(img, 45, 20, 5, 38, "WOOD_BASE")
+    rect(img, 46, 18, 4, 2, "WOOD_BASE")
+    rect(img, 45, 20, 1, 38, "WOOD_LIGHT")
+    rect(img, 48, 18, 1, 40, "WOOD_SHADOW")
+    rect(img, 49, 18, 1, 40, "WOOD_DEEP")
+    rect(img, 48, 26, 4, 2, "METAL_BASE")
+    rect(img, 48, 48, 4, 2, "METAL_BASE")
+    px(img, 45, 36, "GOLD_LIGHT")
+    px(img, 45, 37, "GOLD_BASE")
+
+    # 3. Heavy stone doorstep threshold at bottom (x=8..55, y=58..63)
+    rect(img, 8, 58, 48, 2, "STONE_LIGHT")
+    rect(img, 8, 60, 48, 3, "STONE_SHADOW")
+    rect(img, 8, 63, 48, 1, "STONE_DEEP")
+
+    # The entire center (x=19..44, y=4..57) remains completely see-through transparent!
+    return finalize_prop(img, "OUTLINE_WARM")
+
+
 def gen_stairs_up() -> Image.Image:
     """64x64 oak staircase ascending with carved handrail."""
     img = new_canvas(64, 64)
@@ -711,110 +771,235 @@ def gen_stairs_down() -> Image.Image:
 # 4. Seating & Storage (layer="prop", non-tileable, closed outline)
 # =============================================================================
 
-def gen_chair() -> Image.Image:
-    """24x32 tavern wooden chair with carved backrest and sturdy legs."""
+def gen_chair_s() -> Image.Image:
+    """24x32 tavern wooden chair facing South (toward camera)."""
     img = new_canvas(24, 32)
-
     # Backrest uprights (x=4..6 and x=17..19, y=2..18)
     rect(img, 4, 2, 3, 17, "WOOD_BASE")
     rect(img, 4, 2, 1, 17, "WOOD_LIGHT")
     rect(img, 17, 2, 3, 17, "WOOD_SHADOW")
     rect(img, 17, 2, 1, 17, "WOOD_BASE")
-
     # Curved top crest rail (x=4..19, y=2..5)
     rect(img, 4, 2, 16, 3, "WOOD_BASE")
     rect(img, 4, 2, 16, 1, "WOOD_LIGHT")
     # Carved center splat (x=10..13, y=5..16)
     rect(img, 10, 5, 4, 11, "WOOD_LIGHT")
     rect(img, 12, 5, 2, 11, "WOOD_BASE")
-
     # Seat cushion / plank (x=3..20, y=16..22)
     rect(img, 3, 16, 18, 5, "WOOD_BASE")
     rect(img, 3, 16, 18, 1, "WOOD_LIGHT")
     rect(img, 3, 16, 1, 5, "WOOD_LIGHT")
     rect(img, 3, 21, 18, 2, "WOOD_SHADOW")
-
     # 4 legs (front legs x=4..6, x=17..19, y=22..31)
     rect(img, 4, 22, 3, 10, "WOOD_BASE")
     rect(img, 4, 22, 1, 10, "WOOD_LIGHT")
     rect(img, 17, 22, 3, 10, "WOOD_SHADOW")
     rect(img, 17, 22, 1, 10, "WOOD_BASE")
-
     # Cross stretchers
     rect(img, 7, 27, 10, 1, "WOOD_SHADOW")
-
     return finalize_prop(img, "OUTLINE_WARM")
 
 
-def gen_stool() -> Image.Image:
-    """20x24 round rustic tavern stool with 3 splayed legs and foot ring."""
-    img = new_canvas(20, 24)
+def gen_chair_n() -> Image.Image:
+    """24x32 tavern wooden chair facing North (away from camera, seen from behind)."""
+    img = new_canvas(24, 32)
+    # Rear backrest uprights extending to floor
+    rect(img, 4, 2, 3, 29, "WOOD_BASE")
+    rect(img, 4, 2, 1, 29, "WOOD_LIGHT")
+    rect(img, 17, 2, 3, 29, "WOOD_SHADOW")
+    rect(img, 19, 2, 1, 29, "WOOD_DEEP")
+    # Top crest rail
+    rect(img, 4, 2, 16, 4, "WOOD_BASE")
+    rect(img, 4, 2, 16, 1, "WOOD_LIGHT")
+    # Solid wooden back panel in foreground
+    rect(img, 7, 5, 10, 16, "WOOD_BASE")
+    rect(img, 7, 5, 2, 16, "WOOD_LIGHT")
+    rect(img, 15, 5, 2, 16, "WOOD_SHADOW")
+    # Cross stretcher
+    rect(img, 7, 26, 10, 2, "WOOD_SHADOW")
+    return finalize_prop(img, "OUTLINE_WARM")
 
+
+def gen_chair_e() -> Image.Image:
+    """24x32 tavern wooden chair facing East (profile facing right toward table)."""
+    img = new_canvas(24, 32)
+    # Backrest on West (left)
+    rect(img, 4, 2, 3, 20, "WOOD_BASE")
+    rect(img, 4, 2, 1, 20, "WOOD_LIGHT")
+    rect(img, 6, 2, 1, 20, "WOOD_SHADOW")
+    # Seat extending East
+    rect(img, 6, 16, 14, 5, "WOOD_BASE")
+    rect(img, 6, 16, 14, 1, "WOOD_LIGHT")
+    rect(img, 6, 20, 14, 2, "WOOD_SHADOW")
+    # Rear leg
+    rect(img, 4, 21, 3, 10, "WOOD_BASE")
+    rect(img, 4, 21, 1, 10, "WOOD_LIGHT")
+    # Front leg
+    rect(img, 16, 21, 3, 10, "WOOD_SHADOW")
+    rect(img, 16, 21, 1, 10, "WOOD_BASE")
+    rect(img, 7, 26, 9, 2, "WOOD_SHADOW")
+    return finalize_prop(img, "OUTLINE_WARM")
+
+
+def gen_chair_w() -> Image.Image:
+    """24x32 tavern wooden chair facing West (profile facing left toward table, top-left lit)."""
+    img = new_canvas(24, 32)
+    # Backrest on East (right)
+    rect(img, 17, 2, 3, 20, "WOOD_SHADOW")
+    rect(img, 17, 2, 1, 20, "WOOD_BASE")
+    rect(img, 19, 2, 1, 20, "WOOD_DEEP")
+    # Seat extending West with top-left lighting
+    rect(img, 4, 16, 14, 5, "WOOD_BASE")
+    rect(img, 4, 16, 14, 1, "WOOD_LIGHT")
+    rect(img, 4, 16, 1, 5, "WOOD_LIGHT")
+    rect(img, 4, 20, 14, 2, "WOOD_SHADOW")
+    # Front leg (left)
+    rect(img, 5, 21, 3, 10, "WOOD_BASE")
+    rect(img, 5, 21, 1, 10, "WOOD_LIGHT")
+    # Rear leg (right)
+    rect(img, 17, 21, 3, 10, "WOOD_DEEP")
+    rect(img, 17, 21, 1, 10, "WOOD_SHADOW")
+    rect(img, 8, 26, 9, 2, "WOOD_SHADOW")
+    return finalize_prop(img, "OUTLINE_WARM")
+
+gen_chair = gen_chair_s
+
+
+def gen_stool_s() -> Image.Image:
+    """20x24 round rustic tavern stool facing South (front view)."""
+    img = new_canvas(20, 24)
     # Round wooden seat top (oval in 3/4 perspective)
     ellipse(img, 9.5, 6.0, 7.0, 3.8, "WOOD_BASE", filled=True)
     ellipse(img, 9.5, 5.0, 6.5, 3.2, "WOOD_LIGHT", filled=True)
-    # Wood grain ring in center
     ellipse(img, 9.5, 5.0, 3.0, 1.5, "WOOD_BASE", filled=False)
     # Seat thickness front rim
     rect(img, 3, 7, 14, 2, "WOOD_SHADOW")
-
     # 3 splayed legs
-    # Left leg
     line(img, 5, 9, 3, 23, "WOOD_BASE")
     line(img, 6, 9, 4, 23, "WOOD_LIGHT")
-    # Center back leg
     line(img, 10, 9, 10, 23, "WOOD_DEEP")
-    # Right leg
     line(img, 14, 9, 16, 23, "WOOD_SHADOW")
     line(img, 15, 9, 17, 23, "WOOD_DEEP")
-
-    # Circular foot ring stretcher connecting legs (y=17..18)
     ellipse(img, 10.0, 17.5, 5.5, 2.0, "WOOD_SHADOW", filled=False)
     px(img, 6, 17, "WOOD_LIGHT")
     px(img, 14, 18, "WOOD_DEEP")
-
     return finalize_prop(img, "OUTLINE_WARM")
 
 
-def gen_bench() -> Image.Image:
-    """64x28 long communal tavern bench with trestle legs."""
-    img = new_canvas(64, 28)
+def gen_stool_n() -> Image.Image:
+    """20x24 round rustic tavern stool facing North (back view)."""
+    img = new_canvas(20, 24)
+    ellipse(img, 9.5, 6.0, 7.0, 3.8, "WOOD_BASE", filled=True)
+    ellipse(img, 9.5, 5.0, 6.5, 3.2, "WOOD_LIGHT", filled=True)
+    rect(img, 3, 7, 14, 2, "WOOD_SHADOW")
+    line(img, 10, 8, 10, 23, "WOOD_BASE")
+    line(img, 9, 8, 9, 23, "WOOD_LIGHT")
+    line(img, 4, 9, 3, 23, "WOOD_SHADOW")
+    line(img, 15, 9, 16, 23, "WOOD_DEEP")
+    ellipse(img, 10.0, 16.5, 5.5, 2.0, "WOOD_SHADOW", filled=False)
+    px(img, 6, 16, "WOOD_LIGHT")
+    px(img, 14, 17, "WOOD_DEEP")
+    return finalize_prop(img, "OUTLINE_WARM")
 
-    # Seat plank (x=2..61, y=4..13)
+
+def gen_stool_e() -> Image.Image:
+    """20x24 round rustic tavern stool facing East (profile view)."""
+    img = new_canvas(20, 24)
+    ellipse(img, 9.5, 6.0, 7.0, 3.8, "WOOD_BASE", filled=True)
+    ellipse(img, 9.5, 5.0, 6.5, 3.2, "WOOD_LIGHT", filled=True)
+    rect(img, 3, 7, 14, 2, "WOOD_SHADOW")
+    line(img, 6, 8, 4, 23, "WOOD_LIGHT")
+    line(img, 7, 8, 5, 23, "WOOD_BASE")
+    line(img, 13, 8, 15, 23, "WOOD_SHADOW")
+    line(img, 14, 8, 16, 23, "WOOD_DEEP")
+    ellipse(img, 10.0, 17.0, 5.0, 2.0, "WOOD_SHADOW", filled=False)
+    return finalize_prop(img, "OUTLINE_WARM")
+
+
+def gen_stool_w() -> Image.Image:
+    """20x24 round rustic tavern stool facing West (profile view, top-left lit)."""
+    img = new_canvas(20, 24)
+    ellipse(img, 9.5, 6.0, 7.0, 3.8, "WOOD_BASE", filled=True)
+    ellipse(img, 9.5, 5.0, 6.5, 3.2, "WOOD_LIGHT", filled=True)
+    rect(img, 3, 7, 14, 2, "WOOD_SHADOW")
+    line(img, 5, 8, 3, 23, "WOOD_LIGHT")
+    line(img, 6, 8, 4, 23, "WOOD_BASE")
+    line(img, 14, 8, 16, 23, "WOOD_SHADOW")
+    line(img, 15, 8, 17, 23, "WOOD_DEEP")
+    ellipse(img, 10.0, 17.0, 5.0, 2.0, "WOOD_SHADOW", filled=False)
+    return finalize_prop(img, "OUTLINE_WARM")
+
+gen_stool = gen_stool_s
+
+
+def gen_bench_s() -> Image.Image:
+    """64x28 long communal tavern bench facing South (front view)."""
+    img = new_canvas(64, 28)
     rect(img, 2, 4, 60, 6, "WOOD_BASE")
     rect(img, 2, 4, 60, 1, "WOOD_LIGHT")
     rect(img, 2, 4, 1, 6, "WOOD_LIGHT")
-    # Wood grain streaks on seat
     rect(img, 6, 6, 22, 1, "WOOD_LIGHT")
     rect(img, 34, 7, 18, 1, "WOOD_SHADOW")
-    # Front apron edge
     rect(img, 2, 10, 60, 3, "WOOD_SHADOW")
     rect(img, 2, 13, 60, 1, "WOOD_DEEP")
-
-    # Left trestle leg (x=8..15, y=14..27)
     rect(img, 8, 14, 7, 13, "WOOD_BASE")
     rect(img, 8, 14, 2, 13, "WOOD_LIGHT")
     rect(img, 13, 14, 2, 13, "WOOD_SHADOW")
-    # Splayed foot
     rect(img, 6, 25, 11, 3, "WOOD_SHADOW")
     rect(img, 6, 25, 11, 1, "WOOD_LIGHT")
-
-    # Right trestle leg (x=48..55, y=14..27)
     rect(img, 48, 14, 7, 13, "WOOD_SHADOW")
     rect(img, 48, 14, 2, 13, "WOOD_BASE")
     rect(img, 53, 14, 2, 13, "WOOD_DEEP")
-    # Splayed foot
     rect(img, 46, 25, 11, 3, "WOOD_DEEP")
     rect(img, 46, 25, 11, 1, "WOOD_SHADOW")
-
-    # Longitudinal stretcher connecting trestles (y=19..21, x=15..48)
     rect(img, 15, 19, 33, 3, "WOOD_SHADOW")
     rect(img, 15, 19, 33, 1, "WOOD_BASE")
-    # Wooden locking wedges
     px(img, 15, 20, "WOOD_LIGHT")
     px(img, 47, 20, "WOOD_LIGHT")
-
     return finalize_prop(img, "OUTLINE_WARM")
+
+
+def gen_bench_n() -> Image.Image:
+    """64x28 long communal tavern bench facing North (back view)."""
+    img = new_canvas(64, 28)
+    rect(img, 2, 4, 60, 6, "WOOD_BASE")
+    rect(img, 2, 4, 60, 1, "WOOD_LIGHT")
+    rect(img, 2, 10, 60, 3, "WOOD_SHADOW")
+    rect(img, 2, 13, 60, 1, "WOOD_DEEP")
+    rect(img, 8, 14, 7, 13, "WOOD_BASE")
+    rect(img, 8, 14, 2, 13, "WOOD_LIGHT")
+    rect(img, 13, 14, 2, 13, "WOOD_SHADOW")
+    rect(img, 6, 25, 11, 3, "WOOD_SHADOW")
+    rect(img, 48, 14, 7, 13, "WOOD_SHADOW")
+    rect(img, 48, 14, 2, 13, "WOOD_BASE")
+    rect(img, 53, 14, 2, 13, "WOOD_DEEP")
+    rect(img, 46, 25, 11, 3, "WOOD_DEEP")
+    rect(img, 15, 18, 33, 3, "WOOD_SHADOW")
+    return finalize_prop(img, "OUTLINE_WARM")
+
+
+def gen_bench_e() -> Image.Image:
+    """28x64 vertical communal tavern bench facing East."""
+    img = new_canvas(28, 64)
+    rect(img, 4, 2, 8, 60, "WOOD_BASE")
+    rect(img, 4, 2, 1, 60, "WOOD_LIGHT")
+    rect(img, 12, 2, 12, 60, "WOOD_SHADOW")
+    rect(img, 6, 6, 16, 6, "WOOD_BASE")
+    rect(img, 6, 52, 16, 6, "WOOD_SHADOW")
+    return finalize_prop(img, "OUTLINE_WARM")
+
+
+def gen_bench_w() -> Image.Image:
+    """28x64 vertical communal tavern bench facing West (top-left lit)."""
+    img = new_canvas(28, 64)
+    rect(img, 4, 2, 12, 60, "WOOD_BASE")
+    rect(img, 4, 2, 1, 60, "WOOD_LIGHT")
+    rect(img, 16, 2, 8, 60, "WOOD_DEEP")
+    rect(img, 6, 6, 16, 6, "WOOD_BASE")
+    rect(img, 6, 52, 16, 6, "WOOD_SHADOW")
+    return finalize_prop(img, "OUTLINE_WARM")
+
+gen_bench = gen_bench_s
 
 
 def gen_chest() -> Image.Image:
@@ -1765,6 +1950,11 @@ PROPS_STRUCTURE_FURNITURE: dict[str, AssetSpec] = {
         footprint=(2, 1),
         layer="prop",
     ),
+    "door_front_open": AssetSpec(
+        fn=gen_door_front_open,
+        footprint=(2, 1),
+        layer="prop",
+    ),
     "stairs_up": AssetSpec(
         fn=gen_stairs_up,
         footprint=(2, 2),
@@ -1782,14 +1972,74 @@ PROPS_STRUCTURE_FURNITURE: dict[str, AssetSpec] = {
         footprint=(1, 1),
         layer="prop",
     ),
+    "chair_s": AssetSpec(
+        fn=gen_chair_s,
+        footprint=(1, 1),
+        layer="prop",
+    ),
+    "chair_n": AssetSpec(
+        fn=gen_chair_n,
+        footprint=(1, 1),
+        layer="prop",
+    ),
+    "chair_e": AssetSpec(
+        fn=gen_chair_e,
+        footprint=(1, 1),
+        layer="prop",
+    ),
+    "chair_w": AssetSpec(
+        fn=gen_chair_w,
+        footprint=(1, 1),
+        layer="prop",
+    ),
     "stool": AssetSpec(
         fn=gen_stool,
+        footprint=(1, 1),
+        layer="prop",
+    ),
+    "stool_s": AssetSpec(
+        fn=gen_stool_s,
+        footprint=(1, 1),
+        layer="prop",
+    ),
+    "stool_n": AssetSpec(
+        fn=gen_stool_n,
+        footprint=(1, 1),
+        layer="prop",
+    ),
+    "stool_e": AssetSpec(
+        fn=gen_stool_e,
+        footprint=(1, 1),
+        layer="prop",
+    ),
+    "stool_w": AssetSpec(
+        fn=gen_stool_w,
         footprint=(1, 1),
         layer="prop",
     ),
     "bench": AssetSpec(
         fn=gen_bench,
         footprint=(2, 1),
+        layer="prop",
+    ),
+    "bench_s": AssetSpec(
+        fn=gen_bench_s,
+        footprint=(2, 1),
+        layer="prop",
+    ),
+    "bench_n": AssetSpec(
+        fn=gen_bench_n,
+        footprint=(2, 1),
+        layer="prop",
+    ),
+    "bench_e": AssetSpec(
+        fn=gen_bench_e,
+        footprint=(1, 2),
+        layer="prop",
+    ),
+    "bench_w": AssetSpec(
+        fn=gen_bench_w,
+        footprint=(1, 2),
         layer="prop",
     ),
     "chest": AssetSpec(

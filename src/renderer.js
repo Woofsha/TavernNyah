@@ -286,9 +286,11 @@ export class TavernRenderer {
     const walkCycle = [0, 1, 2, 1];
     const col = isWalking ? walkCycle[Math.floor(actor.animTime * 6.5) % 4] : 1;
     const bobY = !isWalking ? (Math.floor(actor.animTime * 2.2) % 2 === 0 ? 0 : -1) : 0;
+    const isSitting = actor.anim === 'sit' || actor.anim === 'eat';
+    const sitOffsetY = isSitting ? -8 : 0;
 
     const drawX = Math.round(sx);
-    const drawY = Math.round(sy - cellH + bobY);
+    const drawY = Math.round(sy - cellH + bobY + sitOffsetY);
 
     if (flipX) {
       this.ctx.save();
@@ -379,8 +381,11 @@ export class TavernRenderer {
       }
     }
 
+    const isSitting = actor.anim === 'sit' || actor.anim === 'eat';
+    const sitOffsetY = isSitting ? -8 : 0;
+
     const drawX = Math.round(sx);
-    const drawY = Math.round(sy - cellH + bobY);
+    const drawY = Math.round(sy - cellH + bobY + sitOffsetY);
 
     if (flipX) {
       this.ctx.save();
@@ -513,6 +518,10 @@ export class TavernRenderer {
         if (p.asset === 'fireplace_1' && this.atmosphereEnabled) {
           if (Math.floor(this.animClock * 5.5) % 2 === 1) {
             drawImg = this.assets.tavern.get('fireplace_2') || img;
+          }
+        } else if (p.asset === 'door_front' || p.id === 'front_door') {
+          if (sim.isDoorOpen) {
+            drawImg = this.assets.tavern.get('door_front_open') || img;
           }
         }
 

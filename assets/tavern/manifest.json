@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "baseTile": 32,
-  "assetCount": 102,
+  "assetCount": 115,
   "assets": {
     "fireplace_1": {
       "file": "assets/tavern/fireplace_1.png",
@@ -555,6 +555,26 @@
       "multiGroup": null,
       "multiPos": null
     },
+    "door_front_open": {
+      "file": "assets/tavern/door_front_open.png",
+      "size": [
+        64,
+        64
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
     "stairs_up": {
       "file": "assets/tavern/stairs_up.png",
       "size": [
@@ -615,8 +635,168 @@
       "multiGroup": null,
       "multiPos": null
     },
+    "chair_s": {
+      "file": "assets/tavern/chair_s.png",
+      "size": [
+        24,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "chair_n": {
+      "file": "assets/tavern/chair_n.png",
+      "size": [
+        24,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "chair_e": {
+      "file": "assets/tavern/chair_e.png",
+      "size": [
+        24,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "chair_w": {
+      "file": "assets/tavern/chair_w.png",
+      "size": [
+        24,
+        32
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
     "stool": {
       "file": "assets/tavern/stool.png",
+      "size": [
+        20,
+        24
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stool_s": {
+      "file": "assets/tavern/stool_s.png",
+      "size": [
+        20,
+        24
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stool_n": {
+      "file": "assets/tavern/stool_n.png",
+      "size": [
+        20,
+        24
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stool_e": {
+      "file": "assets/tavern/stool_e.png",
+      "size": [
+        20,
+        24
+      ],
+      "footprint": [
+        1,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "stool_w": {
+      "file": "assets/tavern/stool_w.png",
       "size": [
         20,
         24
@@ -644,6 +824,86 @@
       "footprint": [
         2,
         1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bench_s": {
+      "file": "assets/tavern/bench_s.png",
+      "size": [
+        64,
+        28
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bench_n": {
+      "file": "assets/tavern/bench_n.png",
+      "size": [
+        64,
+        28
+      ],
+      "footprint": [
+        2,
+        1
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bench_e": {
+      "file": "assets/tavern/bench_e.png",
+      "size": [
+        28,
+        64
+      ],
+      "footprint": [
+        1,
+        2
+      ],
+      "layer": "prop",
+      "anchor": [
+        0.5,
+        1.0
+      ],
+      "tileable": false,
+      "hangs": false,
+      "multiGroup": null,
+      "multiPos": null
+    },
+    "bench_w": {
+      "file": "assets/tavern/bench_w.png",
+      "size": [
+        28,
+        64
+      ],
+      "footprint": [
+        1,
+        2
       ],
       "layer": "prop",
       "anchor": [
