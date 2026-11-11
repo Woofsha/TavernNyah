@@ -714,7 +714,7 @@ export class TavernRenderer {
   _drawCutawayBorderWalls(ctx, sim, camX, camY) {
     const interiorSet = new Set();
     for (const f of sim.layout.floors) {
-      if (f.asset !== 'floor_cobble') {
+      if (f.asset !== 'floor_cobble' && f.asset !== 'floor_grass') {
         interiorSet.add(`${f.tx},${f.ty}`);
       }
     }
@@ -722,7 +722,7 @@ export class TavernRenderer {
     const doorTY = sim.layout.doorTileY;
 
     for (const f of sim.layout.floors) {
-      if (f.asset === 'floor_cobble') continue;
+      if (f.asset === 'floor_cobble' || f.asset === 'floor_grass') continue;
       const sx = Math.round(f.x - camX);
       const sy = Math.round(f.y - camY);
       if (sx < -48 || sx > INTERNAL_W + 48 || sy < -64 || sy > INTERNAL_H + 48) continue;
