@@ -278,6 +278,15 @@ async function main() {
     await sleep(120);
     await cdp.capturePng(path.join(outDir, 'live_04_inspector.png'));
 
+    // Screenshot 4b: Building Tab with Exterior Facade Banner
+    await cdp.evalJs(`(() => {
+      const g = window.__tavernGame;
+      g.ui.activeTab = 'building';
+      g.ui.shopScroll = 0;
+    })()`);
+    await sleep(120);
+    await cdp.capturePng(path.join(outDir, 'live_09_building_tab.png'));
+
     // Screenshot 5: Grand Expanded Tavern (Evening, Stage Musician + Dancer, Hearth, Chandelier, Tier 4 Tables)
     await cdp.evalJs(`(() => {
       const g = window.__tavernGame;

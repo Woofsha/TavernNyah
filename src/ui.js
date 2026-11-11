@@ -512,21 +512,42 @@ export class TavernUI {
     const listH = ph - 36;
     drawNineSlice(ctx, parchSkin, listX, listY, listW, listH, 8);
 
+    // Architectural Exterior Facade Banner (`facade_t1..t4`) on Building tab (A4)
+    let headerOffset = 0;
+    if (this.activeTab === 'building') {
+      const facadeImg = this.assets.tavern.get(sim.layout.facadeAsset);
+      if (facadeImg) {
+        headerOffset = 34;
+        ctx.fillStyle = rgbaFromPalette(this.pal, 'OUTLINE_WARM', 0.16);
+        ctx.fillRect(listX + 5, listY + 5, listW - 10, 30);
+        ctx.drawImage(facadeImg, listX + 8, listY + 6, 48, 28);
+        drawPixelText(ctx, `Exterior: Tier ${sim.layout.tavernTier}`, listX + 62, listY + 10, {
+          color: this.pal.OUTLINE_WARM,
+        });
+        drawPixelText(ctx, `${sim.state.unlockedRooms.size}/6 Wings Built`, listX + 62, listY + 21, {
+          color: this.pal.WOOD_SHADOW,
+        });
+      }
+    }
+
     const items = this.buildShopItemsForTab(sim, this.activeTab);
-    const cardH = 48;
-    const gap = 4;
-    const totalContentH = items.length * (cardH + gap) + 8;
-    this.maxShopScroll = Math.max(0, totalContentH - (listH - 8));
+    const cardH = headerOffset > 0 ? 55 : 64;
+    const gap = headerOffset > 0 ? 4 : 5;
+    const stepH = cardH + gap;
+    const viewTop = listY + 4 + headerOffset;
+    const viewH = listH - 8 - headerOffset;
+    const totalContentH = Math.max(0, items.length * stepH - gap + 4);
+    this.maxShopScroll = Math.max(0, totalContentH - viewH);
     this.shopScroll = Math.min(this.shopScroll, this.maxShopScroll);
 
     ctx.save();
     ctx.beginPath();
-    ctx.rect(listX + 3, listY + 4, listW - 6, listH - 8);
+    ctx.rect(listX + 3, viewTop, listW - 6, viewH);
     ctx.clip();
 
     items.forEach((item, idx) => {
-      const cy = Math.round(listY + 6 + idx * (cardH + gap) - this.shopScroll);
-      if (cy + cardH < listY || cy > listY + listH) return;
+      const cy = Math.round(viewTop + 2 + idx * stepH - this.shopScroll);
+      if (cy + cardH < viewTop || cy > viewTop + viewH) return;
       const cx = listX + 5;
       const cw = listW - (this.maxShopScroll > 0 ? 18 : 10);
 
@@ -544,29 +565,38 @@ export class TavernUI {
         ctx.drawImage(iconImg, cx + 4, cy + 5);
       }
 
-      // Title + Subline (cleanly above button row)
-      const titleStr = item.title.length > 26 ? item.title.slice(0, 25) + '.' : item.title;
-      drawPixelText(ctx, titleStr, cx + 24, cy + 5, {
+      // Title on top-left + Dedicated Level/Tier badge on top-right (A5: zero title truncation!)
+      drawPixelText(ctx, item.title, cx + 23, cy + 4, {
         color: this.pal.OUTLINE_WARM,
       });
-      const subClipped = item.subline.length > 26 ? item.subline.slice(0, 25) + '.' : item.subline;
-      drawPixelText(ctx, subClipped, cx + 24, cy + 16, {
+      if (item.levelBadge) {
+        drawPixelText(ctx, item.levelBadge, cx + cw - 4, cy + 4, {
+          color: this.pal.CLOTH_RED_BASE,
+          align: 'right',
+        });
+      }
+
+      // 2-line wrapped description (A5: complete sentences, zero mid-word clipping!)
+      drawWrappedPixelText(ctx, item.subline, cx + 23, cy + 15, cw - 26, {
         color: this.pal.WOOD_SHADOW,
+        lineHeight: 9,
+        maxLines: 2,
       });
 
+      const bottomRowY = cy + cardH - 16;
       if (item.ownedMax) {
-        drawPixelText(ctx, item.doneBadge || 'OWNED', cx + cw - 6, cy + 33, {
+        drawPixelText(ctx, item.doneBadge || 'OWNED', cx + cw - 6, bottomRowY, {
           color: this.pal.LEAF_SHADOW,
           align: 'right',
         });
       } else {
         if (item.reqNote) {
-          drawPixelText(ctx, item.reqNote, cx + 6, cy + 33, {
+          drawPixelText(ctx, item.reqNote, cx + 5, bottomRowY, {
             color: this.pal.CLOTH_RED_BASE,
           });
         }
         const btnW = 62;
-        this.drawButton(ctx, `buy_${item.id}`, cx + cw - btnW - 4, cy + 27, btnW, 17, `${item.cost}g`, {
+        this.drawButton(ctx, `buy_${item.id}`, cx + cw - btnW - 4, cy + cardH - 21, btnW, 17, `${item.cost}g`, {
           gold: item.canBuy,
           disabled: !item.canBuy,
           onClick: item.onBuy,
@@ -583,15 +613,104 @@ export class TavernUI {
     // Scroll buttons if needed
     if (this.maxShopScroll > 0) {
       const sbX = listX + listW - 13;
-      this.drawButton(ctx, 'scroll_up', sbX, listY + 5, 10, 18, '^', {
+      this.drawButton(ctx, 'scroll_up', sbX, viewTop + 1, 10, 18, '^', {
         disabled: this.shopScroll <= 0,
-        onClick: () => { this.shopScroll = Math.max(0, this.shopScroll - 48); },
+        onClick: () => { this.shopScroll = Math.max(0, this.shopScroll - stepH); },
       });
-      this.drawButton(ctx, 'scroll_dn', sbX, listY + listH - 23, 10, 18, 'v', {
+      this.drawButton(ctx, 'scroll_dn', sbX, viewTop + viewH - 19, 10, 18, 'v', {
         disabled: this.shopScroll >= this.maxShopScroll,
-        onClick: () => { this.shopScroll = Math.min(this.maxShopScroll, this.shopScroll + 48); },
+        onClick: () => { this.shopScroll = Math.min(this.maxShopScroll, this.shopScroll + stepH); },
       });
     }
+  }
+
+  _shortReqLabel(sim, reqId, repReq) {
+    const shortNames = {
+      exp_kitchen: 'Kitchen Wing',
+      exp_counter_shop: 'Supply Shop',
+      exp_main_hall: 'Timber Hall',
+      exp_upstairs: 'Upstairs Wing',
+      exp_cellar: 'Wine Cellar',
+      exp_stage: 'Bard Stage',
+      exp_garden: 'Garden Patio',
+      table_tier_2: 'Pine Tables',
+      table_tier_3: 'Oak Tables',
+      hire_maid_clover: 'Hire Clover',
+      hire_maid_roxie: 'Hire Roxie',
+      hire_maid_pippa: 'Hire Pippa',
+      decor_candles: 'Candles',
+      decor_hearth: 'Hearth Logs',
+      decor_rug_red: 'Red Runner',
+      decor_herbs: 'Herb Bundles',
+      decor_plants: 'Potted Ferns',
+      decor_banners: 'Guild Banners',
+      decor_rug_accent: 'Oasis Carpet',
+      decor_painting: 'Oil Painting',
+      decor_armor: 'Plate Armor',
+      decor_trophy: 'Wyvern Trophy',
+    };
+    if (reqId && !sim.isUpgradeOwned(reqId)) {
+      return `Req: ${shortNames[reqId] || reqId}`;
+    }
+    if ((repReq || 0) > sim.reputation) {
+      return `Req: ${repReq} Rep`;
+    }
+    return '';
+  }
+
+  _conciseUpgradeSubline(sim, u) {
+    const eff = u.effect || {};
+    switch (u.id) {
+      case 'add_table':
+        return `Add a 2-to-4 seat dining table (${sim.layout.tables.length}/${sim.layout.maxTableSlots} placed).`;
+      case 'train_maids':
+        return `Maid speed +5%/lv (Now ${Math.round(sim.maidSpeedMult * 100)}%).`;
+      case 'train_chefs':
+        return `Cooking speed +5%/lv (Now ${Math.round(sim.chefSpeedMult * 100)}%).`;
+      case 'decor_polish':
+        return `Beeswax shine: +1 Ambience/lv (Now ${sim.ambience}).`;
+      case 'town_crier':
+        return `Arrival rate +6%/lv (Now +${Math.round((sim.patronSpawnMult - 1) * 100)}%).`;
+      case 'table_tier_2':
+        return '3 seats/table +14% meal value.';
+      case 'table_tier_3':
+        return '4 seats/table +28% meal value.';
+      case 'table_tier_4':
+        return '4 royal seats +42% meal value.';
+      case 'bed_tier_2':
+        return 'Doubles overnight room rental fees.';
+      default:
+        break;
+    }
+    if (u.kind === 'expansion') {
+      const expSummaries = {
+        exp_kitchen: 'Unlocks commercial kitchen & Tier 2-4 dishes.',
+        exp_counter_shop: 'Unlocks quest board, potions & Veteran guests.',
+        exp_main_hall: 'Doubles main floor capacity & Merchant guests.',
+        exp_upstairs: 'Adds 4 upstairs lodging beds & Noble guests.',
+        exp_cellar: 'Adds underground vault & +20% drink value.',
+        exp_stage: 'Unlocks performance stage for Lyra & Soleil.',
+        exp_garden: 'Opens outdoor garden patio & +12 Ambience.',
+      };
+      return expSummaries[u.id] || 'Major tavern architectural expansion.';
+    }
+    if (u.kind === 'staff_hire') {
+      const staffSummaries = {
+        hire_maid_clover: 'Fast junior bunny maid (+5% tips).',
+        hire_maid_roxie: 'Bold catgirl maid (+10% tips).',
+        hire_chef_marcel: 'Sous-chef doubling kitchen output.',
+        hire_bartender_garrett: 'Dedicated barkeep for all drink orders.',
+        hire_maid_pippa: 'Cheerful fox maid (+16% tips).',
+        hire_maid_velvet: 'Aristocratic elf maid (+25% tips).',
+        hire_musician_lyra: 'Plays live harp stem & slows mood decay.',
+        hire_dancer_soleil: 'Stage ribbon dancer (+20% patron tips).',
+      };
+      return staffSummaries[u.id] || 'Hire unique tavern staff member.';
+    }
+    if (eff.type === 'ambience_bonus') {
+      return `Cozy tavern decor (+${eff.value} Ambience).`;
+    }
+    return u.desc;
   }
 
   buildShopItemsForTab(sim, tabId) {
@@ -600,20 +719,27 @@ export class TavernUI {
         const unlocked = sim.state.unlockedRecipes.has(r.id);
         const reason = sim.getRecipeBlockReason(r);
         const canBuy = reason === null;
+        const cardTitle =
+          r.id === 'bread_cheese'
+            ? 'Crusty Bread & Cheddar'
+            : r.id === 'hunter_pie'
+              ? "Hunter's Venison Pie"
+              : r.name;
         return {
           id: r.id,
           icon: r.icon,
-          title: r.name,
-          subline: `${r.category.toUpperCase()} | Sell ${r.price}g | ${r.cookTime}s`,
+          title: cardTitle,
+          levelBadge: `T${r.tier}`,
+          subline: `${r.category.toUpperCase()} (${r.station}) | Sells ${r.price}g | Cook ${r.cookTime}s`,
           cost: r.unlockCost,
           canBuy,
           ownedMax: unlocked,
           doneBadge: 'SERVING',
-          reqNote: !unlocked && reason && !reason.startsWith('Needs ') ? reason : (r.repRequired > sim.reputation ? `Rep ${r.repRequired}` : ''),
+          reqNote: !unlocked ? this._shortReqLabel(sim, r.requiredExpansion, r.repRequired) : '',
           onBuy: () => {
             if (sim.unlockRecipe(r.id)) {
               this.callbacks.onPlaySfx?.('upgrade');
-              this.pushToast('Recipe Unlocked!', `${r.name} added to the menu!`);
+              this.pushToast('Recipe Unlocked!', `${r.name} (${r.price}g) is now on the menu!`);
             }
           },
           tooltip: {
@@ -631,16 +757,21 @@ export class TavernUI {
       const cost = sim.getUpgradeCost(u);
       const reason = sim.getUpgradeBlockReason(u);
       const canBuy = reason === null;
-      const lvTag = u.maxLevel > 1 ? ` (${lv}/${u.maxLevel})` : '';
+      const lvBadge = u.maxLevel > 1 ? `${lv}/${u.maxLevel}` : '';
       let reqShort = '';
-      if (!maxed && reason && !reason.endsWith('g')) {
-        reqShort = reason.length > 19 ? reason.slice(0, 18) + '.' : reason;
+      if (!maxed) {
+        if (u.effect?.type === 'add_table' && (2 + lv) >= sim.layout.maxTableSlots) {
+          reqShort = 'Expand for space';
+        } else {
+          reqShort = this._shortReqLabel(sim, u.requires, u.repRequired);
+        }
       }
       return {
         id: u.id,
         icon: u.icon,
-        title: `${u.name}${lvTag}`,
-        subline: u.kind === 'expansion' ? 'Architectural Expansion' : u.kind === 'staff_hire' ? 'Unique Staff Hire' : u.desc.slice(0, 26),
+        title: u.name,
+        levelBadge: lvBadge,
+        subline: this._conciseUpgradeSubline(sim, u),
         cost,
         canBuy,
         ownedMax: maxed,
@@ -648,14 +779,21 @@ export class TavernUI {
         reqNote: reqShort,
         onBuy: () => {
           if (sim.buyUpgrade(u.id)) {
-            this.callbacks.onPlaySfx?.('upgrade');
-            if (u.nyahComment) {
-              this.pushToast(`Nyah on ${u.name}:`, u.nyahComment);
+            if (u.kind === 'expansion') {
+              this.callbacks.onPlaySfx?.('expansion_fanfare');
+              const roomVal = u.effect?.value || 'center';
+              this.callbacks.onFocusRoom?.(roomVal);
+              this.pushToast(`NEW WING: ${u.name}!`, u.nyahComment || 'The tavern grows grander!');
+            } else {
+              this.callbacks.onPlaySfx?.('upgrade');
+              if (u.nyahComment) {
+                this.pushToast(`Nyah on ${u.name}:`, u.nyahComment);
+              }
             }
           }
         },
         tooltip: {
-          title: `${u.name}${lvTag}`,
+          title: `${u.name}${lvBadge ? ' (' + lvBadge + ')' : ''}`,
           body: `${u.desc}${reason && !maxed ? ' [' + reason + ']' : ''}`,
           quote: u.nyahComment ? `Nyah: "${u.nyahComment}"` : null,
         },

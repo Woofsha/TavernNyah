@@ -151,14 +151,41 @@ async function boot() {
 
   const focusRoom = (roomKey) => {
     const b = sim.layout.bounds;
+    let fx = b.defaultCenterX;
+    let fy = b.defaultCenterY;
     if (roomKey === 'kitchen') {
-      renderer.centerCameraOn(19 * 32, 8.5 * 32, b);
+      fx = 19 * 32;
+      fy = 8.5 * 32;
+    } else if (roomKey === 'counter_shop' || roomKey === 'main_hall') {
+      fx = 12.5 * 32;
+      fy = 8.5 * 32;
     } else if (roomKey === 'upstairs') {
-      renderer.centerCameraOn(12.5 * 32, 2.5 * 32, b);
+      fx = 12.5 * 32;
+      fy = 2.5 * 32;
+    } else if (roomKey === 'cellar') {
+      fx = 19 * 32;
+      fy = 3 * 32;
     } else if (roomKey === 'stage') {
-      renderer.centerCameraOn(3.5 * 32, 9.5 * 32, b);
-    } else {
-      renderer.centerCameraOn(b.defaultCenterX, b.defaultCenterY, b);
+      fx = 3.5 * 32;
+      fy = 9.5 * 32;
+    } else if (roomKey === 'garden') {
+      fx = 12.5 * 32;
+      fy = 15.5 * 32;
+    }
+    renderer.centerCameraOn(fx, fy, b);
+    if (roomKey && roomKey !== 'center') {
+      for (let i = 0; i < 10; i++) {
+        renderer.spawnParticle({
+          kind: 'ember',
+          x: fx + (Math.random() - 0.5) * 96,
+          y: fy + (Math.random() - 0.5) * 56,
+          vx: (Math.random() - 0.5) * 18,
+          vy: -12 - Math.random() * 14,
+          life: 1.6,
+          maxLife: 1.6,
+          size: 2,
+        });
+      }
     }
   };
 
@@ -389,6 +416,7 @@ async function boot() {
   let lastRenderTime = lastTimestamp;
   let simAccumulator = 0;
   let autosaveTimer = 0;
+  let footstepTimer = 0;
 
   function frame(now) {
     requestAnimationFrame(frame);
@@ -446,14 +474,32 @@ async function boot() {
     audio.hasFireplace = sim.isUpgradeOwned('decor_hearth');
     audio.update(visDt, sim.dayPhase, sim.isMusicianPerforming, sim.customers.length);
 
+    if (ui.mode === 'playing' && !sim.banter.introActive) {
+      const anyWalking =
+        sim.staff.some((s) => s.anim === 'walk' || s.anim === 'carry') ||
+        sim.customers.some((c) => c.anim === 'walk');
+      if (anyWalking) {
+        footstepTimer += visDt;
+        if (footstepTimer >= 0.38) {
+          footstepTimer = 0;
+          audio.playSfx('footstep', 0.35);
+        }
+      }
+    }
+
     // Respect Low-CPU FPS Cap (30 FPS = ~32ms interval; 60 FPS = uncapped rAF)
     const minFrameMs = ui.fpsCap === 30 ? 31.0 : 0;
     if (now - lastRenderTime >= minFrameMs) {
       const renderDt = Math.min(0.1, (now - lastRenderTime) / 1000);
       lastRenderTime = now;
       renderer.updateAtmosphere(renderDt, sim);
+      // B6: Suppress world speech bubble unless in Ambient Mode [H], since the bottom ticker shows live banter
       const suppressBubbles =
-        ui.mode !== 'playing' || sim.banter.introActive || Boolean(ui.offlineModal) || ui.settingsOpen;
+        !ui.ambientMode ||
+        ui.mode !== 'playing' ||
+        sim.banter.introActive ||
+        Boolean(ui.offlineModal) ||
+        ui.settingsOpen;
       renderer.render(sim, ui.selectedActorId, suppressBubbles);
       const hasAutosave = Boolean(readLocalJson(SAVE_STORAGE_KEY));
       ui.render(renderer.ctx, sim, hasAutosave, {

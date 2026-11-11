@@ -70,6 +70,8 @@ export class TavernSim {
     this.nextOrderId = 1;
     this.spawnTimer = 10.0;  // cozy quiet start: first villager walks in around ~10s
     this.hasSpawnedFirstRookie = false;
+    this.regularsRoster = []; // bounded roster of up to 20 returning regulars { seed, archetypeId, visits, affinity }
+    this.partyQueue = [];     // queued party companions { arch, partyInfo, delaySec }
 
     this.stats = {
       customersServed: 0,
@@ -189,7 +191,39 @@ export class TavernSim {
     this.rebuildLayoutPreservingOccupancy();
     this.syncStaffRoster();
 
-    this.emitEvent('upgrade_bought', { upgradeId: u.id, kind: u.kind, name: u.name, comment: u.nyahComment });
+    // Visible world feedback for repeatable and one-off purchases (B2)
+    if (eff.type === 'maid_speed') {
+      const pct = Math.round(this.maidSpeedMult * 100);
+      for (const s of this.staff) {
+        if (s.role === 'maid') s.setEmote('emote_sparkle', 2.4);
+      }
+      const nyahActor = this.staff.find((s) => s.id === 'nyah') || this.staff[0];
+      if (nyahActor) this.pushFloatingText(`Maid Speed ${pct}%!`, nyahActor.x, nyahActor.y - 46, 'gold');
+    } else if (eff.type === 'chef_speed') {
+      const pct = Math.round(this.chefSpeedMult * 100);
+      for (const s of this.staff) {
+        if (s.role === 'chef') s.setEmote('emote_sparkle', 2.4);
+      }
+      const chefActor = this.staff.find((s) => s.role === 'chef') || this.staff[0];
+      if (chefActor) this.pushFloatingText(`Cook Speed ${pct}%!`, chefActor.x, chefActor.y - 46, 'gold');
+    } else if (eff.type === 'ambience_bonus') {
+      const bp = this.layout.waypoints.barBehind;
+      this.pushFloatingText(`Ambience ${this.ambience}!`, bp.x, bp.y - 28, 'gold');
+      const fifiActor = this.staff.find((s) => s.id === 'fifi');
+      if (fifiActor) fifiActor.setEmote('emote_sparkle', 2.4);
+    } else if (eff.type === 'patron_spawn_rate') {
+      const pct = Math.round((this.patronSpawnMult - 1) * 100);
+      const dp = this.layout.waypoints.entranceInside;
+      this.pushFloatingText(`Traffic +${pct}%!`, dp.x, dp.y - 30, 'gold');
+    }
+
+    this.emitEvent('upgrade_bought', {
+      upgradeId: u.id,
+      kind: u.kind,
+      name: u.name,
+      roomKey: eff.type === 'unlock_room' ? String(eff.value) : null,
+      comment: u.nyahComment,
+    });
 
     if (eff.type === 'hire_staff') {
       const staffId = String(eff.value);
@@ -352,7 +386,31 @@ export class TavernSim {
     return false;
   }
 
-  claimFreeSeat(customerId) {
+  countFreeSeats() {
+    let free = 0;
+    for (const t of this.layout.tables) {
+      if (t.dirty) continue;
+      for (const s of t.seats) {
+        if (!s.occupiedBy) free++;
+      }
+    }
+    return free;
+  }
+
+  claimFreeSeat(customerId, preferredTableIndex = null) {
+    // If part of an adventurer party with a preferred table, sit together if possible!
+    if (preferredTableIndex !== null && this.layout.tables[preferredTableIndex]) {
+      const prefT = this.layout.tables[preferredTableIndex];
+      if (!prefT.dirty) {
+        for (const s of prefT.seats) {
+          if (!s.occupiedBy) {
+            s.occupiedBy = customerId;
+            return { tableIndex: prefT.index, seatIndex: s.seatIndex };
+          }
+        }
+      }
+    }
+
     // Spread customers evenly across non-dirty tables
     const candidates = [];
     for (const t of this.layout.tables) {
@@ -514,6 +572,22 @@ export class TavernSim {
     this.pushFloatingText(`+${totalEarned}g`, cust.x, cust.y - 44, 'gold');
     this.emitEvent('payment', { gold: totalEarned, tip, repDelta });
 
+    // Record or level up happy guests in the Returning Regulars roster (up to 20 regulars)
+    if (cust.mood >= 58) {
+      const existing = this.regularsRoster.find((r) => r.seed === cust.seed);
+      if (existing) {
+        existing.visits = (existing.visits || 1) + 1;
+        existing.affinity = Math.min(20, (existing.affinity || 2) + 2);
+      } else if (this.regularsRoster.length < 20) {
+        this.regularsRoster.push({
+          seed: cust.seed,
+          archetypeId: cust.archetype.id,
+          visits: 1,
+          affinity: 2,
+        });
+      }
+    }
+
     if (tip >= 20) {
       this.banter.trigger('big_tip', this);
     }
@@ -609,17 +683,30 @@ export class TavernSim {
     return Math.max(1.8, Math.min(32.0, rate));
   }
 
-  spawnCustomer() {
+  spawnCustomer(forcedArch = null, partyInfo = null) {
     const seatCap = this.getTotalSeatCapacity();
     const maxActive = seatCap + this.layout.beds.length + 3;
-    if (this.customers.length >= maxActive) return false;
+    if (this.customers.length >= maxActive) return null;
 
-    const arch = this.chooseSpawnArchetype();
+    const arch = forcedArch || this.chooseSpawnArchetype();
     const id = `c_${this.nextCustomerNum++}`;
-    const seed = Math.abs(this.nextSeed()) || 1;
-    const cust = new CustomerActor(id, seed, arch, this);
+
+    // Check if an inactive Returning Regular of this archetype wants to revisit (~30% chance)
+    let regularEntry = null;
+    if (this.regularsRoster.length > 0 && ((Math.abs(this.rngSeedCounter * 17) % 100) < 30)) {
+      const activeSeeds = new Set(this.customers.map((c) => c.seed));
+      const candidates = this.regularsRoster.filter(
+        (r) => r.archetypeId === arch.id && !activeSeeds.has(r.seed)
+      );
+      if (candidates.length > 0) {
+        regularEntry = candidates[this.nextCustomerNum % candidates.length];
+      }
+    }
+
+    const seed = regularEntry ? regularEntry.seed : (Math.abs(this.nextSeed()) || 1);
+    const cust = new CustomerActor(id, seed, arch, this, { regularEntry, partyInfo });
     this.customers.push(cust);
-    return true;
+    return cust;
   }
 
   updateDayCycle(dt) {
@@ -658,12 +745,54 @@ export class TavernSim {
       this.stats.recentWindowSec = 0;
     }
 
+    // Drain queued adventurer party companions walking in together (~1.0s apart)
+    if (this.partyQueue.length > 0) {
+      this.partyQueue[0].delaySec -= dt;
+      if (this.partyQueue[0].delaySec <= 0) {
+        const nextMember = this.partyQueue.shift();
+        this.spawnCustomer(nextMember.arch, nextMember.partyInfo);
+      }
+    }
+
     // Spawn logic driven by fame (reputation), ambience, expansions, and time of day (never seat count!)
     this.spawnTimer -= dt;
     if (this.spawnTimer <= 0) {
-      this.spawnCustomer();
+      const spawned = this.spawnCustomer();
+      let partySpacingMult = 1.0;
+
+      // Adventurer Party Waves (C1): after Kitchen unlocks, adventurers can arrive in 2-to-3 person parties!
+      if (
+        spawned &&
+        this.isUpgradeOwned('exp_kitchen') &&
+        spawned.archetype.id.startsWith('adventurer') &&
+        this.partyQueue.length === 0 &&
+        this.countFreeSeats() >= 3 &&
+        ((this.nextCustomerNum * 13) % 100) < (this.isUpgradeOwned('exp_counter_shop') ? 28 : 18)
+      ) {
+        const partySize = this.countFreeSeats() >= 4 && (this.nextCustomerNum % 3 === 0) ? 3 : 2;
+        // Find a table with >=2 free seats so the party can sit together
+        let prefTableIdx = null;
+        for (const t of this.layout.tables) {
+          if (t.dirty) continue;
+          const openCount = t.seats.filter((s) => !s.occupiedBy).length;
+          if (openCount >= 2) {
+            prefTableIdx = t.index;
+            break;
+          }
+        }
+        spawned.partyInfo = { size: partySize, index: 1, preferredTableIndex: prefTableIdx };
+        for (let p = 2; p <= partySize; p++) {
+          this.partyQueue.push({
+            arch: spawned.archetype,
+            partyInfo: { size: partySize, index: p, preferredTableIndex: prefTableIdx },
+            delaySec: 1.0,
+          });
+        }
+        partySpacingMult = partySize;
+      }
+
       const guestsPerMin = this.getTargetGuestsPerMin();
-      const baseInterval = 60.0 / guestsPerMin;
+      const baseInterval = (60.0 / guestsPerMin) * partySpacingMult;
       const jitter = 0.88 + ((Math.abs(this.nextSeed()) % 25) / 100);
       this.spawnTimer = Math.max(1.6, baseInterval * jitter);
     }

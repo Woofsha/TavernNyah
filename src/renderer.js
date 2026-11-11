@@ -440,6 +440,9 @@ export class TavernRenderer {
       if (img) ctx.drawImage(img, sx, sy);
     }
 
+    // 2b. Cutaway Side Walls & Low Front Wall Rim (A4)
+    this._drawCutawayBorderWalls(ctx, sim, camX, camY);
+
     // 3. Assembled Rugs on Floor Layer
     for (const r of sim.layout.rugs) {
       const rugCanvas = this.assembledRugs.get(r.group);
@@ -531,7 +534,18 @@ export class TavernRenderer {
           lightSources.push({ sx, sy: sy - Math.floor(drawImg.height * 0.5), large: p.asset === 'fireplace_1' });
         }
 
-        // Tabletop overlays (candles, active dishes, dirty crumb indicator)
+        // Tabletop overlays (candles, active dishes, dirty crumb indicator, beeswax polish shine)
+        if ((sim.layout.polishedLevel || 0) > 0 && (p.tableIndex !== undefined || p.id === 'main_bar')) {
+          const seedOff = (p.tableIndex ?? 7) * 1.9;
+          const glintPhase = (this.animClock * 1.6 + seedOff) % 3.2;
+          if (glintPhase < 0.75) {
+            const gx = sx - 10 + Math.round((glintPhase / 0.75) * 20);
+            const gy = sy - (p.id === 'main_bar' ? 22 : 26);
+            ctx.fillStyle = this.pal.CREAM_LIGHT;
+            ctx.fillRect(gx - 1, gy, 3, 1);
+            ctx.fillRect(gx, gy - 1, 1, 3);
+          }
+        }
         if (p.tableIndex !== undefined) {
           const tbl = sim.layout.tables[p.tableIndex];
           if (p.hasCandles) {
@@ -671,17 +685,18 @@ export class TavernRenderer {
       });
     }
 
-    const beat = !suppressWorldBubbles ? sim.banter.currentBeat : null;
+    const beat = sim.banter.currentBeat;
     if (beat) {
       const speakerActor = sim.getActorById(beat.speaker);
       const parchSkin = this.assets.tavern.get('ui_panel_parchment');
-      if (speakerActor && parchSkin) {
+      if (speakerActor) {
         const sx = Math.round(speakerActor.x - camX);
         const sy = Math.round(speakerActor.y - camY - 52);
-        if (sx >= 36 && sx <= INTERNAL_W - 36 && sy >= 30 && sy <= INTERNAL_H - 20) {
-          const bw = 186;
-          const wrapped = wrapPixelText(beat.text, bw - 14, 1).slice(0, 6);
-          const bh = Math.max(24, wrapped.length * 9 + 11);
+        // Only draw overhead text bubble when bottom ticker is hidden (Ambient Mode [H]), avoiding duplicate text clutter (B6)
+        if (!suppressWorldBubbles && parchSkin && sx >= 36 && sx <= INTERNAL_W - 36 && sy >= 30 && sy <= INTERNAL_H - 20) {
+          const bw = 164;
+          const wrapped = wrapPixelText(beat.text, bw - 14, 1).slice(0, 3);
+          const bh = Math.max(22, wrapped.length * 9 + 10);
           const bx = Math.max(6, Math.min(INTERNAL_W - bw - 6, Math.round(sx - bw / 2)));
           const by = Math.max(30, sy - bh);
           drawNineSlice(ctx, parchSkin, bx, by, bw, bh, 8);
@@ -689,8 +704,74 @@ export class TavernRenderer {
             color: this.pal.OUTLINE_WARM,
             scale: 1,
             lineHeight: 9,
-            maxLines: 6,
+            maxLines: 3,
           });
+        }
+      }
+    }
+  }
+
+  _drawCutawayBorderWalls(ctx, sim, camX, camY) {
+    const interiorSet = new Set();
+    for (const f of sim.layout.floors) {
+      if (f.asset !== 'floor_cobble') {
+        interiorSet.add(`${f.tx},${f.ty}`);
+      }
+    }
+    const doorTX = sim.layout.doorTileX;
+    const doorTY = sim.layout.doorTileY;
+
+    for (const f of sim.layout.floors) {
+      if (f.asset === 'floor_cobble') continue;
+      const sx = Math.round(f.x - camX);
+      const sy = Math.round(f.y - camY);
+      if (sx < -48 || sx > INTERNAL_W + 48 || sy < -64 || sy > INTERNAL_H + 48) continue;
+
+      const hasLeft = interiorSet.has(`${f.tx - 1},${f.ty}`);
+      const hasRight = interiorSet.has(`${f.tx + 1},${f.ty}`);
+      const hasBottom = interiorSet.has(`${f.tx},${f.ty + 1}`);
+
+      // Left cutaway timber/stone wall sill
+      if (!hasLeft) {
+        ctx.fillStyle = this.pal.OUTLINE_WARM;
+        ctx.fillRect(sx - 6, sy, 6, 32);
+        ctx.fillStyle = this.pal.WOOD_SHADOW;
+        ctx.fillRect(sx - 5, sy, 4, 32);
+        ctx.fillStyle = this.pal.WOOD_LIGHT;
+        ctx.fillRect(sx - 3, sy, 2, 32);
+      }
+
+      // Right cutaway timber/stone wall sill
+      if (!hasRight) {
+        ctx.fillStyle = this.pal.OUTLINE_WARM;
+        ctx.fillRect(sx + 32, sy, 6, 32);
+        ctx.fillStyle = this.pal.WOOD_SHADOW;
+        ctx.fillRect(sx + 33, sy, 4, 32);
+        ctx.fillStyle = this.pal.WOOD_BASE;
+        ctx.fillRect(sx + 33, sy, 2, 32);
+      }
+
+      // South (front) low cutaway wall with framed opening for the front doorway
+      if (!hasBottom) {
+        const isDoorway = f.ty === doorTY && (f.tx === doorTX || f.tx === doorTX + 1);
+        if (!isDoorway) {
+          // 10px tall cutaway front wall (timber top rail + stone base + warm outline)
+          ctx.fillStyle = this.pal.OUTLINE_WARM;
+          ctx.fillRect(sx - (!hasLeft ? 6 : 0), sy + 28, 32 + (!hasLeft ? 6 : 0) + (!hasRight ? 6 : 0), 10);
+          ctx.fillStyle = this.pal.WOOD_LIGHT;
+          ctx.fillRect(sx - (!hasLeft ? 5 : 0), sy + 29, 32 + (!hasLeft ? 5 : 0) + (!hasRight ? 5 : 0), 2);
+          ctx.fillStyle = this.pal.STONE_BASE;
+          ctx.fillRect(sx - (!hasLeft ? 5 : 0), sy + 31, 32 + (!hasLeft ? 5 : 0) + (!hasRight ? 5 : 0), 4);
+          ctx.fillStyle = this.pal.STONE_SHADOW;
+          ctx.fillRect(sx - (!hasLeft ? 5 : 0), sy + 35, 32 + (!hasLeft ? 5 : 0) + (!hasRight ? 5 : 0), 2);
+        } else if (f.tx === doorTX) {
+          // Timber door-jamb posts framing the front door opening
+          ctx.fillStyle = this.pal.OUTLINE_WARM;
+          ctx.fillRect(sx - 4, sy + 26, 6, 12);
+          ctx.fillRect(sx + 62, sy + 26, 6, 12);
+          ctx.fillStyle = this.pal.WOOD_BASE;
+          ctx.fillRect(sx - 3, sy + 27, 4, 10);
+          ctx.fillRect(sx + 63, sy + 27, 4, 10);
         }
       }
     }

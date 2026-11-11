@@ -217,8 +217,24 @@ export function buildTavernLayout(state, data) {
     { asset: 'lantern_wall', x: 16 * TILE + 8, y: (mainTop - 2) * TILE + 14, lightPool: true },
   );
 
-  // Decor Upgrades -> Visible Props!
+  // Decor & Repeatable Upgrades -> Visible World Props (B2)!
   const upg = state.upgradeLevels || {};
+  if ((upg.decor_polish || 0) > 0) {
+    props.push({
+      id: 'bar_polished_tray',
+      asset: 'ale_tray_three',
+      x: barX - 18,
+      y: barY - 14,
+      sortY: barY + 2,
+      shadow: false,
+    });
+  }
+  if ((upg.train_chefs || 0) > 0 && !hasKitchen) {
+    wallMounts.push({ asset: 'drying_rack_herbs', x: 16 * TILE + 4, y: 4 * TILE + 12 });
+  }
+  if ((upg.town_crier || 0) > 0 && !hasCounter) {
+    wallMounts.push({ asset: 'quest_board_full', x: 8 * TILE + 12, y: 4 * TILE + 10 });
+  }
   if ((upg.decor_hearth || 0) > 0) {
     props.push({ id: 'hearth_fire', asset: 'fireplace_1', x: 10 * TILE + 16, y: 6 * TILE + 16, shadow: false, emitsEmbers: true, lightPool: true });
   }
@@ -393,6 +409,7 @@ export function buildTavernLayout(state, data) {
   return {
     tavernTier,
     facadeAsset: `facade_t${tavernTier}`,
+    polishedLevel: upg.decor_polish || 0,
     doorTileX,
     doorTileY,
     floors,

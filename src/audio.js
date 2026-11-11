@@ -982,6 +982,9 @@ export class AudioManager {
         case 'upgrade':
           this._sfxUpgrade(t, vol, pitch);
           break;
+        case 'expansion_fanfare':
+          this._sfxExpansionFanfare(t, vol, pitch);
+          break;
         case 'complaint':
           this._sfxComplaint(t, vol, pitch);
           break;
@@ -1349,6 +1352,42 @@ export class AudioManager {
       overtone.start(noteTime);
       osc.stop(noteTime + 0.55);
       overtone.stop(noteTime + 0.55);
+    });
+  }
+
+  // 8b. Celebratory architectural expansion fanfare (rising pentatonic harp + warm fifth chord)
+  _sfxExpansionFanfare(t, vol, pitch) {
+    const notes = [293.66, 369.99, 440.00, 587.33, 739.99, 880.00]; // D4, F#4, A4, D5, F#5, A5
+    notes.forEach((f, idx) => {
+      const noteTime = t + idx * 0.085;
+      const isLast = idx >= 4;
+      const dur = isLast ? 0.95 : 0.45;
+
+      const osc = this.ctx.createOscillator();
+      const overtone = this.ctx.createOscillator();
+      const env = this.ctx.createGain();
+      const otGain = this.ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(f * pitch, noteTime);
+
+      overtone.type = 'sine';
+      overtone.frequency.setValueAtTime(f * 2.0 * pitch, noteTime);
+      otGain.gain.setValueAtTime(0.08 * vol, noteTime);
+
+      env.gain.setValueAtTime(0.0001, noteTime);
+      env.gain.linearRampToValueAtTime((isLast ? 0.24 : 0.18) * vol, noteTime + 0.01);
+      env.gain.exponentialRampToValueAtTime(0.0001, noteTime + dur);
+
+      osc.connect(env);
+      overtone.connect(otGain);
+      otGain.connect(env);
+      env.connect(this.sfxGain);
+
+      osc.start(noteTime);
+      overtone.start(noteTime);
+      osc.stop(noteTime + dur + 0.04);
+      overtone.stop(noteTime + dur + 0.04);
     });
   }
 

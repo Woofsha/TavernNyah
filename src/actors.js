@@ -34,7 +34,7 @@ function stepTowards(actor, tx, ty, speedPxPerSec, dt) {
 }
 
 export class CustomerActor {
-  constructor(id, seed, archetypeSpec, sim) {
+  constructor(id, seed, archetypeSpec, sim, spawnMeta = {}) {
     const profile = generateCustomerProfile(seed, archetypeSpec, sim.data);
     this.id = id;
     this.isStaff = false;
@@ -49,7 +49,18 @@ export class CustomerActor {
     this.level = profile.level;
     this.gold = profile.gold;
     this.quirk = profile.quirk;
-    this.mood = Math.min(96, profile.baselineMood + Math.min(14, sim.ambience * 0.25));
+
+    const reg = spawnMeta.regularEntry || null;
+    this.isRegular = Boolean(reg);
+    this.regularVisits = reg ? (reg.visits || 1) + 1 : 1;
+    this.regularAffinity = reg ? (reg.affinity || 2) : 0;
+    this.partyInfo = spawnMeta.partyInfo || null;
+    this.laneOffsetX = ((seed % 5) - 2) * 3;
+
+    this.mood = Math.min(
+      98,
+      profile.baselineMood + Math.min(14, sim.ambience * 0.25) + Math.min(10, this.regularAffinity)
+    );
     this.favoriteDishId = profile.favoriteDishId;
     this.favoriteDishName = profile.favoriteDishName;
     this.spriteIndex = profile.spriteIndex;
@@ -90,10 +101,16 @@ export class CustomerActor {
     this.emote = null;
     this.emoteTimer = 0;
     this.recentEvents = [];
-    pushBounded(
-      this.recentEvents,
-      this.isReturningFromQuest ? 'Returned dusty from a quest' : 'Arrived at the tavern'
-    );
+    if (this.partyInfo && this.partyInfo.size > 1) {
+      pushBounded(this.recentEvents, `Arrived with an adventurer party (${this.partyInfo.index}/${this.partyInfo.size})`);
+    } else if (this.isRegular) {
+      pushBounded(this.recentEvents, `Returning regular (Visit #${this.regularVisits})`);
+    } else {
+      pushBounded(
+        this.recentEvents,
+        this.isReturningFromQuest ? 'Returned dusty from a quest' : 'Arrived at the tavern'
+      );
+    }
   }
 
   setEmote(emoteName, duration = 2.4) {
@@ -279,7 +296,7 @@ export class CustomerActor {
       case 'ENTERING': {
         this.anim = 'walk';
         const wp = sim.layout.waypoints.entranceInside;
-        if (stepTowards(this, wp.x, wp.y, walkSpeed, dt)) {
+        if (stepTowards(this, wp.x + this.laneOffsetX, wp.y, walkSpeed, dt)) {
           sim.emitEvent('door_enter', { actorId: this.id });
           if (this.isReturningFromQuest) {
             sim.banter.trigger('quest_return', sim);
@@ -303,9 +320,11 @@ export class CustomerActor {
 
       case 'AT_QUEST_BOARD': {
         const qwp = sim.layout.waypoints.questBoardSpot;
-        if (Math.hypot(this.x - qwp.x, this.y - qwp.y) > 4) {
+        const tx = qwp.x + this.laneOffsetX;
+        const ty = qwp.y;
+        if (Math.hypot(this.x - tx, this.y - ty) > 4) {
           this.anim = 'walk';
-          stepTowards(this, qwp.x, qwp.y, walkSpeed, dt);
+          stepTowards(this, tx, ty, walkSpeed, dt);
         } else {
           this.anim = 'idle';
           this.dir = 'up';
@@ -320,9 +339,11 @@ export class CustomerActor {
 
       case 'AT_COUNTER': {
         const cwp = sim.layout.waypoints.counterCustomerSpot;
-        if (Math.hypot(this.x - cwp.x, this.y - cwp.y) > 4) {
+        const tx = cwp.x + this.laneOffsetX;
+        const ty = cwp.y;
+        if (Math.hypot(this.x - tx, this.y - ty) > 4) {
           this.anim = 'walk';
-          stepTowards(this, cwp.x, cwp.y, walkSpeed, dt);
+          stepTowards(this, tx, ty, walkSpeed, dt);
         } else {
           this.anim = 'idle';
           this.dir = 'up';
@@ -347,7 +368,7 @@ export class CustomerActor {
 
       case 'SEEKING_SEAT': {
         if (!this.seatRef) {
-          const found = sim.claimFreeSeat(this.id);
+          const found = sim.claimFreeSeat(this.id, this.partyInfo?.preferredTableIndex ?? null);
           if (found) {
             this.seatRef = found;
           } else {
@@ -522,11 +543,16 @@ export class CustomerActor {
   }
 
   getInspectorSnapshot(sim) {
+    const tag = this.isRegular
+      ? `Regular #${this.regularVisits}`
+      : this.partyInfo && this.partyInfo.size > 1
+        ? `Party ${this.partyInfo.index}/${this.partyInfo.size}`
+        : this.archetypeName;
     return {
       id: this.id,
       isStaff: false,
       name: this.name,
-      role: `${this.className} (${this.archetypeName})`,
+      role: `${this.className} (${tag})`,
       folk: this.folk,
       level: this.level,
       gold: this.gold,
