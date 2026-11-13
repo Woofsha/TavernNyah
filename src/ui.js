@@ -498,9 +498,9 @@ export class TavernUI {
     });
 
     // Settings Modal
-    this.drawButton(ctx, 'btn_settings', 537, 6, 42, 19, 'Menu', {
+    this.drawButton(ctx, 'btn_settings', 537, 6, 42, 19, 'Opts', {
       onClick: () => { this.settingsOpen = !this.settingsOpen; },
-      tooltip: { title: 'Settings & Save', body: 'Audio sliders, FPS cap, atmosphere & save export.' },
+      tooltip: { title: 'Options & Save', body: 'Audio sliders, toggles, FPS cap & save export.' },
     });
 
     // Shop Toggle
