@@ -436,17 +436,24 @@ export class CustomerActor {
           this.mood = Math.min(100, this.mood + 0.6 * dt);
         }
         if (this.stateTimer >= eatDuration) {
-          if (this.seatRef) {
-            const tbl = sim.layout.tables[this.seatRef.tableIndex];
+          const tableIdx = this.seatRef ? this.seatRef.tableIndex : -1;
+          this.releaseSeat(sim);
+          if (tableIdx >= 0) {
+            const tbl = sim.layout.tables[tableIdx];
             if (tbl) {
-              tbl.activeDishProp = null;
-              tbl.hasHotFood = false;
-              if ((Math.abs(sim.nextSeed()) % 100) < 48) {
+              const seatedIds = tbl.seats.map((s) => s.occupiedBy).filter(Boolean);
+              const anotherEating = seatedIds.some(
+                (id) => sim.getCustomerById(id)?.state === 'EATING'
+              );
+              if (!anotherEating) {
+                tbl.activeDishProp = null;
+                tbl.hasHotFood = false;
+              }
+              if (seatedIds.length === 0 && (Math.abs(sim.nextSeed()) % 100) < 48) {
                 tbl.dirty = true;
               }
             }
           }
-          this.releaseSeat(sim);
 
           // Check overnight room rental!
           const wantsRoomNow =
@@ -959,6 +966,13 @@ export class StaffActor {
       case 'PREP_ORDER': {
         const ord = this.currentOrder;
         if (!ord) {
+          this.transition('IDLE', 20.0);
+          return;
+        }
+        const custTarget = sim.getCustomerById(ord.customerId);
+        if (!custTarget || custTarget.state !== 'WAITING_FOR_FOOD') {
+          ord.cookingByStaffId = null;
+          this.currentOrder = null;
           this.transition('IDLE', 20.0);
           return;
         }

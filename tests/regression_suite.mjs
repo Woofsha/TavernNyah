@@ -144,7 +144,7 @@ const RUN_AUDIT = args.has('--audit');
 
 // Promotion mask: enable checks by default once their fix commit lands.
 // At baseline (pre-fixes), ENABLED_AUDITS is empty; `--audit` runs all checks.
-const ENABLED_AUDITS = new Set(['C1']);
+const ENABLED_AUDITS = new Set(['C1', 'C2']);
 
 const results = [];
 function runCheck(name, fn, auditGroup = null) {
@@ -376,7 +376,7 @@ runCheck('regularsRoster and hasSpawnedFirstRookie persist across save round-tri
   sim.hasSpawnedFirstRookie = true;
   sim.regularsRoster.push({
     seed: 918273,
-    archetypeId: 'townsfolk',
+    archetypeId: 'villager',
     name: 'Alden Ashford',
     visits: 4,
     lastGoldSpent: 28,
@@ -435,9 +435,9 @@ runCheck('Hostile malformed save payload is sanitized without NaN/Infinity/inval
   assert.equal(sim.state.upgradeLevels.unknown_fake_upg, undefined);
   assert.equal(sim.state.upgradeLevels.add_table, 0);
   assert.ok(sim.state.upgradeLevels.hire_maid_clover <= 1);
-  assert.equal(sim.state.unlockedRecipes.includes('nonexistent_dish'), false);
-  assert.equal(sim.state.unlockedRooms.includes('bogus_wing'), false);
-  assert.equal(sim.state.hiredStaffIds.includes('hacker_npc'), false);
+  assert.equal(sim.state.unlockedRecipes.has('nonexistent_dish'), false);
+  assert.equal(sim.state.unlockedRooms.has('bogus_wing'), false);
+  assert.equal(sim.state.hiredStaffIds.has('hacker_npc'), false);
 }, 'C2');
 
 runCheck('Chef aborts PREP_ORDER immediately if customer left WAITING_FOR_FOOD', () => {

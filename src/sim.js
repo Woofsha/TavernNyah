@@ -693,7 +693,7 @@ export class TavernSim {
 
     // Check if an inactive Returning Regular of this archetype wants to revisit (~30% chance)
     let regularEntry = null;
-    if (this.regularsRoster.length > 0 && ((Math.abs(this.rngSeedCounter * 17) % 100) < 30)) {
+    if (this.regularsRoster.length > 0 && ((Math.abs(this.nextSeed()) % 100) < 30)) {
       const activeSeeds = new Set(this.customers.map((c) => c.seed));
       const candidates = this.regularsRoster.filter(
         (r) => r.archetypeId === arch.id && !activeSeeds.has(r.seed)
@@ -894,30 +894,101 @@ export class TavernSim {
       unlockedRooms: Array.from(this.state.unlockedRooms),
       hiredStaffIds: Array.from(this.state.hiredStaffIds),
       hasSeenIntro: this.state.hasSeenIntro,
+      hasSpawnedFirstRookie: this.hasSpawnedFirstRookie,
+      regularsRoster: this.regularsRoster.slice(-30).map((r) => ({ ...r })),
       stats: { ...this.stats },
     };
   }
 
   loadSave(payload, nowMs = Date.now()) {
     if (!payload || typeof payload !== 'object') return null;
-    this.gold = Math.max(0, Number(payload.gold) || 0);
-    this.reputation = Math.max(0, Number(payload.reputation) || 0);
-    this.state.dayNumber = Math.max(1, Number(payload.dayNumber) || 1);
-    this.state.dayTimeSec = Math.max(0, Math.min(DAY_CYCLE_SEC - 1, Number(payload.dayTimeSec) || 40));
-    this.state.totalTimeSec = Math.max(0, Number(payload.totalTimeSec) || 0);
-    this.state.tableTier = Math.max(1, Math.min(4, Number(payload.tableTier) || 1));
-    this.state.bedTier = Math.max(1, Math.min(2, Number(payload.bedTier) || 1));
-    this.state.upgradeLevels = { ...(payload.upgradeLevels || {}) };
-    this.state.unlockedRecipes = new Set(payload.unlockedRecipes || []);
+    const finiteNum = (v, fallback, min = -Infinity, max = Infinity) => {
+      const n = Number(v);
+      return Number.isFinite(n) ? Math.max(min, Math.min(max, n)) : fallback;
+    };
+
+    const rawSeed = Number(payload.seed);
+    if (Number.isFinite(rawSeed) && rawSeed > 0) {
+      this.seed = Math.floor(rawSeed);
+    }
+
+    this.gold = Math.floor(finiteNum(payload.gold, 16, 0));
+    this.reputation = finiteNum(payload.reputation, 0, 0);
+    this.state.dayNumber = Math.floor(finiteNum(payload.dayNumber, 1, 1));
+    this.state.dayTimeSec = finiteNum(payload.dayTimeSec, 40, 0, DAY_CYCLE_SEC - 0.01);
+    this.state.totalTimeSec = finiteNum(payload.totalTimeSec, 0, 0);
+    this.state.tableTier = Math.floor(finiteNum(payload.tableTier, 1, 1, 4));
+    this.state.bedTier = Math.floor(finiteNum(payload.bedTier, 1, 1, 2));
+
+    const validUpgrades = new Map(this.data.upgrades.upgrades.map((u) => [u.id, u]));
+    const cleanUpgrades = {};
+    if (payload.upgradeLevels && typeof payload.upgradeLevels === 'object') {
+      for (const [uid, rawLvl] of Object.entries(payload.upgradeLevels)) {
+        const spec = validUpgrades.get(uid);
+        if (!spec) continue;
+        const maxLvl = spec.maxLevel ?? 999;
+        cleanUpgrades[uid] = Math.floor(finiteNum(rawLvl, 0, 0, maxLvl));
+      }
+    }
+    this.state.upgradeLevels = cleanUpgrades;
+
+    const validRecipes = new Set(this.data.recipes.recipes.map((r) => r.id));
+    this.state.unlockedRecipes = new Set(
+      (Array.isArray(payload.unlockedRecipes) ? payload.unlockedRecipes : []).filter(
+        (id) => typeof id === 'string' && validRecipes.has(id)
+      )
+    );
     for (const r of this.data.recipes.recipes) {
       if (r.unlockCost === 0) this.state.unlockedRecipes.add(r.id);
     }
-    this.state.unlockedRooms = new Set(payload.unlockedRooms || []);
-    this.state.hiredStaffIds = new Set(payload.hiredStaffIds || []);
+
+    const validRooms = new Set(
+      this.data.upgrades.upgrades
+        .filter((u) => u.effect?.type === 'unlock_room' && typeof u.effect.value === 'string')
+        .map((u) => u.effect.value)
+    );
+    this.state.unlockedRooms = new Set(
+      (Array.isArray(payload.unlockedRooms) ? payload.unlockedRooms : []).filter(
+        (id) => typeof id === 'string' && validRooms.has(id)
+      )
+    );
+
+    const validHireable = new Set(this.data.staff.hireableStaff.map((s) => s.id));
+    this.state.hiredStaffIds = new Set(
+      (Array.isArray(payload.hiredStaffIds) ? payload.hiredStaffIds : []).filter(
+        (id) => typeof id === 'string' && validHireable.has(id)
+      )
+    );
     this.state.hasSeenIntro = Boolean(payload.hasSeenIntro);
+    this.hasSpawnedFirstRookie = Boolean(payload.hasSpawnedFirstRookie);
+
+    const validArchIds = new Set(this.data.customers.archetypes.map((a) => a.id));
+    this.regularsRoster = Array.isArray(payload.regularsRoster)
+      ? payload.regularsRoster
+        .filter((r) => r && typeof r === 'object' && Number.isFinite(Number(r.seed)) && validArchIds.has(r.archetypeId))
+        .slice(-30)
+        .map((r) => ({
+          seed: Math.floor(Number(r.seed)),
+          archetypeId: r.archetypeId,
+          name: typeof r.name === 'string' ? r.name : 'Patron',
+          visits: Math.max(1, Math.floor(finiteNum(r.visits, 1, 1, 99999))),
+          lastGoldSpent: Math.max(0, Math.floor(finiteNum(r.lastGoldSpent, 0, 0, 999999))),
+          affinity: typeof r.affinity === 'string' ? r.affinity : 'Regular',
+        }))
+      : [];
 
     if (payload.stats && typeof payload.stats === 'object') {
-      this.stats = { ...this.stats, ...payload.stats };
+      this.stats = {
+        customersServed: Math.floor(finiteNum(payload.stats.customersServed, this.stats.customersServed, 0)),
+        goldEarnedTotal: Math.floor(finiteNum(payload.stats.goldEarnedTotal, this.stats.goldEarnedTotal, 0)),
+        complaintsTotal: Math.floor(finiteNum(payload.stats.complaintsTotal, this.stats.complaintsTotal, 0)),
+        roomsRented: Math.floor(finiteNum(payload.stats.roomsRented, this.stats.roomsRented, 0)),
+        suppliesSold: Math.floor(finiteNum(payload.stats.suppliesSold, this.stats.suppliesSold, 0)),
+        recoveriesTotal: Math.floor(finiteNum(payload.stats.recoveriesTotal, this.stats.recoveriesTotal, 0)),
+        recentGoldWindow: finiteNum(payload.stats.recentGoldWindow, 0, 0),
+        recentWindowSec: finiteNum(payload.stats.recentWindowSec, 0, 0),
+        avgGoldPerSec: finiteNum(payload.stats.avgGoldPerSec, 0.35, 0.05, 10000),
+      };
     }
 
     // Reset active transients cleanly on load
@@ -925,14 +996,17 @@ export class TavernSim {
     this.pendingOrders = [];
     this.readyOrders = [];
     this.floatingTexts = [];
+    this.partyQueue = [];
     this.staff = [];
 
     this.recomputeModifiers();
     this.layout = buildTavernLayout(this.state, this.data);
     this.syncStaffRoster();
+    this.updateDayCycle(0);
 
     // Calculate capped, reduced-rate offline earnings if away >= 60s
-    const savedAt = Number(payload.savedAtMs) || nowMs;
+    const rawSavedAt = Number(payload.savedAtMs);
+    const savedAt = Number.isFinite(rawSavedAt) ? rawSavedAt : nowMs;
     const elapsedSec = Math.max(0, (nowMs - savedAt) / 1000);
     if (elapsedSec >= 60) {
       const cappedSec = Math.min(elapsedSec, 8 * 3600);
@@ -942,6 +1016,11 @@ export class TavernSim {
       this.gold = Math.round(this.gold + offlineGold);
       this.stats.goldEarnedTotal += offlineGold;
       this.stats.customersServed += estCustomers;
+      this.state.totalTimeSec += cappedSec;
+      const totalDayOffset = this.state.dayTimeSec + cappedSec;
+      this.state.dayNumber += Math.floor(totalDayOffset / DAY_CYCLE_SEC);
+      this.state.dayTimeSec = totalDayOffset % DAY_CYCLE_SEC;
+      this.updateDayCycle(0);
       return this.banter.formatOfflineSummary(elapsedSec / 60, offlineGold, estCustomers);
     }
     return null;
