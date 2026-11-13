@@ -812,6 +812,77 @@ runCheck('Dev Wings toggle previews all 7 regions reversibly without mutating sa
   assert.equal(Boolean(ui.hitRegions.find((h) => h.id === 'jmp_garden')?.onClick), true);
 });
 
+runCheck('Wing layouts (Upstairs/Kitchen/Cellar/Garden), sleeper crop/sort & warm SFX hold', () => {
+  const sim = new TavernSim(data);
+  sim.setDevUnlockAllRegions(true);
+  const l = sim.layout;
+
+  // Kitchen: stone wall at tx=22 (no brown wall_corner_r window fragment) & warm stove/spit lighting
+  assert.equal(l.walls.some((w) => w.asset === 'wall_stone_mid' && w.x === 22 * 32), true);
+  assert.equal(l.walls.some((w) => w.asset === 'wall_corner_r' && w.x >= 22 * 32), false);
+  assert.equal(l.props.find((p) => p.id === 'kitchen_stove')?.lightPool, true);
+  assert.equal(l.props.find((p) => p.id === 'kitchen_spit')?.lightPool, true);
+
+  // Cellar: flush south edge (max ty === 14) with vintage shelf & candlelit tasting table
+  const cellarFloors = l.floors.filter((f) => f.asset === 'floor_cellar');
+  assert.ok(cellarFloors.length > 0);
+  assert.equal(Math.max(...cellarFloors.map((f) => f.ty)), 14);
+  assert.ok(l.props.find((p) => p.id === 'cellar_vintages' && p.asset === 'shelves_bottles'));
+  assert.equal(l.props.find((p) => p.id === 'cellar_tasting')?.hasCandles, true);
+
+  // Garden: south-west courtyard below doorTileY, zero overlap into Stage north corner (tx<=4, ty<=7)
+  const gardenCobble = l.floors.filter((f) => f.asset === 'floor_cobble' && f.tx < 12);
+  assert.ok(gardenCobble.length >= 18);
+  assert.ok(gardenCobble.every((f) => f.ty > l.doorTileY));
+  assert.equal(l.props.some((p) => (p.asset === 'tree_oak' || p.asset === 'bush_berry' || p.asset === 'lamppost') && p.x < 5 * 32 && p.y < 8 * 32), false);
+
+  // Upstairs: landing + wall lanterns + aligned bedfoot coordinates + mid-stair waypoint
+  assert.ok(l.props.find((p) => p.id === 'upstairs_landing' && p.asset === 'stairs_down'));
+  assert.ok(l.wallMounts.filter((m) => m.asset === 'lantern_wall' && m.y < 0).length >= 2);
+  assert.ok(l.waypoints?.stairsUpMid && l.beds.length > 0);
+  const bed0Prop = l.props.find((p) => p.id === 'guest_bed_0');
+  assert.equal(l.beds[0].y, bed0Prop?.y);
+
+  // Sleeping NPC head-only crop (sh=29, dy=sy-57) & positive sleeper depth offset in renderer
+  const draws = [];
+  const cctx = makeFakeCanvasCtx();
+  cctx.drawImage = (...args) => draws.push(args);
+  const assets = makeFakeAssets();
+  assets.npcs.set('barnaby', { width: 144, height: 192 });
+  const ren = new TavernRenderer({ getContext: () => cctx, width: 640, height: 360, style: {} }, assets, palette);
+  ren.drawGeneratedNpc({ id: 'c_sleep', spriteKey: 'barnaby', isCanon: false, dir: 'down', anim: 'sleep', state: 'SLEEPING', animTime: 0 }, 100, 90);
+  assert.equal(draws.length, 1);
+  assert.equal(draws[0][4], 29);
+  assert.equal(draws[0][6], 90 - 57);
+  const renSrc = fs.readFileSync(path.join(ROOT, 'src/renderer.js'), 'utf8');
+  assert.ok(renSrc.includes("footY: c.state === 'SLEEPING' ? c.y + 2 : c.y"));
+
+  // Cozy SFX: lowpass filter <= 2500Hz and zero raw sawtooth/square oscillator buzzers across all SFX + blips
+  const originalGlobal = globalThis.window;
+  const fakeCtx = createFakeAudioContext();
+  globalThis.window = { AudioContext: function () { return fakeCtx; }, addEventListener() {} };
+  try {
+    const audio = new AudioManager();
+    audio.init();
+    assert.equal(audio.sfxWarmFilter?.type, 'lowpass');
+    assert.ok(audio.sfxWarmFilter?.frequency.value <= 2500);
+    const startNodes = fakeCtx.createdNodes.length;
+    for (const sfx of ['mug', 'coin', 'doorbell', 'upgrade', 'click', 'hover', 'tab', 'sizzle', 'fire_crackle', 'complaint', 'expansion']) {
+      fakeCtx.currentTime += 1;
+      audio.playSfx(sfx);
+    }
+    for (const speaker of ['nyah', 'fifi', 'barnaby', 'patron']) {
+      fakeCtx.currentTime += 1;
+      audio.playSfx('blip', { speaker });
+    }
+    const oscs = fakeCtx.createdNodes.slice(startNodes).filter((n) => n.kind === 'oscillator');
+    assert.ok(oscs.length > 0);
+    assert.ok(oscs.every((o) => o.type !== 'sawtooth' && o.type !== 'square'));
+  } finally {
+    globalThis.window = originalGlobal;
+  }
+});
+
 const failed = results.filter((r) => !r.pass);
 console.log(`\nSummary: ${results.length - failed.length}/${results.length} passed (${failed.length} failed)`);
 if (failed.length > 0) {
