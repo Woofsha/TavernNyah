@@ -9,13 +9,14 @@
 ## 2. Scale, Resolution & Visual Rules
 - **Canon Character Measurements**:
   - `character sprites/nyah_world.png` & `fifi_world.png`: `144x192` (`3x4` cells of `48x48` px). Visual height `41-44` px, chibi ~2-head proportions, anchor `(0.5, 1.0)`.
-  - Missing East walk cycle in Row 3 is handled at runtime by flipping Row 2 (West) horizontally (`ctx.scale(-1, 1)`). Canon PNGs are never modified or resampled.
+  - Missing East walk cycle in Row 3 is handled at runtime by flipping Row 2 (West) horizontally (`ctx.scale(-1, 1)`). Original canon PNGs are never modified or resampled; runtime prefers pre-slimmed `nyah_world_small.png` & `fifi_world_small.png` (~14% smaller in-cell figures inside matching `144x192` sheets) so Nyah & Fifi match generated NPC proportions cleanly.
 - **Base Tile**: `32x32` px (`TILE_SIZE = 32`). Fits 48x48 chibi character footprints (~20px wide feet) comfortably in 1-tile aisles.
 - **Internal Viewport**: `640x360` px (`INTERNAL_W = 640`, `INTERNAL_H = 360`), scaled to the browser window using **integer scale factors only** (`Math.max(1, Math.floor(Math.min(winW / 640, winH / 360)))`), centered with letterbox/pillarbox, `ctx.imageSmoothingEnabled = false`, CSS `image-rendering: pixelated`.
 - **Camera**: Integer pixel coordinates `(Math.round(camX), Math.round(camY))`. Supports drag-pan, WASD/Arrow keys, and room quick-focus buttons as building expansions grow the tavern footprint from `10x7` tiles up to `26x16` tiles.
 - **Y-Sorting & Contact Shadows**:
-  - Every world prop and character uses `anchor: [0.5, 1.0]` (bottom-center of footprint) and sorts by `footY` (`entity.y`).
-  - Engine renders a crisp pixel-ellipse contact shadow directly beneath every Y-sorted dynamic actor and free-standing prop before drawing its sprite (no baked shadows in PNGs).
+  - Every world prop and character uses `anchor: [0.5, 1.0]` (bottom-center of footprint) and sorts by `footY` (`entity.y`). Sleeping upstairs patrons sort slightly ahead of bed headboards (`footY = c.y + 2`) and clip to the top `29px` so faces rest cleanly on pillows behind bed covers.
+  - Cutaway border walls (`_drawCutawayBorderWalls`) follow continuous outer corner sills and match stone (`floor_kitchen`, `floor_cellar`) vs timber flooring cleanly.
+  - Engine renders a crisp pixel-ellipse contact shadow directly beneath every Y-sorted dynamic actor and free-standing prop before drawing its sprite (no baked shadows in PNGs, omitted for tucked sleepers).
 - **Art Rules (All Generated PNGs)**:
   - Palette-only pixels (`tools/palette.py` for tavern/UI, `tools/palette_chars.py` for generated NPCs). Never raw hex outside palette modules; never `#000000`.
   - Binary alpha (`0` or `255` only).
@@ -25,13 +26,16 @@
 ## 3. Repository File Tree
 ```text
 TavernNyah/
-├── index.html                      # Offline entry point, integer-scaled canvas mount
+├── index.html                      # Offline entry point, integer-scaled canvas + native <dialog id="save-dialog">
 ├── ARCHITECTURE.md                 # Frozen specs, schemas, module boundaries (Primary Agent)
+├── CHANGELOG.md                    # Release changelog (v1.0.0 -> v1.1.0)
 ├── PROGRESS.md                     # Milestone log, assumptions, visual critique notes
 ├── README.md                       # How to run, controls, architecture & modding guide
 ├── sheet.png                       # 4-col 8x nearest-neighbor labeled asset contact sheet
 ├── preview.png                     # Y-sorted tavern diorama preview with contact shadows
-├── character sprites/              # Untouched canon world & big character sheets
+├── character sprites/              # Canon world/big sheets + slimmed worldSheetSmall variants
+├── tests/
+│   └── regression_suite.mjs        # 23 automated invariant checks (data, sim, UI, audio, layout)
 ├── portraits/                      # Untouched canon portraits
 ├── Ui Elements/                    # Untouched supplied pixel UI sheet
 ├── assets/
@@ -161,7 +165,7 @@ TavernNyah/
 
 ## 5. Actor State Machine & Timeout Recovery Contract
 Every dynamic actor holds `(state, stateTimer, maxStateTimeout)`:
-1. **Customer**: `ENTERING` (12s) -> `SEEKING_SEAT` / `AT_COUNTER` / `AT_QUEST_BOARD` (10s) -> `WAITING_TO_ORDER` (patience, ~35s) -> `ORDER_TAKEN_WAITING_FOOD` (patience, ~45s) -> `EATING` (8-14s) -> (`SEEKING_ROOM` -> `SLEEPING` 25-45s at night if room available) -> `PAYING` (2s) -> `LEAVING` (15s) -> `DESPAWNED`.
+1. **Customer**: `ENTERING` (12s) -> `SEEKING_SEAT` / `AT_COUNTER` / `AT_QUEST_BOARD` (10s) -> `WAITING_TO_ORDER` (patience, ~35s) -> `ORDER_TAKEN_WAITING_FOOD` (patience, ~45s) -> `EATING` (8-14s) -> (`SEEKING_ROOM` [22s, `stairPhase` stair walk] -> `SLEEPING` 25-45s at night if room available) -> `PAYING` (12s when descending stairs / 2s downstairs) -> `LEAVING` (15s) -> `DESPAWNED`.
    - **Recovery**: Any state exceeding `maxStateTimeout` logs a recovery transition (never hangs): waiting patrons lose mood and transition cleanly to `LEAVING`; walking actors blocked or delayed snap to waypoint and advance.
 2. **Maid (Nyah, Fifi, Hires)**: `IDLE` -> `WALK_TO_PATRON` (10s) -> `TAKING_ORDER` (1.2s) -> `SUBMIT_ORDER` -> `WALK_TO_PICKUP` (10s) -> `CARRYING_TO_PATRON` (10s) -> `SERVING` (0.8s) -> `CLEANING_TABLE` (1.5s) -> `IDLE`.
 3. **Chef / Bartender**: `IDLE` -> `PREP_ORDER` (`cookTime / workSpeed`, max 15s) -> `PLATE_READY` -> `IDLE`.

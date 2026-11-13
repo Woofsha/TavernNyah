@@ -113,3 +113,20 @@
   - **Banter De-duplication & Audio Polish (`B6`)**: Suppressed duplicate overhead world speech bubbles unless in `[H]` Ambient Mode (`src/main.js`), wired active walking footsteps (`audio.playSfx('footstep')`), and added `'expansion_fanfare'` (`_sfxExpansionFanfare`) + camera focus + celebratory ember burst when unlocking any building wing (`src/audio.js`, `src/ui.js`, `src/main.js`).
   - **QA Gate Sweep**: `python tools/validate_data.py` -> **exit 0**; `node tools/sim_economy.mjs` -> **exit 0** (`34.0s` first buy, `10.87m` Kitchen, `5.44h` full unlock, `9,872/9,872` sprite/folk match); `node tools/soak_test.mjs` -> **exit 0** (`0` stuck, `0` NaN, `5.09%` heap growth); `node tools/browser_qa.mjs` -> **exit 0** (`0` console/page/HTTP errors).
 
+### Release v1.1.0 — Visual, Audio, UX & Wing Layout Overhaul (`hydrogen-overhaul`)
+- **Status**: COMPLETE
+- **Changes & Verification**:
+  - **Regression & Stability Hardening (`tests/regression_suite.mjs`)**: Added a 23-check automated Node invariant suite covering banter/glyph completeness, shared-table co-diner isolation, orphaned `PREP_ORDER` aborting, hostile save sanitization, native `<dialog id="save-dialog" closedby="any">`, de-overlapped north `wallMounts`, crisp `0.5px` strokes, scrollable NPC Inspector (`5` opinions), Shop viewport hitbox clipping, 2-step Save Reset confirmation, and blur/visibility key clearing.
+  - **Cutaway Corners, Slimmed Maid Sprites & UX Polish**: Connected corner cutaway side walls cleanly with 64px north back walls (`src/renderer.js`); added `-14%` slimmed Nyah & Fifi world sheets (`character sprites/nyah_world_small.png`, `fifi_world_small.png`) matching NPC paper-doll proportions; renamed top-bar `Menu` to `Settings` to eliminate ambiguity with the `Menu` recipe shop tab; trimmed temporary dev/sprite toggles and displayed `Version v1.1.0` (`GAME_VERSION`) in Settings.
+  - **Audio Overhaul (`src/audio.js`)**: Upgraded procedural music to an 8-bar stereo acoustic hall soundtrack with percussion and retained a live `Music: NEW/OLD` toggle in Settings; rebuilt all 12 `_sfx*` synthesizers and per-speaker `_sfxBlip` voices through a warm `2200 Hz` (`Q=0.55`) lowpass bus (`sfxWarmFilter`) with zero raw `sawtooth`/`square` dialogue buzzers.
+  - **Upstairs, Kitchen, Cellar & Garden Rebuild (`src/layout.js`, `src/actors.js`, `src/renderer.js`, `src/main.js`)**:
+    - **Upstairs**: Added `upstairs_landing` (`stairs_down`), warm wall lanterns, mid-stair `stairPhase` climbing/descending waypoints, aligned bed coordinates, positive sleeper depth sorting (`c.y + 2`), and top-`29px` pillow-tucked sleeper cropping. Verified live with Night sleepers (`Zzz`) resting cleanly atop `bed_t2` pillows.
+    - **Kitchen & Cellar**: Replaced Kitchen's corner brown wood window fragment with `wall_stone_mid`, matched cutaway border walls to stone for `floor_kitchen` & `floor_cellar`, lit stove/spit pools, aligned `floor_cellar` flush at `ty=14`, equipped bottle shelves + candlelit tasting table, and fixed `focusRoom('cellar')`.
+    - **Garden**: Moved Verdant Garden Terrace out of `tx=0..4, ty=3..7` (previously overlapping Stage) into a clean south-west courtyard below `doorTileY` linked to the front cobble walkway, separated oak tree & berry bushes, and pointed `focusRoom('garden')` directly at the courtyard.
+  - **Final QA Gate Sweep (`v1.1.0`)**:
+    - `node tests/regression_suite.mjs` -> **`23/23 passed (0 failed)`**
+    - `python tools/validate_data.py` -> **exit 0** (`VALIDATION PASSED (all).`)
+    - `node tools/sim_economy.mjs` -> **exit 0** (`34.0s` first buy, `10.33m` Kitchen, `5.57h` full unlock, `9,823/9,823` sprite/folk match, all gates PASS)
+    - `node tools/soak_test.mjs` -> **exit 0** (`8h / 288,000` ticks in `0.77s`, `13,043` served, `0` stuck actors, `5.86%` heap growth, PASS)
+    - Live browser visual verification across Garden, Stage, Upstairs Night sleepers, Kitchen, and Cellar -> **`0` console errors, `0` failed requests**.
+
