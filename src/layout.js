@@ -101,7 +101,7 @@ export function buildTavernLayout(state, data) {
       { id: 'kitchen_prep', asset: 'prep_counter', x: 19 * TILE + 20, y: 8 * TILE + 26, shadow: true },
       { id: 'kitchen_larder', asset: 'crates_sacks', x: 22 * TILE - 2, y: 8 * TILE + 20, shadow: true },
       { id: 'kitchen_spit', asset: 'spit_roast', x: 21 * TILE + 12, y: 10 * TILE + 20, lightPool: true, shadow: true },
-      { id: 'kitchen_crate_herb', asset: 'plant_pot', x: 18 * TILE + 10, y: 11 * TILE + 6, shadow: true },
+      { id: 'kitchen_crate_herb', asset: 'plant_pot', x: 18 * TILE + 18, y: 11 * TILE + 6, shadow: true },
     );
     wallMounts.push(
       { asset: 'lantern_wall', x: 18 * TILE + 8, y: 4 * TILE + 6, lightPool: true },
@@ -163,10 +163,10 @@ export function buildTavernLayout(state, data) {
     }
     props.push(
       { id: 'cellar_stairs', asset: 'stairs_down', x: 18 * TILE + 26, y: 13 * TILE + 18, shadow: false },
-      { id: 'cellar_kegs_1', asset: 'keg_rack', x: 20 * TILE + 14, y: 13 * TILE + 20, shadow: true },
+      { id: 'cellar_kegs_1', asset: 'keg_rack', x: 20 * TILE + 12, y: 13 * TILE + 20, shadow: true },
       { id: 'cellar_vintages', asset: 'shelves_bottles', x: 22 * TILE, y: 13 * TILE + 20, shadow: true },
-      { id: 'cellar_crates', asset: 'crates_sacks', x: 19 * TILE + 6, y: 14 * TILE + 22, shadow: true },
-      { id: 'cellar_tasting', asset: 'table_round', x: 21 * TILE + 18, y: 14 * TILE + 20, hasCandles: true, shadow: true },
+      { id: 'cellar_crates', asset: 'crates_sacks', x: 18 * TILE + 26, y: 14 * TILE + 22, shadow: true },
+      { id: 'cellar_tasting', asset: 'table_round', x: 20 * TILE + 22, y: 14 * TILE + 20, hasCandles: true, shadow: true },
     );
     wallMounts.push(
       { asset: 'lantern_wall', x: 19 * TILE + 12, y: 11 * TILE + 8, lightPool: true },
@@ -203,9 +203,9 @@ export function buildTavernLayout(state, data) {
     fillFloor(5, patioTop, 10, patioTop + 2, 'floor_cobble');
     fillFloor(11, patioTop + 1, 11, patioTop + 1, 'floor_cobble'); // stone path joining front door walk
     props.push(
-      { id: 'garden_tree_1', asset: 'tree_oak', x: 3 * TILE + 22, y: (patioTop + 1) * TILE + 24, shadow: true },
-      { id: 'garden_bush_1', asset: 'bush_berry', x: 4 * TILE + 20, y: patioTop * TILE + 20, shadow: true },
-      { id: 'garden_bush_2', asset: 'bush_berry', x: 11 * TILE + 14, y: (patioTop + 2) * TILE + 18, shadow: true },
+      { id: 'garden_tree_1', asset: 'tree_oak', x: 2 * TILE + 24, y: (patioTop + 1) * TILE + 24, shadow: true },
+      { id: 'garden_bush_1', asset: 'bush_berry', x: 4 * TILE + 12, y: (patioTop + 2) * TILE + 16, shadow: true },
+      { id: 'garden_bush_2', asset: 'bush_berry', x: 11 * TILE + 16, y: (patioTop + 2) * TILE + 18, shadow: true },
       { id: 'garden_lamp_1', asset: 'lamppost', x: 7 * TILE + 30, y: patioTop * TILE + 22, shadow: true },
       { id: 'garden_pot_1', asset: 'plant_pot', x: 11 * TILE + 16, y: patioTop * TILE + 22, shadow: true },
     );
