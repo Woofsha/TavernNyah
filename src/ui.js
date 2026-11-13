@@ -1163,7 +1163,7 @@ export class TavernUI {
     const woodSkin = this.assets.tavern.get('ui_panel_wood');
     const parchSkin = this.assets.tavern.get('ui_panel_parchment');
     const mw = 336;
-    const mh = 256;
+    const mh = 280;
     const mx = Math.floor((INTERNAL_W - mw) / 2);
     const my = Math.floor((INTERNAL_H - mh) / 2);
 
@@ -1237,8 +1237,30 @@ export class TavernUI {
       },
     });
 
+    // Music Style A/B Toggle ('new' vs 'old') for direct in-game comparison
+    const musicStyle = audioState.musicStyle === 'old' ? 'old' : 'new';
+    const isNewMusic = musicStyle === 'new';
+    this.drawButton(ctx, 'tog_music_style', mx + 20, my + 132, 132, 20, isNewMusic ? 'Music: NEW' : 'Music: OLD', {
+      gold: isNewMusic,
+      tooltip: {
+        title: 'Soundtrack Version',
+        body: 'Toggle live between the upgraded 8-bar stereo hall music (NEW) and the original dry synth (OLD).',
+      },
+      onClick: () => {
+        const nextStyle = isNewMusic ? 'old' : 'new';
+        this.callbacks.onSettingsChange?.({ musicStyle: nextStyle });
+      },
+    });
+    drawPixelText(
+      ctx,
+      isNewMusic ? '8-bar acoustic hall + drums' : 'Classic 4-bar dry synth',
+      mx + 160,
+      my + 138,
+      { color: this.pal.WOOD_SHADOW }
+    );
+
     // Camera Quick-Jumps (2 tidy rows covering all 6 wings, disabling unbuilt wings)
-    drawPixelText(ctx, 'Camera Jump:', mx + 20, my + 139, { color: this.pal.WOOD_SHADOW });
+    drawPixelText(ctx, 'Camera Jump:', mx + 20, my + 162, { color: this.pal.WOOD_SHADOW });
     const jumps = [
       ['Hall', 'center', null],
       ['Kitchen', 'kitchen', 'kitchen'],
@@ -1251,7 +1273,7 @@ export class TavernUI {
       const col = i % 3;
       const row = Math.floor(i / 3);
       const unlocked = !reqRoom || sim.state.unlockedRooms.has(reqRoom);
-      this.drawButton(ctx, `jmp_${key}`, mx + 98 + col * 72, my + 134 + row * 21, 68, 18, lbl, {
+      this.drawButton(ctx, `jmp_${key}`, mx + 98 + col * 72, my + 157 + row * 21, 68, 18, lbl, {
         disabled: !unlocked,
         tooltip: unlocked ? null : { title: lbl, body: 'Unlock this wing under Shop -> Build first.' },
         onClick: () => {
@@ -1263,19 +1285,19 @@ export class TavernUI {
     });
 
     // Save Controls
-    this.drawButton(ctx, 'btn_save_now', mx + 20, my + 180, 92, 22, 'Save Now', {
+    this.drawButton(ctx, 'btn_save_now', mx + 20, my + 204, 92, 22, 'Save Now', {
       gold: true,
       onClick: () => {
         this.callbacks.onSaveNow?.();
         this.pushToast('Autosave', 'Tavern progress saved locally!');
       },
     });
-    this.drawButton(ctx, 'btn_exp_imp', mx + 120, my + 180, 102, 22, 'Export/Import', {
+    this.drawButton(ctx, 'btn_exp_imp', mx + 120, my + 204, 102, 22, 'Export/Import', {
       onClick: () => {
         this.callbacks.onOpenSaveDialog?.();
       },
     });
-    this.drawButton(ctx, 'btn_replay_intro', mx + 228, my + 180, 86, 22, 'Story Intro', {
+    this.drawButton(ctx, 'btn_replay_intro', mx + 228, my + 204, 86, 22, 'Story Intro', {
       onClick: () => {
         this.settingsOpen = false;
         this.resetConfirmArmed = false;
@@ -1288,7 +1310,7 @@ export class TavernUI {
       ctx,
       'btn_reset_save',
       mx + 20,
-      my + 210,
+      my + 234,
       118,
       20,
       this.resetConfirmArmed ? 'Confirm Wipe?' : 'Reset Save Data',
@@ -1316,7 +1338,7 @@ export class TavernUI {
       ctx,
       `Served: ${sim.stats.customersServed} | Rooms: ${sim.stats.roomsRented}`,
       mx + 148,
-      my + 216,
+      my + 240,
       { color: this.pal.WOOD_SHADOW }
     );
   }

@@ -207,32 +207,328 @@ const PHASE_DATA = {
   }
 };
 
+// Upgraded 8-bar (128-step) compositions for the 'new' expressive music engine
+const ENHANCED_PHASE_DATA = {
+  morning: {
+    targetBpm: 76,
+    swingMs: 0.0,
+    chords: [
+      { bass: 43, root: 55, cello: 43, arps: [55, 59, 62, 66, 69], strum: [55, 59, 62, 69] }, // Gadd9
+      { bass: 42, root: 54, cello: 42, arps: [54, 57, 62, 66, 69], strum: [54, 57, 62, 66] }, // D/F#
+      { bass: 40, root: 52, cello: 40, arps: [52, 55, 59, 62, 66], strum: [52, 55, 59, 66] }, // Em9
+      { bass: 48, root: 52, cello: 48, arps: [48, 55, 59, 62, 64], strum: [48, 55, 59, 62] }, // Cmaj9
+      { bass: 43, root: 55, cello: 43, arps: [55, 59, 62, 67, 69], strum: [55, 59, 62, 69] }, // Gadd9
+      { bass: 47, root: 54, cello: 47, arps: [47, 54, 57, 62, 66], strum: [47, 54, 57, 62] }, // Bm7
+      { bass: 45, root: 52, cello: 45, arps: [45, 52, 55, 59, 64], strum: [45, 52, 55, 64] }, // Am9
+      { bass: 38, root: 50, cello: 50, arps: [50, 54, 57, 62, 66], strum: [50, 54, 57, 62] }  // D
+    ],
+    flutePhrases: [
+      [
+        { step: 8, note: 71, dur: 4, scoop: true },
+        { step: 12, note: 74, dur: 4 },
+        { step: 16, note: 78, dur: 4, scoop: true },
+        { step: 20, note: 81, dur: 4 },
+        { step: 24, note: 74, dur: 4 },
+        { step: 28, note: 76, dur: 4 },
+        { step: 32, note: 79, dur: 6, scoop: true },
+        { step: 38, note: 78, dur: 4 },
+        { step: 42, note: 76, dur: 5 },
+        { step: 48, note: 74, dur: 6 },
+        { step: 54, note: 76, dur: 4 },
+        { step: 58, note: 79, dur: 6 },
+        { step: 64, note: 83, dur: 6, scoop: true },
+        { step: 70, note: 81, dur: 4 },
+        { step: 74, note: 79, dur: 5 },
+        { step: 80, note: 78, dur: 6 },
+        { step: 86, note: 74, dur: 4 },
+        { step: 90, note: 71, dur: 5 },
+        { step: 96, note: 76, dur: 6, scoop: true },
+        { step: 102, note: 72, dur: 4 },
+        { step: 106, note: 71, dur: 5 },
+        { step: 112, note: 69, dur: 6 },
+        { step: 118, note: 74, dur: 8 }
+      ],
+      [
+        { step: 12, note: 74, dur: 4, scoop: true },
+        { step: 16, note: 78, dur: 5 },
+        { step: 22, note: 76, dur: 4 },
+        { step: 26, note: 74, dur: 5 },
+        { step: 32, note: 71, dur: 6 },
+        { step: 38, note: 74, dur: 5 },
+        { step: 44, note: 76, dur: 4 },
+        { step: 48, note: 79, dur: 8, scoop: true },
+        { step: 68, note: 74, dur: 4 },
+        { step: 72, note: 76, dur: 4 },
+        { step: 76, note: 79, dur: 4 },
+        { step: 80, note: 78, dur: 6, scoop: true },
+        { step: 86, note: 74, dur: 6 },
+        { step: 96, note: 72, dur: 6 },
+        { step: 102, note: 71, dur: 4 },
+        { step: 106, note: 69, dur: 5 },
+        { step: 112, note: 69, dur: 6 },
+        { step: 120, note: 67, dur: 8 }
+      ],
+      []
+    ],
+    luteRuns: [
+      [71, 74, 79, 83],
+      [69, 74, 78, 81],
+      [71, 74, 76, 83],
+      [72, 76, 79, 84],
+      [71, 74, 79, 83],
+      [71, 74, 78, 83],
+      [69, 72, 76, 83],
+      [69, 74, 78, 81]
+    ]
+  },
+  afternoon: {
+    targetBpm: 84,
+    swingMs: 0.009,
+    chords: [
+      { bass: 48, root: 55, cello: 48, arps: [48, 55, 59, 62, 64], strum: [48, 55, 59, 64] }, // Cmaj9
+      { bass: 47, root: 55, cello: 47, arps: [47, 50, 55, 59, 62], strum: [47, 50, 55, 62] }, // G/B
+      { bass: 45, root: 52, cello: 45, arps: [45, 52, 55, 60, 64], strum: [45, 52, 55, 60] }, // Am7
+      { bass: 43, root: 52, cello: 43, arps: [43, 52, 55, 59, 62], strum: [43, 52, 55, 59] }, // Em7/G
+      { bass: 41, root: 48, cello: 41, arps: [41, 48, 53, 57, 60], strum: [41, 48, 53, 60] }, // Fmaj9
+      { bass: 40, root: 48, cello: 40, arps: [40, 48, 55, 60, 64], strum: [40, 48, 55, 60] }, // C/E
+      { bass: 38, root: 50, cello: 38, arps: [38, 50, 57, 60, 64], strum: [38, 50, 57, 64] }, // Dm9
+      { bass: 43, root: 55, cello: 43, arps: [43, 50, 53, 57, 62], strum: [43, 50, 55, 62] }  // G13
+    ],
+    flutePhrases: [
+      [
+        { step: 8, note: 76, dur: 4, scoop: true },
+        { step: 12, note: 79, dur: 4 },
+        { step: 16, note: 83, dur: 6, scoop: true },
+        { step: 22, note: 81, dur: 4 },
+        { step: 26, note: 79, dur: 5 },
+        { step: 32, note: 76, dur: 6 },
+        { step: 38, note: 72, dur: 5 },
+        { step: 44, note: 76, dur: 4 },
+        { step: 48, note: 79, dur: 6 },
+        { step: 54, note: 76, dur: 4 },
+        { step: 58, note: 74, dur: 5 },
+        { step: 64, note: 72, dur: 6, scoop: true },
+        { step: 70, note: 76, dur: 4 },
+        { step: 74, note: 79, dur: 5 },
+        { step: 80, note: 76, dur: 6 },
+        { step: 86, note: 79, dur: 4 },
+        { step: 90, note: 72, dur: 5 },
+        { step: 96, note: 77, dur: 6, scoop: true },
+        { step: 102, note: 76, dur: 4 },
+        { step: 106, note: 74, dur: 5 },
+        { step: 112, note: 74, dur: 6 },
+        { step: 118, note: 71, dur: 4 },
+        { step: 122, note: 67, dur: 6 }
+      ],
+      [
+        { step: 4, note: 67, dur: 4 },
+        { step: 10, note: 72, dur: 5, scoop: true },
+        { step: 16, note: 76, dur: 6 },
+        { step: 24, note: 74, dur: 4 },
+        { step: 32, note: 72, dur: 6 },
+        { step: 40, note: 69, dur: 6 },
+        { step: 48, note: 71, dur: 6, scoop: true },
+        { step: 56, note: 74, dur: 6 },
+        { step: 68, note: 76, dur: 4 },
+        { step: 74, note: 79, dur: 6 },
+        { step: 84, note: 76, dur: 6 },
+        { step: 96, note: 74, dur: 6 },
+        { step: 104, note: 72, dur: 6 },
+        { step: 112, note: 71, dur: 6 },
+        { step: 120, note: 72, dur: 8 }
+      ],
+      []
+    ],
+    luteRuns: [
+      [72, 76, 79, 84],
+      [71, 74, 79, 83],
+      [69, 72, 76, 81],
+      [71, 76, 79, 83],
+      [69, 72, 77, 81],
+      [72, 76, 79, 84],
+      [69, 74, 77, 81],
+      [71, 74, 79, 83]
+    ]
+  },
+  evening: {
+    targetBpm: 94,
+    swingMs: 0.012,
+    chords: [
+      { bass: 38, fifth: 45, root: 50, cello: 50, arps: [50, 54, 57, 62, 64], strum: [50, 54, 57, 62] }, // D
+      { bass: 36, fifth: 43, root: 48, cello: 48, arps: [48, 52, 55, 60, 62], strum: [48, 52, 55, 62] }, // Cadd9
+      { bass: 47, fifth: 43, root: 55, cello: 43, arps: [47, 50, 55, 59, 62], strum: [47, 50, 55, 62] }, // G/B
+      { bass: 45, fifth: 38, root: 50, cello: 45, arps: [45, 50, 54, 57, 62], strum: [50, 54, 57, 62] }, // D/A
+      { bass: 38, fifth: 45, root: 50, cello: 50, arps: [50, 54, 57, 62, 66], strum: [50, 54, 57, 66] }, // D
+      { bass: 36, fifth: 43, root: 48, cello: 48, arps: [48, 52, 55, 60, 64], strum: [48, 52, 55, 64] }, // Cadd9
+      { bass: 45, fifth: 40, root: 52, cello: 45, arps: [45, 52, 55, 60, 64], strum: [45, 52, 55, 60] }, // Am7
+      { bass: 45, fifth: 38, root: 50, cello: 50, arps: [45, 50, 54, 57, 62], strum: [50, 54, 57, 62] }  // D/A -> D
+    ],
+    flutePhrases: [
+      [
+        { step: 0, note: 74, dur: 2 },
+        { step: 2, note: 76, dur: 2 },
+        { step: 4, note: 78, dur: 2, scoop: true },
+        { step: 6, note: 81, dur: 2 },
+        { step: 8, note: 78, dur: 3 },
+        { step: 12, note: 74, dur: 3 },
+        { step: 16, note: 72, dur: 2 },
+        { step: 18, note: 76, dur: 2 },
+        { step: 20, note: 79, dur: 2, scoop: true },
+        { step: 22, note: 76, dur: 2 },
+        { step: 24, note: 74, dur: 3 },
+        { step: 28, note: 72, dur: 3 },
+        { step: 32, note: 71, dur: 2 },
+        { step: 34, note: 74, dur: 2 },
+        { step: 36, note: 79, dur: 2 },
+        { step: 38, note: 83, dur: 2, scoop: true },
+        { step: 40, note: 79, dur: 3 },
+        { step: 44, note: 74, dur: 3 },
+        { step: 48, note: 81, dur: 2 },
+        { step: 50, note: 79, dur: 2 },
+        { step: 52, note: 78, dur: 2 },
+        { step: 54, note: 76, dur: 2 },
+        { step: 56, note: 74, dur: 5 },
+        { step: 64, note: 78, dur: 2, scoop: true },
+        { step: 66, note: 81, dur: 2 },
+        { step: 68, note: 86, dur: 3 },
+        { step: 72, note: 81, dur: 3 },
+        { step: 76, note: 78, dur: 3 },
+        { step: 80, note: 79, dur: 2 },
+        { step: 82, note: 76, dur: 2 },
+        { step: 84, note: 72, dur: 3 },
+        { step: 88, note: 74, dur: 3 },
+        { step: 92, note: 76, dur: 3 },
+        { step: 96, note: 81, dur: 2, scoop: true },
+        { step: 98, note: 79, dur: 2 },
+        { step: 100, note: 76, dur: 3 },
+        { step: 104, note: 79, dur: 3 },
+        { step: 108, note: 83, dur: 3 },
+        { step: 112, note: 81, dur: 3 },
+        { step: 116, note: 78, dur: 3 },
+        { step: 120, note: 74, dur: 6 }
+      ],
+      [
+        { step: 4, note: 81, dur: 2, scoop: true },
+        { step: 6, note: 79, dur: 2 },
+        { step: 8, note: 78, dur: 3 },
+        { step: 12, note: 74, dur: 3 },
+        { step: 18, note: 76, dur: 2 },
+        { step: 20, note: 79, dur: 3 },
+        { step: 24, note: 72, dur: 4 },
+        { step: 32, note: 79, dur: 3, scoop: true },
+        { step: 36, note: 83, dur: 3 },
+        { step: 40, note: 81, dur: 4 },
+        { step: 48, note: 78, dur: 3 },
+        { step: 52, note: 74, dur: 5 },
+        { step: 68, note: 74, dur: 2 },
+        { step: 70, note: 78, dur: 2 },
+        { step: 72, note: 81, dur: 4, scoop: true },
+        { step: 80, note: 79, dur: 3 },
+        { step: 84, note: 76, dur: 3 },
+        { step: 88, note: 72, dur: 4 },
+        { step: 96, note: 76, dur: 3 },
+        { step: 100, note: 79, dur: 3 },
+        { step: 104, note: 81, dur: 4 },
+        { step: 112, note: 78, dur: 3 },
+        { step: 118, note: 74, dur: 6 }
+      ],
+      []
+    ],
+    luteRuns: [
+      [74, 78, 81, 86],
+      [72, 76, 79, 84],
+      [71, 74, 79, 83],
+      [74, 78, 81, 86],
+      [74, 78, 81, 86],
+      [72, 76, 79, 84],
+      [69, 72, 76, 81],
+      [74, 78, 81, 86]
+    ]
+  },
+  night: {
+    targetBpm: 62,
+    swingMs: 0.0,
+    chords: [
+      { bass: 41, root: 53, cello: 41, arps: [41, 48, 57, 60, 64], strum: [53, 57, 60, 64] }, // Fmaj9
+      { bass: 40, root: 52, cello: 40, arps: [40, 48, 55, 59, 64], strum: [52, 55, 59, 64] }, // Cmaj7/E
+      { bass: 38, root: 50, cello: 38, arps: [38, 50, 57, 60, 64], strum: [50, 57, 60, 64] }, // Dm9
+      { bass: 36, root: 48, cello: 36, arps: [48, 55, 57, 60, 64], strum: [48, 55, 57, 60] }, // C6
+      { bass: 46, root: 53, cello: 46, arps: [46, 53, 57, 62, 65], strum: [53, 57, 62, 65] }, // Bbmaj7
+      { bass: 45, root: 53, cello: 45, arps: [45, 53, 57, 60, 65], strum: [53, 57, 60, 65] }, // F/A
+      { bass: 43, root: 50, cello: 43, arps: [43, 50, 53, 58, 62], strum: [50, 53, 58, 62] }, // Gm7
+      { bass: 36, root: 48, cello: 36, arps: [48, 50, 55, 60, 67], strum: [48, 50, 55, 60] }  // Csus2
+    ],
+    bellTones: [
+      { step: 4, note: 76 },
+      { step: 12, note: 81 },
+      { step: 20, note: 83 },
+      { step: 28, note: 79 },
+      { step: 36, note: 81 },
+      { step: 44, note: 77 },
+      { step: 52, note: 76 },
+      { step: 60, note: 72 },
+      { step: 68, note: 74 },
+      { step: 76, note: 77 },
+      { step: 84, note: 81 },
+      { step: 92, note: 79 },
+      { step: 100, note: 77 },
+      { step: 108, note: 74 },
+      { step: 116, note: 76 },
+      { step: 124, note: 72 }
+    ],
+    flutePhrases: [
+      [
+        { step: 64, note: 65, dur: 8, scoop: true },
+        { step: 80, note: 69, dur: 8 },
+        { step: 96, note: 67, dur: 8 },
+        { step: 112, note: 64, dur: 10 }
+      ],
+      []
+    ],
+    luteRuns: [
+      [77, 81, 84, 88],
+      [76, 79, 83, 88],
+      [74, 77, 81, 86],
+      [72, 76, 79, 84],
+      [74, 77, 81, 86],
+      [72, 77, 81, 84],
+      [70, 74, 77, 82],
+      [72, 74, 79, 84]
+    ]
+  }
+};
+
 export class AudioManager {
   constructor() {
     this.ctx = null;
     this.isUnlocked = false;
     this._listenersAttached = false;
 
-    // Volume state
+    // Volume & music style state ('new' = warm hall acoustics & 8-bar stems, 'old' = classic dry synth)
     this.masterVolume = 0.75;
     this.musicVolume = 0.70;
     this.sfxVolume = 0.85;
     this.muted = false;
+    this.musicStyle = 'new';
 
-    // Bus gain nodes
+    // Bus gain & acoustic processing nodes
     this.masterGain = null;
+    this.masterCompressor = null;
     this.musicGain = null;
     this.sfxGain = null;
     this.musicianGain = null;
     this.ambientGain = null;
     this.hearthGain = null;
     this.crowdGain = null;
+    this.reverbInput = null;
+    this.reverbNode = null;
+    this.reverbWetGain = null;
 
     // Generative music engine state
     this.currentPhase = 'morning';
     this.bpm = 76;
     this.targetBpm = 76;
-    this.step = 0;              // 0..63 (4 bars of 16 sixteenth-notes)
+    this.step = 0;              // 0..63 ('old') or 0..127 ('new')
     this.nextStepTime = 0;
     this.phraseIndex = 0;
     this.barCycle = 0;
@@ -334,12 +630,25 @@ export class AudioManager {
     }
   }
 
+  setMusicStyle(style) {
+    const nextStyle = style === 'old' ? 'old' : 'new';
+    if (this.musicStyle === nextStyle) return;
+    this.musicStyle = nextStyle;
+    // Keep rhythm continuous across live A/B toggle without out-of-range phrase/step indexes
+    this.step = nextStyle === 'old' ? (this.step % 64) : (this.step % 128);
+    if (this.ctx && this.reverbWetGain) {
+      const wetTarget = nextStyle === 'new' ? 0.26 : 0.0;
+      this.reverbWetGain.gain.setTargetAtTime(wetTarget, this.ctx.currentTime, 0.06);
+    }
+  }
+
   getState() {
     return {
       masterVolume: this.masterVolume,
       musicVolume: this.musicVolume,
       sfxVolume: this.sfxVolume,
-      muted: this.muted
+      muted: this.muted,
+      musicStyle: this.musicStyle
     };
   }
 
@@ -349,6 +658,7 @@ export class AudioManager {
     if (typeof obj.musicVolume === 'number') this.setMusicVolume(obj.musicVolume);
     if (typeof obj.sfxVolume === 'number') this.setSfxVolume(obj.sfxVolume);
     if (typeof obj.muted === 'boolean') this.setMuted(obj.muted);
+    if (typeof obj.musicStyle === 'string') this.setMusicStyle(obj.musicStyle);
   }
 
   // --- Internal Audio Graph Construction ---
@@ -357,15 +667,53 @@ export class AudioManager {
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
 
-    // Master bus
+    // Master bus (with transparent safety compressor when supported)
     this.masterGain = this.ctx.createGain();
     this.masterGain.gain.setValueAtTime(this.muted ? 0 : this.masterVolume, now);
-    this.masterGain.connect(this.ctx.destination);
+    if (typeof this.ctx.createDynamicsCompressor === 'function') {
+      try {
+        this.masterCompressor = this.ctx.createDynamicsCompressor();
+        this.masterCompressor.threshold.setValueAtTime(-10, now);
+        this.masterCompressor.knee.setValueAtTime(12, now);
+        this.masterCompressor.ratio.setValueAtTime(3, now);
+        this.masterCompressor.attack.setValueAtTime(0.008, now);
+        this.masterCompressor.release.setValueAtTime(0.16, now);
+        this.masterGain.connect(this.masterCompressor);
+        this.masterCompressor.connect(this.ctx.destination);
+      } catch {
+        this.masterCompressor = null;
+        this.masterGain.connect(this.ctx.destination);
+      }
+    } else {
+      this.masterGain.connect(this.ctx.destination);
+    }
 
     // Music bus
     this.musicGain = this.ctx.createGain();
     this.musicGain.gain.setValueAtTime(this.musicVolume, now);
     this.musicGain.connect(this.masterGain);
+
+    // Warm Wooden Tavern Hall Reverb Send (active only in 'new' mode)
+    if (typeof this.ctx.createConvolver === 'function' && typeof this.ctx.createBuffer === 'function') {
+      try {
+        const ir = this._createTavernReverbIR();
+        if (ir) {
+          this.reverbInput = this.ctx.createGain();
+          this.reverbInput.gain.setValueAtTime(1.0, now);
+          this.reverbNode = this.ctx.createConvolver();
+          this.reverbNode.buffer = ir;
+          this.reverbWetGain = this.ctx.createGain();
+          this.reverbWetGain.gain.setValueAtTime(this.musicStyle === 'new' ? 0.26 : 0.0, now);
+          this.reverbInput.connect(this.reverbNode);
+          this.reverbNode.connect(this.reverbWetGain);
+          this.reverbWetGain.connect(this.musicGain);
+        }
+      } catch {
+        this.reverbInput = null;
+        this.reverbNode = null;
+        this.reverbWetGain = null;
+      }
+    }
 
     // SFX bus
     this.sfxGain = this.ctx.createGain();
@@ -394,6 +742,29 @@ export class AudioManager {
 
     this._createNoiseBuffer();
     this._startAmbientBackground();
+  }
+
+  _createTavernReverbIR() {
+    if (!this.ctx || typeof this.ctx.createBuffer !== 'function') return null;
+    const sampleRate = this.ctx.sampleRate || 44100;
+    const len = Math.max(1, Math.floor(sampleRate * 1.35));
+    const ir = this.ctx.createBuffer(2, len, sampleRate);
+    if (!ir || typeof ir.getChannelData !== 'function') return null;
+    const chL = ir.getChannelData(0);
+    const chR = ir.getChannelData(1);
+    if (!chL || !chR) return null;
+    const preDelay = Math.floor(sampleRate * 0.014);
+    let lpL = 0;
+    let lpR = 0;
+    for (let i = preDelay; i < len; i++) {
+      const t = (i - preDelay) / (len - preDelay);
+      const decay = Math.pow(1 - t, 2.5);
+      lpL = lpL * 0.74 + (Math.random() * 2 - 1) * 0.26;
+      lpR = lpR * 0.74 + (Math.random() * 2 - 1) * 0.26;
+      chL[i] = lpL * decay * 0.65;
+      chR[i] = lpR * decay * 0.65;
+    }
+    return ir;
   }
 
   _createNoiseBuffer() {
@@ -472,7 +843,9 @@ export class AudioManager {
       return;
     }
 
-    const phase = PHASE_DATA[this.currentPhase];
+    const isEnhanced = this.musicStyle !== 'old';
+    const phase = isEnhanced ? ENHANCED_PHASE_DATA[this.currentPhase] : PHASE_DATA[this.currentPhase];
+    const totalSteps = isEnhanced ? 128 : 64;
     this.targetBpm = phase.targetBpm;
 
     // Smooth BPM interpolation
@@ -509,9 +882,14 @@ export class AudioManager {
     }
 
     while (this.nextStepTime < scheduleHorizon) {
-      this._scheduleStep(this.nextStepTime, this.step, phase);
+      const swingOffset = isEnhanced && (this.step % 2 === 1) ? (phase.swingMs || 0) : 0;
+      if (isEnhanced) {
+        this._scheduleEnhancedStep(this.nextStepTime + swingOffset, this.step % 128, phase);
+      } else {
+        this._scheduleStep(this.nextStepTime, this.step % 64, phase);
+      }
       this.nextStepTime += stepDuration;
-      this.step = (this.step + 1) % 64; // 4 bars = 64 sixteenth steps
+      this.step = (this.step + 1) % totalSteps;
       if (this.step === 0) {
         this.barCycle = (this.barCycle + 1) % 8;
         this.phraseIndex = (this.phraseIndex + 1) % phase.flutePhrases.length;
@@ -896,6 +1274,485 @@ export class AudioManager {
       oscOvertone.start(time);
       osc.stop(time + duration + 0.05);
       oscOvertone.stop(time + duration + 0.05);
+    } catch {}
+  }
+
+  // --- Upgraded Expressive Music Engine ('new' mode) ---
+
+  _connectMusicVoice(node, targetBus, pan = 0, wetAmount = 0.25) {
+    if (!this.ctx || !node || !targetBus) return;
+    const now = this.ctx.currentTime;
+    if (typeof this.ctx.createStereoPanner === 'function' && Math.abs(pan) > 0.01) {
+      const panner = this.ctx.createStereoPanner();
+      panner.pan.setValueAtTime(Math.max(-0.9, Math.min(0.9, pan)), now);
+      node.connect(panner);
+      panner.connect(targetBus);
+    } else {
+      node.connect(targetBus);
+    }
+    if (this.reverbInput && wetAmount > 0.005) {
+      const wetSend = this.ctx.createGain();
+      wetSend.gain.setValueAtTime(wetAmount, now);
+      node.connect(wetSend);
+      wetSend.connect(this.reverbInput);
+    }
+  }
+
+  _scheduleEnhancedStep(time, step, phase) {
+    const bar = Math.floor(step / 16);
+    const barStep = step % 16;
+    const chord = phase.chords[bar % phase.chords.length];
+    const stepSec = (60 / this.bpm) / 4;
+    const jitter = () => (Math.random() - 0.5) * 0.008;
+
+    // 1. Acoustic Guitar / Nylon Harp & Bowed Cello Backing
+    if (this.currentPhase === 'morning' || this.currentPhase === 'afternoon') {
+      if (barStep === 0) {
+        if (bar % 2 === 0 && chord.strum) {
+          this._playRichStrum(time, chord.strum, 0.95, 0.105, 0.015, -0.22);
+        } else {
+          this._playRichPluck(time, m2f(chord.bass), 0.9, 0.185, { brightness: 1800, pan: -0.20, wet: 0.28 });
+        }
+        if (bar % 2 === 0 && chord.cello) {
+          this._playWarmCello(time, m2f(chord.cello), stepSec * 30, 0.08, -0.10);
+        }
+      } else if (barStep === 8) {
+        this._playRichPluck(time + jitter(), m2f(chord.root), 0.72, 0.15, { brightness: 1650, pan: -0.18, wet: 0.26 });
+      } else if (barStep === 2 || barStep === 6 || barStep === 10 || barStep === 14) {
+        const arpPattern = bar % 2 === 0 ? [1, 2, 3, 4] : [2, 4, 3, 1];
+        const patSlot = ((barStep - 2) / 4) | 0;
+        const idx = arpPattern[patSlot % arpPattern.length] % chord.arps.length;
+        const vel = barStep === 6 || barStep === 14 ? 0.115 : 0.14;
+        this._playRichPluck(time + jitter(), m2f(chord.arps[idx]), 0.55, vel, { brightness: 2250, pan: -0.24 + idx * 0.06, wet: 0.30 });
+      } else if (this.currentPhase === 'morning' && bar === 7 && (barStep === 11 || barStep === 13)) {
+        // Gentle harp turnaround shimmer into bar 0
+        const top = chord.arps[chord.arps.length - 1] + (barStep === 13 ? 7 : 0);
+        this._playRichPluck(time, m2f(top), 0.85, 0.08, { brightness: 2800, pan: 0.22, wet: 0.44 });
+      }
+
+      if (this.currentPhase === 'afternoon') {
+        if (barStep === 0 && bar % 2 === 0) {
+          this._playPad(time, [chord.root, chord.arps[1] || chord.root + 4, chord.arps[2] || chord.root + 7], stepSec * 30, 0.055);
+        }
+        if (bar >= 4 && (barStep === 4 || barStep === 12)) {
+          this._playBrushPerc(time + jitter(), 0.028);
+        }
+      }
+    }
+
+    // 2. Evening Tavern Reel: Upright Bass, Chop Strum, Bodhran Frame Drum & Shaker
+    if (this.currentPhase === 'evening') {
+      if (barStep === 0) {
+        this._playBass(time, m2f(chord.bass), 0.52, 0.23);
+        this._playRichStrum(time, chord.strum, 0.42, 0.105, 0.010, -0.24);
+        this._playBodhran(time, true);
+        if (bar % 4 === 0 && chord.cello) {
+          this._playWarmCello(time, m2f(chord.cello), stepSec * 28, 0.07, -0.08);
+        }
+      } else if (barStep === 6) {
+        this._playBass(time + jitter(), m2f(chord.fifth || chord.root), 0.30, 0.17);
+        this._playBodhran(time + jitter(), false);
+      } else if (barStep === 8) {
+        this._playBass(time, m2f(chord.root), 0.48, 0.20);
+        this._playBodhran(time, true);
+      } else if (barStep === 14) {
+        this._playBodhran(time + jitter(), false);
+      }
+
+      if (barStep === 4 || barStep === 12) {
+        // Crisp offbeat folk chop
+        this._playRichPluck(time + jitter(), m2f(chord.arps[1]), 0.22, 0.115, { brightness: 3100, pan: -0.26, wet: 0.22 });
+        this._playRichPluck(time + 0.008, m2f(chord.arps[2]), 0.22, 0.105, { brightness: 2900, pan: -0.20, wet: 0.22 });
+        this._playBrushPerc(time, 0.042);
+      } else if (barStep === 2 || barStep === 10) {
+        this._playBrushPerc(time + jitter(), 0.022);
+      }
+    }
+
+    // 3. Night Dreamy Lullaby: Velvety Cello, Soft Pad, Nylon Harp & Celesta Music-Box
+    if (this.currentPhase === 'night') {
+      if (barStep === 0) {
+        this._playBass(time, m2f(chord.bass), 1.9, 0.13);
+        if (bar % 2 === 0) {
+          this._playWarmCello(time, m2f(chord.cello), stepSec * 31, 0.055, -0.10);
+          this._playPad(time, [chord.root, chord.arps[1] || chord.root + 4, chord.arps[2] || chord.root + 7], stepSec * 31, 0.06);
+        }
+      }
+      if (barStep === 2 || barStep === 6 || barStep === 10 || barStep === 14) {
+        const arpIdx = ((barStep - 2) / 4) % chord.arps.length;
+        this._playRichPluck(time + jitter(), m2f(chord.arps[arpIdx]), 1.15, 0.068, { brightness: 1250, pan: -0.25 + arpIdx * 0.1, wet: 0.42 });
+      }
+      if (phase.bellTones) {
+        for (let i = 0; i < phase.bellTones.length; i++) {
+          if (phase.bellTones[i].step === step) {
+            this._playCelestaBell(time, m2f(phase.bellTones[i].note), 2.4, 0.115, 0.20);
+            break;
+          }
+        }
+      }
+    }
+
+    // 4. Expressive Lead Flute / Whistle / Night Alto Flute
+    const currentFlutePhrase = phase.flutePhrases[this.phraseIndex % phase.flutePhrases.length];
+    if (currentFlutePhrase && currentFlutePhrase.length > 0) {
+      for (let i = 0; i < currentFlutePhrase.length; i++) {
+        const item = currentFlutePhrase[i];
+        if (item.step === step) {
+          const durSec = Math.max(0.18, item.dur * stepSec);
+          const fluteGain = this.currentPhase === 'night' ? 0.095 : 0.145;
+          this._playRichFlute(time, m2f(item.note), durSec, fluteGain, { scoop: !!item.scoop, pan: 0.14 });
+          break;
+        }
+      }
+    }
+
+    // 5. Dynamic Musician Stem (Double-course Mandolin / Harp Arpeggios on right stereo stage)
+    const canPlayLute = this.isMusicianPerforming || (this.musicianGain && this.musicianGain.gain.value > 0.01);
+    if (canPlayLute && phase.luteRuns) {
+      const run = phase.luteRuns[bar % phase.luteRuns.length];
+      if (this.currentPhase === 'evening') {
+        if (barStep % 2 === 0 || barStep === 3 || barStep === 7 || barStep === 11 || barStep === 15) {
+          const vel = barStep % 4 === 0 ? 0.175 : 0.13;
+          this._playRichMandolin(time + jitter(), m2f(run[barStep % run.length]), 0.26, vel, 0.26);
+        }
+      } else if (this.currentPhase === 'morning') {
+        if (barStep % 2 === 0) {
+          const pat = [0, 1, 2, 3, 2, 3, 1, 2][(barStep / 2) % 8];
+          this._playRichMandolin(time + jitter(), m2f(run[pat % run.length]), 0.34, 0.13, 0.26);
+        }
+      } else if (this.currentPhase === 'afternoon') {
+        if (barStep === 3 || barStep === 6 || barStep === 11 || barStep === 14) {
+          this._playRichMandolin(time + jitter(), m2f(run[barStep % run.length]), 0.38, 0.135, 0.26);
+        }
+      } else if (this.currentPhase === 'night') {
+        if (barStep === 4 || barStep === 12) {
+          this._playRichMandolin(time, m2f(run[(barStep / 4) % run.length]), 0.72, 0.10, 0.28);
+        }
+      }
+    }
+  }
+
+  _playRichPluck(time, freq, duration, gain = 0.12, opts = {}) {
+    if (!this.ctx || !this.musicGain) return;
+    try {
+      const dur = Math.max(0.08, duration);
+      const brightness = opts.brightness ?? 2200;
+      const osc1 = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const osc3 = this.ctx.createOscillator();
+      const bodyEq = this.ctx.createBiquadFilter();
+      const filter = this.ctx.createBiquadFilter();
+      const env = this.ctx.createGain();
+
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, time);
+
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, time);
+      const o2g = this.ctx.createGain();
+      o2g.gain.setValueAtTime(0.24, time);
+      osc2.connect(o2g);
+
+      osc3.type = 'sawtooth';
+      osc3.frequency.setValueAtTime(freq * 2, time);
+      const o3g = this.ctx.createGain();
+      o3g.gain.setValueAtTime(0.06, time);
+      osc3.connect(o3g);
+
+      bodyEq.type = 'peaking';
+      bodyEq.frequency.setValueAtTime(240, time);
+      bodyEq.Q.setValueAtTime(1.1, time);
+      bodyEq.gain.setValueAtTime(3.0, time);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(brightness, time);
+      filter.frequency.exponentialRampToValueAtTime(360, time + Math.min(dur, 0.42));
+      filter.Q.setValueAtTime(1.2, time);
+
+      env.gain.setValueAtTime(0.0001, time);
+      env.gain.linearRampToValueAtTime(gain, time + 0.006);
+      env.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+
+      osc1.connect(bodyEq);
+      o2g.connect(bodyEq);
+      o3g.connect(bodyEq);
+      bodyEq.connect(filter);
+      filter.connect(env);
+      this._connectMusicVoice(env, this.musicGain, opts.pan ?? -0.2, opts.wet ?? 0.28);
+
+      osc1.start(time);
+      osc2.start(time);
+      osc3.start(time);
+      osc1.stop(time + dur + 0.05);
+      osc2.stop(time + dur + 0.05);
+      osc3.stop(time + dur + 0.05);
+    } catch {}
+  }
+
+  _playRichStrum(time, midiNotes, duration, gain = 0.085, spread = 0.014, pan = -0.22) {
+    if (!midiNotes || !midiNotes.length) return;
+    midiNotes.forEach((midi, idx) => {
+      const noteTime = time + idx * spread;
+      const noteGain = gain * (1 - idx * 0.1);
+      this._playRichPluck(noteTime, m2f(midi), duration, noteGain, {
+        brightness: 2100 - idx * 140,
+        pan: pan + idx * 0.05,
+        wet: 0.30,
+      });
+    });
+  }
+
+  _playWarmCello(time, freq, duration = 1.6, gain = 0.06, pan = -0.10) {
+    if (!this.ctx || !this.musicGain) return;
+    try {
+      const dur = Math.max(0.5, duration);
+      const oscA = this.ctx.createOscillator();
+      const oscB = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
+      const env = this.ctx.createGain();
+
+      oscA.type = 'sawtooth';
+      oscA.frequency.setValueAtTime(freq, time);
+      oscA.detune.setValueAtTime(-3.5, time);
+
+      oscB.type = 'triangle';
+      oscB.frequency.setValueAtTime(freq, time);
+      oscB.detune.setValueAtTime(3.5, time);
+
+      const mixB = this.ctx.createGain();
+      mixB.gain.setValueAtTime(0.6, time);
+      oscB.connect(mixB);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(190, time);
+      filter.frequency.linearRampToValueAtTime(520, time + Math.min(0.45, dur * 0.35));
+      filter.frequency.linearRampToValueAtTime(250, time + dur);
+      filter.Q.setValueAtTime(0.8, time);
+
+      const atk = Math.min(0.24, dur * 0.25);
+      const holdEnd = Math.max(atk + 0.05, dur - 0.35);
+      env.gain.setValueAtTime(0.0001, time);
+      env.gain.linearRampToValueAtTime(gain, time + atk);
+      env.gain.setValueAtTime(gain * 0.9, time + holdEnd);
+      env.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+
+      oscA.connect(filter);
+      mixB.connect(filter);
+      filter.connect(env);
+      this._connectMusicVoice(env, this.musicGain, pan, 0.28);
+
+      oscA.start(time);
+      oscB.start(time);
+      oscA.stop(time + dur + 0.06);
+      oscB.stop(time + dur + 0.06);
+    } catch {}
+  }
+
+  _playRichFlute(time, freq, duration, gain = 0.125, opts = {}) {
+    if (!this.ctx || !this.musicGain) return;
+    try {
+      const dur = Math.max(0.14, duration);
+      const osc = this.ctx.createOscillator();
+      const oscTri = this.ctx.createOscillator();
+      const triGain = this.ctx.createGain();
+      const warmth = this.ctx.createBiquadFilter();
+      const env = this.ctx.createGain();
+
+      osc.type = 'sine';
+      oscTri.type = 'triangle';
+      if (opts.scoop) {
+        const startFreq = freq * 0.965;
+        osc.frequency.setValueAtTime(startFreq, time);
+        osc.frequency.linearRampToValueAtTime(freq, time + 0.032);
+        oscTri.frequency.setValueAtTime(startFreq, time);
+        oscTri.frequency.linearRampToValueAtTime(freq, time + 0.032);
+      } else {
+        osc.frequency.setValueAtTime(freq, time);
+        oscTri.frequency.setValueAtTime(freq, time);
+      }
+
+      triGain.gain.setValueAtTime(0.16, time);
+      oscTri.connect(triGain);
+
+      // Expressive breath vibrato (~5.1Hz after 110ms)
+      const vibrato = this.ctx.createOscillator();
+      const vibGain = this.ctx.createGain();
+      vibrato.frequency.setValueAtTime(5.1, time);
+      vibGain.gain.setValueAtTime(0.0001, time);
+      vibGain.gain.setValueAtTime(0.0001, time + Math.min(0.11, dur * 0.4));
+      vibGain.gain.linearRampToValueAtTime(freq * 0.015, time + Math.min(0.36, dur));
+      vibrato.connect(vibGain);
+      vibGain.connect(osc.frequency);
+      vibGain.connect(oscTri.frequency);
+      vibrato.start(time);
+      vibrato.stop(time + dur + 0.06);
+
+      if (this.noiseBuffer) {
+        const breath = this.ctx.createBufferSource();
+        breath.buffer = this.noiseBuffer;
+        const bFilter = this.ctx.createBiquadFilter();
+        bFilter.type = 'bandpass';
+        bFilter.frequency.setValueAtTime(Math.min(4800, freq * 1.15), time);
+        bFilter.Q.setValueAtTime(3.2, time);
+        const bEnv = this.ctx.createGain();
+        bEnv.gain.setValueAtTime(0.0001, time);
+        bEnv.gain.linearRampToValueAtTime(0.018, time + 0.045);
+        bEnv.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+        breath.connect(bFilter);
+        bFilter.connect(bEnv);
+        this._connectMusicVoice(bEnv, this.musicGain, opts.pan ?? 0.14, 0.34);
+        breath.start(time);
+        breath.stop(time + dur + 0.05);
+      }
+
+      warmth.type = 'lowpass';
+      warmth.frequency.setValueAtTime(3400, time);
+      warmth.Q.setValueAtTime(0.7, time);
+
+      const atk = Math.min(0.055, dur * 0.25);
+      const relStart = Math.max(atk + 0.02, dur - 0.09);
+      env.gain.setValueAtTime(0.0001, time);
+      env.gain.linearRampToValueAtTime(gain, time + atk);
+      env.gain.setValueAtTime(gain, time + relStart);
+      env.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+
+      osc.connect(warmth);
+      triGain.connect(warmth);
+      warmth.connect(env);
+      this._connectMusicVoice(env, this.musicGain, opts.pan ?? 0.14, 0.38);
+
+      osc.start(time);
+      oscTri.start(time);
+      osc.stop(time + dur + 0.06);
+      oscTri.stop(time + dur + 0.06);
+    } catch {}
+  }
+
+  _playRichMandolin(time, freq, duration = 0.28, gain = 0.14, pan = 0.26) {
+    if (!this.ctx || !this.musicianGain) return;
+    try {
+      const dur = Math.max(0.08, duration);
+      const osc1 = this.ctx.createOscillator();
+      const osc2 = this.ctx.createOscillator();
+      const o2g = this.ctx.createGain();
+      const filter = this.ctx.createBiquadFilter();
+      const env = this.ctx.createGain();
+
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, time);
+      osc1.detune.setValueAtTime(-5, time);
+
+      osc2.type = 'sawtooth';
+      osc2.frequency.setValueAtTime(freq, time);
+      osc2.detune.setValueAtTime(6, time);
+      o2g.gain.setValueAtTime(0.15, time);
+      osc2.connect(o2g);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(4200, time);
+      filter.frequency.exponentialRampToValueAtTime(1200, time + Math.min(dur, 0.24));
+      filter.Q.setValueAtTime(1.8, time);
+
+      env.gain.setValueAtTime(0.0001, time);
+      env.gain.linearRampToValueAtTime(gain, time + 0.003);
+      env.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+
+      osc1.connect(filter);
+      o2g.connect(filter);
+      filter.connect(env);
+      this._connectMusicVoice(env, this.musicianGain, pan, 0.30);
+
+      osc1.start(time);
+      osc2.start(time);
+      osc1.stop(time + dur + 0.05);
+      osc2.stop(time + dur + 0.05);
+    } catch {}
+  }
+
+  _playBodhran(time, accent = true) {
+    if (!this.ctx || !this.musicGain) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
+      const env = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(accent ? 116 : 148, time);
+      osc.frequency.exponentialRampToValueAtTime(accent ? 52 : 68, time + 0.095);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(accent ? 260 : 320, time);
+
+      const g = accent ? 0.16 : 0.085;
+      env.gain.setValueAtTime(0.0001, time);
+      env.gain.linearRampToValueAtTime(g, time + 0.004);
+      env.gain.exponentialRampToValueAtTime(0.0001, time + (accent ? 0.16 : 0.11));
+
+      osc.connect(filter);
+      filter.connect(env);
+      this._connectMusicVoice(env, this.musicGain, -0.06, 0.12);
+
+      osc.start(time);
+      osc.stop(time + 0.20);
+    } catch {}
+  }
+
+  _playBrushPerc(time, gain = 0.025) {
+    if (!this.ctx || !this.musicGain || !this.noiseBuffer) return;
+    try {
+      const src = this.ctx.createBufferSource();
+      src.buffer = this.noiseBuffer;
+      const bp = this.ctx.createBiquadFilter();
+      bp.type = 'highpass';
+      bp.frequency.setValueAtTime(4200, time);
+      const env = this.ctx.createGain();
+      env.gain.setValueAtTime(0.0001, time);
+      env.gain.linearRampToValueAtTime(gain, time + 0.003);
+      env.gain.exponentialRampToValueAtTime(0.0001, time + 0.045);
+
+      src.connect(bp);
+      bp.connect(env);
+      this._connectMusicVoice(env, this.musicGain, 0.18, 0.16);
+
+      src.start(time);
+      src.stop(time + 0.06);
+    } catch {}
+  }
+
+  _playCelestaBell(time, freq, duration = 2.4, gain = 0.115, pan = 0.22) {
+    if (!this.ctx || !this.musicGain) return;
+    try {
+      const dur = Math.max(0.3, duration);
+      const osc = this.ctx.createOscillator();
+      const oct = this.ctx.createOscillator();
+      const octGain = this.ctx.createGain();
+      const filter = this.ctx.createBiquadFilter();
+      const env = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, time);
+
+      oct.type = 'sine';
+      oct.frequency.setValueAtTime(freq * 2, time);
+      octGain.gain.setValueAtTime(0.18, time);
+      oct.connect(octGain);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(4600, time);
+
+      env.gain.setValueAtTime(0.0001, time);
+      env.gain.linearRampToValueAtTime(gain, time + 0.005);
+      env.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+
+      osc.connect(filter);
+      octGain.connect(filter);
+      filter.connect(env);
+      this._connectMusicVoice(env, this.musicGain, pan, 0.44);
+
+      osc.start(time);
+      oct.start(time);
+      osc.stop(time + dur + 0.06);
+      oct.stop(time + dur + 0.06);
     } catch {}
   }
 

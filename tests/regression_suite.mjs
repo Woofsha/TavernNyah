@@ -641,6 +641,56 @@ runCheck('Inspector scrolls to reveal all 5 opinions & Shop clips out-of-viewpor
   }
 }, 'C5');
 
+runCheck('Music style toggle (new vs old) switches seamlessly and schedules all 4 phases cleanly', () => {
+  const originalGlobal = globalThis.window;
+  const fakeCtx = createFakeAudioContext();
+  globalThis.window = {
+    AudioContext: function () { return fakeCtx; },
+    addEventListener() {},
+  };
+  try {
+    const audio = new AudioManager();
+    assert.equal(audio.getState().musicStyle, 'new');
+    audio.init();
+    for (const style of ['new', 'old']) {
+      audio.setMusicStyle(style);
+      assert.equal(audio.getState().musicStyle, style);
+      for (const phase of ['morning', 'afternoon', 'evening', 'night']) {
+        for (let t = 0; t < 16; t++) {
+          fakeCtx.currentTime += 0.25;
+          audio.update(0.25, phase, true, 12);
+        }
+      }
+    }
+    audio.applySettings({ musicStyle: 'invalid_value' });
+    assert.equal(audio.getState().musicStyle, 'new');
+
+    // Verify Settings UI exposes live tog_music_style toggle button
+    const sim = new TavernSim(data);
+    const changes = [];
+    const ui = new TavernUI(makeFakeAssets(), palette, {
+      onSettingsChange: (patch) => {
+        audio.applySettings(patch);
+        changes.push(patch.musicStyle);
+      },
+    });
+    const ctx = makeFakeCanvasCtx();
+    ui.mode = 'playing';
+    ui.settingsOpen = true;
+    ui.render(ctx, sim, false, audio.getState());
+    const musicBtn = ui.hitRegions.find((h) => h.id === 'tog_music_style');
+    assert.ok(musicBtn, 'Expected tog_music_style button in Settings modal');
+    musicBtn.onClick();
+    assert.equal(audio.getState().musicStyle, 'old');
+    ui.render(ctx, sim, false, audio.getState());
+    ui.hitRegions.find((h) => h.id === 'tog_music_style').onClick();
+    assert.equal(audio.getState().musicStyle, 'new');
+    assert.deepEqual(changes, ['old', 'new']);
+  } finally {
+    globalThis.window = originalGlobal;
+  }
+});
+
 const failed = results.filter((r) => !r.pass);
 console.log(`\nSummary: ${results.length - failed.length}/${results.length} passed (${failed.length} failed)`);
 if (failed.length > 0) {
