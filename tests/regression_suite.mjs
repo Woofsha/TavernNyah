@@ -691,6 +691,80 @@ runCheck('Music style toggle (new vs old) switches seamlessly and schedules all 
   }
 });
 
+runCheck('Nyah & Fifi small sprites (-14%) and Settings size toggle (small vs orig) work cleanly', () => {
+  const charManifest = loadJson('assets/characters/manifest.json');
+  for (const id of ['nyah', 'fifi']) {
+    const meta = charManifest.characters[id];
+    assert.ok(meta.worldSheetSmall, `Missing worldSheetSmall for ${id}`);
+    const origBuf = fs.readFileSync(path.join(ROOT, meta.worldSheet));
+    const smallBuf = fs.readFileSync(path.join(ROOT, meta.worldSheetSmall));
+    // PNG IHDR width/height at bytes 16..23
+    assert.equal(origBuf.readUInt32BE(16), 144);
+    assert.equal(origBuf.readUInt32BE(20), 192);
+    assert.equal(smallBuf.readUInt32BE(16), 144);
+    assert.equal(smallBuf.readUInt32BE(20), 192);
+  }
+
+  // Verify drawCanonCharacter switches sheet cleanly while NPC draw is untouched
+  const ctx = makeFakeCanvasCtx();
+  const drawnSheets = [];
+  ctx.drawImage = (img) => { drawnSheets.push(img?.id || 'img'); };
+  const fakeCanvas = { getContext: () => ctx, width: 640, height: 360, style: {} };
+  const assets = makeFakeAssets();
+  assets.chars.set('nyah', { id: 'nyah_orig' });
+  assets.chars.set('nyah_small', { id: 'nyah_small' });
+  assets.chars.set('fifi', { id: 'fifi_orig' });
+  assets.chars.set('fifi_small', { id: 'fifi_small' });
+  assets.npcs.set('barnaby', { id: 'barnaby_orig' });
+
+  const ren = new TavernRenderer(fakeCanvas, assets, palette);
+  assert.equal(ren.canonSpriteSize, 'small');
+  const nyahActor = { id: 'nyah', isCanon: true, dir: 'down', anim: 'idle', animTime: 0 };
+  const fifiActor = { id: 'fifi', isCanon: true, dir: 'down', anim: 'idle', animTime: 0 };
+  const npcActor = { id: 'barnaby_1', spriteKey: 'barnaby', isCanon: false, dir: 'down', anim: 'idle', animTime: 0 };
+
+  ren.drawCanonCharacter(nyahActor, 100, 100);
+  ren.drawCanonCharacter(fifiActor, 120, 100);
+  ren.drawGeneratedNpc(npcActor, 140, 100);
+  assert.deepEqual(drawnSheets, ['nyah_small', 'fifi_small', 'barnaby_orig']);
+
+  drawnSheets.length = 0;
+  ren.canonSpriteSize = 'orig';
+  ren.drawCanonCharacter(nyahActor, 100, 100);
+  ren.drawCanonCharacter(fifiActor, 120, 100);
+  ren.drawGeneratedNpc(npcActor, 140, 100);
+  assert.deepEqual(drawnSheets, ['nyah_orig', 'fifi_orig', 'barnaby_orig']);
+
+  // Verify Settings UI exposes non-overlapping tog_canon_size toggle
+  const sim = new TavernSim(data);
+  let sizeState = 'small';
+  const changes = [];
+  const ui = new TavernUI(makeFakeAssets(), palette, {
+    onSettingsChange: (patch) => {
+      if (patch.canonSpriteSize) {
+        sizeState = patch.canonSpriteSize;
+        changes.push(patch.canonSpriteSize);
+      }
+    },
+  });
+  ui.mode = 'playing';
+  ui.settingsOpen = true;
+  ui.render(makeFakeCanvasCtx(), sim, false, { canonSpriteSize: sizeState });
+  const sizeBtn = ui.hitRegions.find((h) => h.id === 'tog_canon_size');
+  const musicBtn = ui.hitRegions.find((h) => h.id === 'tog_music_style');
+  const resetBtn = ui.hitRegions.find((h) => h.id === 'btn_reset_save');
+  assert.ok(sizeBtn && musicBtn && resetBtn, 'Missing expected Settings buttons');
+  assert.ok(sizeBtn.y >= musicBtn.y + musicBtn.h, 'tog_canon_size overlaps tog_music_style');
+  assert.ok(resetBtn.y >= sizeBtn.y + sizeBtn.h, 'tog_canon_size overlaps lower controls');
+
+  sizeBtn.onClick();
+  assert.equal(sizeState, 'orig');
+  ui.render(makeFakeCanvasCtx(), sim, false, { canonSpriteSize: sizeState });
+  ui.hitRegions.find((h) => h.id === 'tog_canon_size').onClick();
+  assert.equal(sizeState, 'small');
+  assert.deepEqual(changes, ['orig', 'small']);
+});
+
 const failed = results.filter((r) => !r.pass);
 console.log(`\nSummary: ${results.length - failed.length}/${results.length} passed (${failed.length} failed)`);
 if (failed.length > 0) {

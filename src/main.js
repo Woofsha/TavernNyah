@@ -82,15 +82,19 @@ async function loadAllGameResources() {
   );
 
   const charMap = new Map();
-  const [nyahWorld, fifiWorld, nyahPortrait, fifiPortrait, uiSheet] = await Promise.all([
+  const [nyahWorld, fifiWorld, nyahWorldSmall, fifiWorldSmall, nyahPortrait, fifiPortrait, uiSheet] = await Promise.all([
     loadImage(`./${charManifest.characters.nyah.worldSheet}`),
     loadImage(`./${charManifest.characters.fifi.worldSheet}`),
+    charManifest.characters.nyah.worldSheetSmall ? loadImage(`./${charManifest.characters.nyah.worldSheetSmall}`) : Promise.resolve(null),
+    charManifest.characters.fifi.worldSheetSmall ? loadImage(`./${charManifest.characters.fifi.worldSheetSmall}`) : Promise.resolve(null),
     loadImage(`./${charManifest.characters.nyah.portraitNative}`),
     loadImage(`./${charManifest.characters.fifi.portraitNative}`),
     loadImage(`./${charManifest.suppliedUi.sheet}`),
   ]);
   charMap.set('nyah', nyahWorld);
   charMap.set('fifi', fifiWorld);
+  if (nyahWorldSmall) charMap.set('nyah_small', nyahWorldSmall);
+  if (fifiWorldSmall) charMap.set('fifi_small', fifiWorldSmall);
   charMap.set('nyah_portrait', nyahPortrait);
   charMap.set('fifi_portrait', fifiPortrait);
 
@@ -133,6 +137,9 @@ async function boot() {
   if (typeof savedSettings.atmosphereEnabled === 'boolean') {
     renderer.atmosphereEnabled = savedSettings.atmosphereEnabled;
   }
+  if (savedSettings.canonSpriteSize === 'orig' || savedSettings.canonSpriteSize === 'small') {
+    renderer.canonSpriteSize = savedSettings.canonSpriteSize;
+  }
 
   renderer.resizeToWindow(window.innerWidth, window.innerHeight);
   renderer.centerCameraOn(sim.layout.bounds.defaultCenterX, sim.layout.bounds.defaultCenterY, sim.layout.bounds);
@@ -141,6 +148,7 @@ async function boot() {
     writeLocalJson(SETTINGS_STORAGE_KEY, {
       ...audio.getState(),
       atmosphereEnabled: renderer.atmosphereEnabled,
+      canonSpriteSize: renderer.canonSpriteSize,
       fpsCap: ui.fpsCap,
     });
   };
@@ -280,6 +288,9 @@ async function boot() {
       audio.applySettings(patch);
       if (typeof patch.atmosphereEnabled === 'boolean') {
         renderer.atmosphereEnabled = patch.atmosphereEnabled;
+      }
+      if (patch.canonSpriteSize === 'orig' || patch.canonSpriteSize === 'small') {
+        renderer.canonSpriteSize = patch.canonSpriteSize;
       }
       persistSettings();
     },
@@ -547,6 +558,7 @@ async function boot() {
       ui.render(renderer.ctx, sim, hasAutosave, {
         ...audio.getState(),
         atmosphereEnabled: renderer.atmosphereEnabled,
+        canonSpriteSize: renderer.canonSpriteSize,
       });
     }
   }
