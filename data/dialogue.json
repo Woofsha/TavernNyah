@@ -576,7 +576,8 @@
     },
     {
       "id": "bnt_morning_04",
-      "trigger": "nyah",
+      "trigger": "morning",
+      "speaker": "nyah",
       "cooldownSec": 42,
       "text": "A grand proprietor does not wake up; she merely deigns to grace the world with her consciousness."
     },

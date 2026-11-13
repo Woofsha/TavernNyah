@@ -127,9 +127,49 @@ def validate_narrative(errors: list[str]) -> None:
     if len(banter) < 80:
         errors.append(f"dialogue.json: banter has {len(banter)} lines, MUST be >= 80")
 
+    try:
+        staff_doc = load_json("staff.json")
+        valid_speakers = {"nyah", "fifi"} | {
+            s.get("id") for s in staff_doc.get("canonStaff", []) + staff_doc.get("hireableStaff", []) if s.get("id")
+        }
+    except Exception:
+        valid_speakers = {"nyah", "fifi"}
+
+    valid_triggers = {
+        "idle", "music", "morning", "night", "upgrade", "expansion",
+        "complaint", "big_tip", "rush", "quest_return",
+    }
+    seen_banter_ids: set[str] = set()
+    for idx, entry in enumerate(banter):
+        bid = entry.get("id")
+        if not bid or not isinstance(bid, str):
+            errors.append(f"dialogue.json: banter[{idx}] missing valid string 'id'")
+        elif bid in seen_banter_ids:
+            errors.append(f"dialogue.json: duplicate banter id '{bid}'")
+        else:
+            seen_banter_ids.add(bid)
+        trig = entry.get("trigger")
+        if trig not in valid_triggers:
+            errors.append(f"dialogue.json: banter '{bid or idx}' has unreachable trigger '{trig}'")
+        spk = entry.get("speaker")
+        if spk not in valid_speakers:
+            errors.append(f"dialogue.json: banter '{bid or idx}' has invalid speaker '{spk}'")
+        if not str(entry.get("text", "")).strip():
+            errors.append(f"dialogue.json: banter '{bid or idx}' has empty text")
+        if float(entry.get("cooldownSec", 0)) <= 0:
+            errors.append(f"dialogue.json: banter '{bid or idx}' needs positive cooldownSec")
+
     hire_scenes = dlg.get("hireScenes", {})
     if len(hire_scenes) < 4:
         errors.append(f"dialogue.json: hireScenes has {len(hire_scenes)} entries, need >= 4")
+    for staff_key, beats in hire_scenes.items():
+        if staff_key not in valid_speakers:
+            errors.append(f"dialogue.json: hireScenes['{staff_key}'] unknown staff id")
+        for b_idx, beat in enumerate(beats):
+            if beat.get("speaker") not in valid_speakers:
+                errors.append(f"dialogue.json: hireScenes['{staff_key}'][{b_idx}] invalid speaker '{beat.get('speaker')}'")
+            if not str(beat.get("text", "")).strip():
+                errors.append(f"dialogue.json: hireScenes['{staff_key}'][{b_idx}] empty text")
 
     if len(dlg.get("offlineTemplates", [])) < 4:
         errors.append("dialogue.json: need >= 4 offlineTemplates")

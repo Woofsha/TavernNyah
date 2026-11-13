@@ -144,7 +144,7 @@ const RUN_AUDIT = args.has('--audit');
 
 // Promotion mask: enable checks by default once their fix commit lands.
 // At baseline (pre-fixes), ENABLED_AUDITS is empty; `--audit` runs all checks.
-const ENABLED_AUDITS = new Set([]);
+const ENABLED_AUDITS = new Set(['C1']);
 
 const results = [];
 function runCheck(name, fn, auditGroup = null) {
