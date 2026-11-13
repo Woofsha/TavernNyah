@@ -144,7 +144,7 @@ const RUN_AUDIT = args.has('--audit');
 
 // Promotion mask: enable checks by default once their fix commit lands.
 // At baseline (pre-fixes), ENABLED_AUDITS is empty; `--audit` runs all checks.
-const ENABLED_AUDITS = new Set(['C1', 'C2']);
+const ENABLED_AUDITS = new Set(['C1', 'C2', 'C3']);
 
 const results = [];
 function runCheck(name, fn, auditGroup = null) {
@@ -602,12 +602,12 @@ runCheck('Inspector scrolls to reveal all 5 opinions & Shop clips out-of-viewpor
   uiReset.mode = 'playing';
   uiReset.settingsOpen = true;
   uiReset.render(ctx, sim, false, {});
-  const resetHit = uiReset.hitRegions.find((h) => h.id === 'settings_reset');
-  assert.ok(resetHit, 'Expected settings_reset hit region');
+  const resetHit = uiReset.hitRegions.find((h) => h.id === 'btn_reset_save');
+  assert.ok(resetHit, 'Expected btn_reset_save hit region');
   resetHit.onClick();
   assert.equal(resetCalls, 0, 'First click on Reset Save Data wiped save immediately without confirmation!');
   uiReset.render(ctx, sim, false, {});
-  const confirmHit = uiReset.hitRegions.find((h) => h.id === 'settings_reset');
+  const confirmHit = uiReset.hitRegions.find((h) => h.id === 'btn_reset_save');
   confirmHit.onClick();
   assert.equal(resetCalls, 1, 'Second confirmation click should trigger onResetSave');
 

@@ -43,17 +43,22 @@
     }
 
     #save-dialog {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(29, 32, 51, 0.78);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 20;
+      margin: auto;
+      padding: 0;
+      border: none;
+      background: transparent;
+      max-width: none;
+      max-height: none;
+      color: inherit;
     }
 
-    #save-dialog.open {
-      display: flex;
+    #save-dialog:modal {
+      overscroll-behavior: contain;
+    }
+
+    #save-dialog::backdrop {
+      background-color: rgba(29, 32, 51, 0.78);
+      overscroll-behavior: contain;
     }
 
     .save-card {
@@ -110,9 +115,9 @@
 <body>
   <canvas id="game-canvas" width="640" height="360"></canvas>
 
-  <div id="save-dialog" role="dialog" aria-modal="true" aria-label="Export or Import Save">
+  <dialog id="save-dialog" closedby="any" aria-labelledby="save-dialog-title">
     <div class="save-card">
-      <h2>Export / Import Tavern Save</h2>
+      <h2 id="save-dialog-title">Export / Import Tavern Save</h2>
       <p>Copy the string below to back up your tavern, or paste a save string and click Import.</p>
       <textarea id="save-textarea" spellcheck="false"></textarea>
       <div class="save-actions">
@@ -121,7 +126,7 @@
         <button id="btn-close-save" type="button">Close</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <script type="module" src="./src/main.js"></script>
 </body>

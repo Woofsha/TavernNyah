@@ -1,6 +1,6 @@
 // Main Browser Bootloader, Offline Asset Loader, Fixed-Timestep Loop, Input & Save Manager.
 
-import { SIM_DT, TavernSim } from './sim.js';
+import { SIM_DT, DAY_CYCLE_SEC, TavernSim } from './sim.js';
 import { TavernRenderer } from './renderer.js';
 import { TavernUI } from './ui.js';
 import { AudioManager } from './audio.js';
@@ -175,16 +175,11 @@ async function boot() {
     renderer.centerCameraOn(fx, fy, b);
     if (roomKey && roomKey !== 'center') {
       for (let i = 0; i < 10; i++) {
-        renderer.spawnParticle({
-          kind: 'ember',
-          x: fx + (Math.random() - 0.5) * 96,
-          y: fy + (Math.random() - 0.5) * 56,
-          vx: (Math.random() - 0.5) * 18,
-          vy: -12 - Math.random() * 14,
-          life: 1.6,
-          maxLife: 1.6,
-          size: 2,
-        });
+        renderer.spawnParticle(
+          'ember',
+          fx + (Math.random() - 0.5) * 96,
+          fy + (Math.random() - 0.5) * 56
+        );
       }
     }
   };
@@ -193,22 +188,45 @@ async function boot() {
   const saveDialog = document.getElementById('save-dialog');
   const saveTextarea = document.getElementById('save-textarea');
   const openSaveDialog = () => {
+    heldKeys.clear();
     saveTextarea.value = sim.exportSaveString(Date.now());
-    saveDialog.classList.add('open');
+    saveDialog.returnValue = '';
+    saveDialog.showModal();
     saveTextarea.focus();
     saveTextarea.select();
   };
 
-  document.getElementById('btn-copy-save').addEventListener('click', () => {
+  saveDialog.addEventListener('click', (e) => {
+    if (e.target === saveDialog && !('closedBy' in HTMLDialogElement.prototype)) {
+      saveDialog.close('backdrop');
+    }
+  });
+
+  document.getElementById('btn-copy-save').addEventListener('click', async () => {
     saveTextarea.select();
-    navigator.clipboard?.writeText(saveTextarea.value).catch(() => {});
-    ui.pushToast('Copied!', 'Save string copied to clipboard.');
+    let copied = false;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(saveTextarea.value);
+        copied = true;
+      }
+    } catch {}
+    if (!copied) {
+      try {
+        copied = document.execCommand('copy');
+      } catch {}
+    }
+    if (copied) {
+      ui.pushToast('Copied!', 'Save string copied to clipboard.');
+    } else {
+      ui.pushToast('Copy Manually', 'Press Ctrl+C to copy the selected save string.');
+    }
   });
 
   document.getElementById('btn-import-save').addEventListener('click', () => {
     try {
       const offline = sim.importSaveString(saveTextarea.value, Date.now());
-      saveDialog.classList.remove('open');
+      saveDialog.close('import');
       ui.mode = 'playing';
       ui.settingsOpen = false;
       if (offline) ui.offlineModal = offline;
@@ -222,7 +240,7 @@ async function boot() {
   });
 
   document.getElementById('btn-close-save').addEventListener('click', () => {
-    saveDialog.classList.remove('open');
+    saveDialog.close('cancel');
   });
 
   const ui = new TavernUI(assets, data.palette, {
@@ -348,8 +366,7 @@ async function boot() {
   // Keyboard Pan & Shortcut Controls
   const heldKeys = new Set();
   window.addEventListener('keydown', (e) => {
-    if (saveDialog.classList.contains('open')) {
-      if (e.key === 'Escape') saveDialog.classList.remove('open');
+    if (saveDialog.open) {
       return;
     }
     heldKeys.add(e.key.toLowerCase());
@@ -361,6 +378,8 @@ async function boot() {
       if (sim.banter.introActive) {
         sim.banter.skipIntro();
         sim.state.hasSeenIntro = true;
+      } else if (ui.offlineModal) {
+        ui.offlineModal = null;
       } else if (ui.settingsOpen) {
         ui.settingsOpen = false;
       } else if (ui.selectedActorId) {
@@ -372,6 +391,9 @@ async function boot() {
       e.preventDefault();
       const more = sim.banter.advanceIntroBeat();
       if (!more) sim.state.hasSeenIntro = true;
+    } else if ((e.key === ' ' || e.key === 'Enter') && ui.offlineModal) {
+      e.preventDefault();
+      ui.offlineModal = null;
     } else if (e.key === '1') {
       ui.speedMultiplier = 1;
     } else if (e.key === '2') {
@@ -383,6 +405,11 @@ async function boot() {
 
   window.addEventListener('keyup', (e) => {
     heldKeys.delete(e.key.toLowerCase());
+  });
+
+  window.addEventListener('blur', () => {
+    heldKeys.clear();
+    isDragging = false;
   });
 
   // Drain simulation events into Web Audio SFX
@@ -425,7 +452,13 @@ async function boot() {
     lastTimestamp = now;
 
     // Keyboard camera panning
-    if (ui.mode === 'playing' && !sim.banter.introActive) {
+    if (
+      ui.mode === 'playing' &&
+      !sim.banter.introActive &&
+      !ui.settingsOpen &&
+      !ui.offlineModal &&
+      !saveDialog.open
+    ) {
       const panStep = Math.min(0.1, rawDeltaSec) * 180;
       if (heldKeys.has('w') || heldKeys.has('arrowup')) renderer.camY -= panStep;
       if (heldKeys.has('s') || heldKeys.has('arrowdown')) renderer.camY += panStep;
@@ -441,6 +474,11 @@ async function boot() {
       sim.gold = Math.round(sim.gold + earned);
       sim.stats.goldEarnedTotal += earned;
       sim.stats.customersServed += guests;
+      sim.state.totalTimeSec += capped;
+      const totalDayOffset = sim.state.dayTimeSec + capped;
+      sim.state.dayNumber += Math.floor(totalDayOffset / DAY_CYCLE_SEC);
+      sim.state.dayTimeSec = totalDayOffset % DAY_CYCLE_SEC;
+      sim.updateDayCycle(0);
       ui.offlineModal = sim.banter.formatOfflineSummary(rawDeltaSec / 60, earned, guests);
     } else if (sim.banter.introActive) {
       sim.banter.updateIntro(Math.min(0.2, rawDeltaSec), (spk) => audio.playSfx('blip', spk));
@@ -448,24 +486,28 @@ async function boot() {
       // Even on the title screen, run gentle background tavern simulation at 1x so diorama is alive!
       const speed = ui.mode === 'playing' ? ui.speedMultiplier : 1;
       simAccumulator += Math.min(rawDeltaSec, 120) * speed;
+      const isCatchupBurst = simAccumulator > SIM_DT * 8;
       let ticksRun = 0;
       const maxCatchupTicks = 6000; // up to 10 minutes per frame without freezing UI
       while (simAccumulator >= SIM_DT && ticksRun < maxCatchupTicks) {
-        sim.step(SIM_DT, ui.mode === 'playing' ? (spk) => audio.playSfx('blip', spk) : null);
+        const allowVoice = ui.mode === 'playing' && !isCatchupBurst;
+        sim.step(SIM_DT, allowVoice ? (spk) => audio.playSfx('blip', spk) : null);
         simAccumulator -= SIM_DT;
         ticksRun += 1;
       }
       if (ticksRun >= maxCatchupTicks) simAccumulator = 0;
 
-      if (ui.mode === 'playing') {
+      if (ui.mode === 'playing' && !isCatchupBurst) {
         processSimEvents();
+      } else {
+        sim.drainEvents();
+      }
+      if (ui.mode === 'playing') {
         autosaveTimer += Math.min(rawDeltaSec, 5);
         if (autosaveTimer >= 20.0) {
           autosaveTimer = 0;
           saveGameNow();
         }
-      } else {
-        sim.drainEvents();
       }
     }
 

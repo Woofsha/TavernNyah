@@ -244,6 +244,9 @@ export class AudioManager {
     this.fireCrackleTimer = 0;
     this.nextCrackleTime = 1.0;
 
+    // SFX burst throttle timestamps keyed by SFX type
+    this._sfxLastAt = new Map();
+
     // Reusable noise buffer
     this.noiseBuffer = null;
   }
@@ -949,6 +952,23 @@ export class AudioManager {
     }
 
     const t = this.ctx.currentTime;
+    const minInterval = {
+      blip: 0.035,
+      coin: 0.045,
+      mug_clink: 0.045,
+      door_bell: 0.08,
+      sizzle: 0.10,
+      footstep: 0.08,
+      ui_hover: 0.04,
+      complaint: 0.15,
+      ui_click: 0.02,
+      ui_tab: 0.02,
+    }[type] ?? 0.03;
+    const lastAt = this._sfxLastAt.get(type);
+    if (lastAt !== undefined && (t - lastAt) < minInterval) {
+      return;
+    }
+    this._sfxLastAt.set(type, t);
 
     try {
       switch (type) {
@@ -1213,10 +1233,13 @@ export class AudioManager {
 
     // AM tremolo flutter simulating bubbling hot skillet
     const am = this.ctx.createOscillator();
-    const amGain = this.ctx.createGain();
+    const amDepth = this.ctx.createGain();
+    const amCarrier = this.ctx.createGain();
     am.frequency.setValueAtTime(32, t);
-    amGain.gain.setValueAtTime(0.3, t);
-    am.connect(amGain.gain);
+    amDepth.gain.setValueAtTime(0.3, t);
+    amCarrier.gain.setValueAtTime(0.7, t);
+    am.connect(amDepth);
+    amDepth.connect(amCarrier.gain);
 
     const env = this.ctx.createGain();
     env.gain.setValueAtTime(0.0001, t);
@@ -1225,7 +1248,8 @@ export class AudioManager {
     env.gain.exponentialRampToValueAtTime(0.0001, t + 0.44);
 
     noise.connect(filter);
-    filter.connect(env);
+    filter.connect(amCarrier);
+    amCarrier.connect(env);
     env.connect(this.sfxGain);
 
     noise.start(t);
