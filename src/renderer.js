@@ -718,6 +718,11 @@ export class TavernRenderer {
         interiorSet.add(`${f.tx},${f.ty}`);
       }
     }
+    const wallBottomSet = new Set();
+    for (const w of sim.layout.walls) {
+      const botTy = Math.round((w.y + 64) / 32);
+      wallBottomSet.add(`${w.tx},${botTy}`);
+    }
     const doorTX = sim.layout.doorTileX;
     const doorTY = sim.layout.doorTileY;
 
@@ -725,30 +730,40 @@ export class TavernRenderer {
       if (f.asset === 'floor_cobble' || f.asset === 'floor_grass') continue;
       const sx = Math.round(f.x - camX);
       const sy = Math.round(f.y - camY);
-      if (sx < -48 || sx > INTERNAL_W + 48 || sy < -64 || sy > INTERNAL_H + 48) continue;
+      if (sx < -48 || sx > INTERNAL_W + 48 || sy < -64 || sy > INTERNAL_H + 72) continue;
 
       const hasLeft = interiorSet.has(`${f.tx - 1},${f.ty}`);
       const hasRight = interiorSet.has(`${f.tx + 1},${f.ty}`);
+      const hasTop = interiorSet.has(`${f.tx},${f.ty - 1}`);
       const hasBottom = interiorSet.has(`${f.tx},${f.ty + 1}`);
+      const extendWallUp = !hasTop && wallBottomSet.has(`${f.tx},${f.ty}`) ? 64 : 0;
 
-      // Left cutaway timber/stone wall sill
+      // Left cutaway timber/stone wall sill (extends along 64px back wall at top corners)
       if (!hasLeft) {
+        const wy = sy - extendWallUp;
+        const wh = 32 + extendWallUp;
+        const innerY = wy + (extendWallUp > 0 ? 1 : 0);
+        const innerH = wh - (extendWallUp > 0 ? 1 : 0);
         ctx.fillStyle = this.pal.OUTLINE_WARM;
-        ctx.fillRect(sx - 6, sy, 6, 32);
+        ctx.fillRect(sx - 6, wy, 6, wh);
         ctx.fillStyle = this.pal.WOOD_SHADOW;
-        ctx.fillRect(sx - 5, sy, 4, 32);
+        ctx.fillRect(sx - 5, innerY, 4, innerH);
         ctx.fillStyle = this.pal.WOOD_LIGHT;
-        ctx.fillRect(sx - 3, sy, 2, 32);
+        ctx.fillRect(sx - 3, innerY, 2, innerH);
       }
 
-      // Right cutaway timber/stone wall sill
+      // Right cutaway timber/stone wall sill (extends along 64px back wall at top corners)
       if (!hasRight) {
+        const wy = sy - extendWallUp;
+        const wh = 32 + extendWallUp;
+        const innerY = wy + (extendWallUp > 0 ? 1 : 0);
+        const innerH = wh - (extendWallUp > 0 ? 1 : 0);
         ctx.fillStyle = this.pal.OUTLINE_WARM;
-        ctx.fillRect(sx + 32, sy, 6, 32);
+        ctx.fillRect(sx + 32, wy, 6, wh);
         ctx.fillStyle = this.pal.WOOD_SHADOW;
-        ctx.fillRect(sx + 33, sy, 4, 32);
+        ctx.fillRect(sx + 33, innerY, 4, innerH);
         ctx.fillStyle = this.pal.WOOD_BASE;
-        ctx.fillRect(sx + 33, sy, 2, 32);
+        ctx.fillRect(sx + 33, innerY, 2, innerH);
       }
 
       // South (front) low cutaway wall with framed opening for the front doorway
