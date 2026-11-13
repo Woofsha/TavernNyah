@@ -715,10 +715,24 @@ export class AudioManager {
       }
     }
 
-    // SFX bus
+    // SFX bus with gentle warm lowpass tilt so transients never sound brittle/harsh
     this.sfxGain = this.ctx.createGain();
     this.sfxGain.gain.setValueAtTime(this.sfxVolume, now);
-    this.sfxGain.connect(this.masterGain);
+    if (typeof this.ctx.createBiquadFilter === 'function') {
+      try {
+        this.sfxWarmFilter = this.ctx.createBiquadFilter();
+        this.sfxWarmFilter.type = 'lowpass';
+        this.sfxWarmFilter.frequency.setValueAtTime(2200, now);
+        this.sfxWarmFilter.Q.setValueAtTime(0.55, now);
+        this.sfxGain.connect(this.sfxWarmFilter);
+        this.sfxWarmFilter.connect(this.masterGain);
+      } catch {
+        this.sfxWarmFilter = null;
+        this.sfxGain.connect(this.masterGain);
+      }
+    } else {
+      this.sfxGain.connect(this.masterGain);
+    }
 
     // Dynamic Musician stem (connects to Music bus, starts silent at gain 0)
     this.musicianGain = this.ctx.createGain();
@@ -1876,75 +1890,65 @@ export class AudioManager {
     } catch {}
   }
 
-  // 1. Dual high resonant glass/ceramic ping + foam hiss
+  // 1. Warm ceramic/wood tavern mug clink + gentle foam sigh (cozy midrange, zero shrill ring)
   _sfxMugClink(t, vol, pitch) {
-    const f1 = 2280 * pitch;
-    const f2 = 2920 * pitch;
+    const f1 = 680 * pitch;
+    const f2 = 880 * pitch;
 
-    // Ping 1
-    const osc1 = this.ctx.createOscillator();
-    const env1 = this.ctx.createGain();
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(f1, t);
-    env1.gain.setValueAtTime(0.0001, t);
-    env1.gain.linearRampToValueAtTime(0.24 * vol, t + 0.002);
-    env1.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
-    osc1.connect(env1);
-    env1.connect(this.sfxGain);
-    osc1.start(t);
-    osc1.stop(t + 0.4);
+    const ping = (start, freq, amp, dur) => {
+      const osc = this.ctx.createOscillator();
+      const env = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, start);
+      env.gain.setValueAtTime(0.0001, start);
+      env.gain.linearRampToValueAtTime(amp * vol, start + 0.005);
+      env.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      osc.connect(env);
+      env.connect(this.sfxGain);
+      osc.start(start);
+      osc.stop(start + dur + 0.03);
+    };
 
-    // Ping 2 (dual clink)
-    const t2 = t + 0.016;
-    const osc2 = this.ctx.createOscillator();
-    const env2 = this.ctx.createGain();
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(f2, t2);
-    env2.gain.setValueAtTime(0.0001, t2);
-    env2.gain.linearRampToValueAtTime(0.20 * vol, t2 + 0.002);
-    env2.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.28);
-    osc2.connect(env2);
-    env2.connect(this.sfxGain);
-    osc2.start(t2);
-    osc2.stop(t2 + 0.32);
+    ping(t, f1, 0.16, 0.22);
+    ping(t + 0.022, f2, 0.14, 0.20);
 
-    // Foam hiss
+    // Subtle soft foam brush
     if (this.noiseBuffer) {
       const noise = this.ctx.createBufferSource();
       noise.buffer = this.noiseBuffer;
       const filter = this.ctx.createBiquadFilter();
       filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(3800 * pitch, t);
-      filter.Q.setValueAtTime(2.4, t);
+      filter.frequency.setValueAtTime(1150 * pitch, t);
+      filter.Q.setValueAtTime(1.6, t);
 
       const nEnv = this.ctx.createGain();
       nEnv.gain.setValueAtTime(0.0001, t);
-      nEnv.gain.linearRampToValueAtTime(0.08 * vol, t + 0.008);
-      nEnv.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+      nEnv.gain.linearRampToValueAtTime(0.035 * vol, t + 0.012);
+      nEnv.gain.exponentialRampToValueAtTime(0.0001, t + 0.11);
 
       noise.connect(filter);
       filter.connect(nEnv);
       nEnv.connect(this.sfxGain);
       noise.start(t);
-      noise.stop(t + 0.16);
+      noise.stop(t + 0.13);
     }
   }
 
-  // 2. Very soft lowpass wood thud
+  // 2. Soft cozy oak plank footstep tap
   _sfxFootstep(t, vol, pitch) {
     const osc = this.ctx.createOscillator();
     const filter = this.ctx.createBiquadFilter();
     const env = this.ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(115 * pitch, t);
-    osc.frequency.exponentialRampToValueAtTime(48 * pitch, t + 0.055);
+    osc.frequency.setValueAtTime(132 * pitch, t);
+    osc.frequency.exponentialRampToValueAtTime(56 * pitch, t + 0.055);
 
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(240, t);
+    filter.frequency.setValueAtTime(280, t);
 
     env.gain.setValueAtTime(0.0001, t);
-    env.gain.linearRampToValueAtTime(0.12 * vol, t + 0.003);
+    env.gain.linearRampToValueAtTime(0.11 * vol, t + 0.004);
     env.gain.exponentialRampToValueAtTime(0.0001, t + 0.065);
 
     osc.connect(filter);
@@ -1952,132 +1956,92 @@ export class AudioManager {
     env.connect(this.sfxGain);
 
     osc.start(t);
-    osc.stop(t + 0.07);
+    osc.stop(t + 0.075);
   }
 
-  // 3. Crisp two-note metallic shimmer (B5 -> E6)
+  // 3. Stardew / Animal Crossing warm marimba coin chime (C5 -> G5, pure warm tones)
   _sfxCoin(t, vol, pitch) {
-    const b5 = 987.77 * pitch;
-    const e6 = 1318.51 * pitch;
+    const notes = [
+      { delay: 0, freq: 523.25 * pitch, amp: 0.18, dur: 0.16 },
+      { delay: 0.065, freq: 783.99 * pitch, amp: 0.20, dur: 0.24 },
+    ];
+    for (const n of notes) {
+      const start = t + n.delay;
+      const osc = this.ctx.createOscillator();
+      const sub = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
+      const env = this.ctx.createGain();
 
-    // Note 1: B5
-    const osc1 = this.ctx.createOscillator();
-    const osc1H = this.ctx.createOscillator();
-    const env1 = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(n.freq, start);
+      sub.type = 'triangle';
+      sub.frequency.setValueAtTime(n.freq * 0.5, start);
 
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(b5, t);
-    osc1H.type = 'sine';
-    osc1H.frequency.setValueAtTime(b5 * 3, t);
+      const subGain = this.ctx.createGain();
+      subGain.gain.setValueAtTime(0.20, start);
+      sub.connect(subGain);
 
-    const h1Gain = this.ctx.createGain();
-    h1Gain.gain.setValueAtTime(0.18, t);
-    osc1H.connect(h1Gain);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1450, start);
 
-    env1.gain.setValueAtTime(0.0001, t);
-    env1.gain.linearRampToValueAtTime(0.22 * vol, t + 0.002);
-    env1.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+      env.gain.setValueAtTime(0.0001, start);
+      env.gain.linearRampToValueAtTime(n.amp * vol, start + 0.006);
+      env.gain.exponentialRampToValueAtTime(0.0001, start + n.dur);
 
-    osc1.connect(env1);
-    h1Gain.connect(env1);
-    env1.connect(this.sfxGain);
+      osc.connect(filter);
+      subGain.connect(filter);
+      filter.connect(env);
+      env.connect(this.sfxGain);
 
-    osc1.start(t);
-    osc1H.start(t);
-    osc1.stop(t + 0.2);
-    osc1H.stop(t + 0.2);
-
-    // Note 2: E6 (staggered ~0.065s later)
-    const t2 = t + 0.065;
-    const osc2 = this.ctx.createOscillator();
-    const osc2H = this.ctx.createOscillator();
-    const env2 = this.ctx.createGain();
-
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(e6, t2);
-    osc2H.type = 'sine';
-    osc2H.frequency.setValueAtTime(e6 * 3, t2);
-
-    const h2Gain = this.ctx.createGain();
-    h2Gain.gain.setValueAtTime(0.22, t2);
-    osc2H.connect(h2Gain);
-
-    env2.gain.setValueAtTime(0.0001, t2);
-    env2.gain.linearRampToValueAtTime(0.25 * vol, t2 + 0.002);
-    env2.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.25);
-
-    osc2.connect(env2);
-    h2Gain.connect(env2);
-    env2.connect(this.sfxGain);
-
-    osc2.start(t2);
-    osc2H.start(t2);
-    osc2.stop(t2 + 0.28);
-    osc2H.stop(t2 + 0.28);
+      osc.start(start);
+      sub.start(start);
+      osc.stop(start + n.dur + 0.03);
+      sub.stop(start + n.dur + 0.03);
+    }
   }
 
-  // 4. Cozy brass shopkeeper bell chime
+  // 4. Warm wooden innkeeper shop-chime (F4 -> C5, mellow rounded bell)
   _sfxDoorBell(t, vol, pitch) {
-    const d6 = 1174.66 * pitch;
-    const a5 = 880.00 * pitch;
+    const strikes = [
+      { delay: 0, freq: 349.23 * pitch, amp: 0.16, dur: 0.55 },
+      { delay: 0.14, freq: 523.25 * pitch, amp: 0.17, dur: 0.72 },
+    ];
+    for (const s of strikes) {
+      const start = t + s.delay;
+      const o1 = this.ctx.createOscillator();
+      const o2 = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
+      const env = this.ctx.createGain();
 
-    // First strike (D6 + brass overtones)
-    const o1 = this.ctx.createOscillator();
-    const o1Overtone = this.ctx.createOscillator();
-    const env1 = this.ctx.createGain();
+      o1.type = 'triangle';
+      o1.frequency.setValueAtTime(s.freq, start);
+      o2.type = 'sine';
+      o2.frequency.setValueAtTime(s.freq * 2.0, start);
 
-    o1.type = 'sine';
-    o1.frequency.setValueAtTime(d6, t);
-    o1Overtone.type = 'sine';
-    o1Overtone.frequency.setValueAtTime(d6 * 2.0, t);
+      const o2Gain = this.ctx.createGain();
+      o2Gain.gain.setValueAtTime(0.14, start);
+      o2.connect(o2Gain);
 
-    const otGain1 = this.ctx.createGain();
-    otGain1.gain.setValueAtTime(0.18, t);
-    o1Overtone.connect(otGain1);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1250, start);
 
-    env1.gain.setValueAtTime(0.0001, t);
-    env1.gain.linearRampToValueAtTime(0.24 * vol, t + 0.003);
-    env1.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+      env.gain.setValueAtTime(0.0001, start);
+      env.gain.linearRampToValueAtTime(s.amp * vol, start + 0.008);
+      env.gain.exponentialRampToValueAtTime(0.0001, start + s.dur);
 
-    o1.connect(env1);
-    otGain1.connect(env1);
-    env1.connect(this.sfxGain);
+      o1.connect(filter);
+      o2Gain.connect(filter);
+      filter.connect(env);
+      env.connect(this.sfxGain);
 
-    o1.start(t);
-    o1Overtone.start(t);
-    o1.stop(t + 0.9);
-    o1Overtone.stop(t + 0.9);
-
-    // Second strike (A5 + overtones at t + 0.14s)
-    const t2 = t + 0.14;
-    const o2 = this.ctx.createOscillator();
-    const o2Overtone = this.ctx.createOscillator();
-    const env2 = this.ctx.createGain();
-
-    o2.type = 'sine';
-    o2.frequency.setValueAtTime(a5, t2);
-    o2Overtone.type = 'sine';
-    o2Overtone.frequency.setValueAtTime(a5 * 2.0, t2);
-
-    const otGain2 = this.ctx.createGain();
-    otGain2.gain.setValueAtTime(0.15, t2);
-    o2Overtone.connect(otGain2);
-
-    env2.gain.setValueAtTime(0.0001, t2);
-    env2.gain.linearRampToValueAtTime(0.22 * vol, t2 + 0.003);
-    env2.gain.exponentialRampToValueAtTime(0.0001, t2 + 1.15);
-
-    o2.connect(env2);
-    otGain2.connect(env2);
-    env2.connect(this.sfxGain);
-
-    o2.start(t2);
-    o2Overtone.start(t2);
-    o2.stop(t2 + 1.2);
-    o2Overtone.stop(t2 + 1.2);
+      o1.start(start);
+      o2.start(start);
+      o1.stop(start + s.dur + 0.04);
+      o2.stop(start + s.dur + 0.04);
+    }
   }
 
-  // 5. Short bandpass noise pan sizzle
+  // 5. Cozy cast-iron simmer sizzle (warm midrange filter instead of sharp hiss)
   _sfxSizzle(t, vol, pitch) {
     if (!this.noiseBuffer) return;
     const noise = this.ctx.createBufferSource();
@@ -2085,23 +2049,23 @@ export class AudioManager {
 
     const filter = this.ctx.createBiquadFilter();
     filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(2500 * pitch, t);
-    filter.Q.setValueAtTime(2.2, t);
+    filter.frequency.setValueAtTime(1080 * pitch, t);
+    filter.Q.setValueAtTime(1.35, t);
 
-    // AM tremolo flutter simulating bubbling hot skillet
+    // Gentle AM simmer flutter simulating bubbling stew pot
     const am = this.ctx.createOscillator();
     const amDepth = this.ctx.createGain();
     const amCarrier = this.ctx.createGain();
-    am.frequency.setValueAtTime(32, t);
-    amDepth.gain.setValueAtTime(0.3, t);
-    amCarrier.gain.setValueAtTime(0.7, t);
+    am.frequency.setValueAtTime(18, t);
+    amDepth.gain.setValueAtTime(0.25, t);
+    amCarrier.gain.setValueAtTime(0.75, t);
     am.connect(amDepth);
     amDepth.connect(amCarrier.gain);
 
     const env = this.ctx.createGain();
     env.gain.setValueAtTime(0.0001, t);
-    env.gain.linearRampToValueAtTime(0.20 * vol, t + 0.03);
-    env.gain.setValueAtTime(0.18 * vol, t + 0.28);
+    env.gain.linearRampToValueAtTime(0.14 * vol, t + 0.04);
+    env.gain.setValueAtTime(0.12 * vol, t + 0.28);
     env.gain.exponentialRampToValueAtTime(0.0001, t + 0.44);
 
     noise.connect(filter);
@@ -2115,137 +2079,158 @@ export class AudioManager {
     am.stop(t + 0.46);
   }
 
-  // 6. Tiny warm pop
+  // 6. Cozy Minecraft/Stardew hearth wood pop
   _sfxFireCrackle(t, vol, pitch) {
-    const osc = this.ctx.createOscillator();
-    const env = this.ctx.createGain();
-
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1400 * pitch, t);
-    osc.frequency.exponentialRampToValueAtTime(320 * pitch, t + 0.02);
-
-    env.gain.setValueAtTime(0.0001, t);
-    env.gain.linearRampToValueAtTime(0.18 * vol, t + 0.002);
-    env.gain.exponentialRampToValueAtTime(0.0001, t + 0.025);
-
-    osc.connect(env);
-    env.connect(this.sfxGain);
-
-    osc.start(t);
-    osc.stop(t + 0.03);
-  }
-
-  // 7. Tactile wooden UI clicks
-  _sfxUiClick(t, vol, pitch) {
     const osc = this.ctx.createOscillator();
     const filter = this.ctx.createBiquadFilter();
     const env = this.ctx.createGain();
 
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(720 * pitch, t);
-    osc.frequency.exponentialRampToValueAtTime(220 * pitch, t + 0.022);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(460 * pitch, t);
+    osc.frequency.exponentialRampToValueAtTime(135 * pitch, t + 0.025);
 
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(1800, t);
+    filter.frequency.setValueAtTime(750, t);
 
     env.gain.setValueAtTime(0.0001, t);
-    env.gain.linearRampToValueAtTime(0.16 * vol, t + 0.002);
-    env.gain.exponentialRampToValueAtTime(0.0001, t + 0.026);
+    env.gain.linearRampToValueAtTime(0.12 * vol, t + 0.003);
+    env.gain.exponentialRampToValueAtTime(0.0001, t + 0.03);
 
     osc.connect(filter);
     filter.connect(env);
     env.connect(this.sfxGain);
 
     osc.start(t);
-    osc.stop(t + 0.03);
+    osc.stop(t + 0.035);
+  }
+
+  // 7. Cozy Animal Crossing / Stardew hollow-wood UI taps
+  _sfxUiClick(t, vol, pitch) {
+    const osc = this.ctx.createOscillator();
+    const filter = this.ctx.createBiquadFilter();
+    const env = this.ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(380 * pitch, t);
+    osc.frequency.exponentialRampToValueAtTime(190 * pitch, t + 0.022);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(950, t);
+
+    env.gain.setValueAtTime(0.0001, t);
+    env.gain.linearRampToValueAtTime(0.14 * vol, t + 0.003);
+    env.gain.exponentialRampToValueAtTime(0.0001, t + 0.028);
+
+    osc.connect(filter);
+    filter.connect(env);
+    env.connect(this.sfxGain);
+
+    osc.start(t);
+    osc.stop(t + 0.035);
   }
 
   _sfxUiHover(t, vol, pitch) {
     const osc = this.ctx.createOscillator();
+    const filter = this.ctx.createBiquadFilter();
     const env = this.ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(1080 * pitch, t);
-    osc.frequency.exponentialRampToValueAtTime(620 * pitch, t + 0.012);
+    osc.frequency.setValueAtTime(290 * pitch, t);
+    osc.frequency.exponentialRampToValueAtTime(215 * pitch, t + 0.012);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(680, t);
 
     env.gain.setValueAtTime(0.0001, t);
-    env.gain.linearRampToValueAtTime(0.05 * vol, t + 0.001);
-    env.gain.exponentialRampToValueAtTime(0.0001, t + 0.015);
+    env.gain.linearRampToValueAtTime(0.032 * vol, t + 0.002);
+    env.gain.exponentialRampToValueAtTime(0.0001, t + 0.016);
 
-    osc.connect(env);
+    osc.connect(filter);
+    filter.connect(env);
     env.connect(this.sfxGain);
 
     osc.start(t);
-    osc.stop(t + 0.02);
+    osc.stop(t + 0.022);
   }
 
   _sfxUiTab(t, vol, pitch) {
-    // Tactile double micro-tap
+    // Gentle wooden notebook double tap
     const tap = (delay, f) => {
       const osc = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
       const env = this.ctx.createGain();
       const time = t + delay;
-      osc.type = 'triangle';
+      osc.type = 'sine';
       osc.frequency.setValueAtTime(f * pitch, time);
-      osc.frequency.exponentialRampToValueAtTime(f * 0.4 * pitch, time + 0.018);
+      osc.frequency.exponentialRampToValueAtTime(f * 0.52 * pitch, time + 0.018);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(880, time);
 
       env.gain.setValueAtTime(0.0001, time);
-      env.gain.linearRampToValueAtTime(0.12 * vol, time + 0.002);
-      env.gain.exponentialRampToValueAtTime(0.0001, time + 0.022);
+      env.gain.linearRampToValueAtTime(0.10 * vol, time + 0.003);
+      env.gain.exponentialRampToValueAtTime(0.0001, time + 0.024);
 
-      osc.connect(env);
+      osc.connect(filter);
+      filter.connect(env);
       env.connect(this.sfxGain);
       osc.start(time);
-      osc.stop(time + 0.025);
+      osc.stop(time + 0.028);
     };
 
-    tap(0, 480);
-    tap(0.024, 380);
+    tap(0, 320);
+    tap(0.024, 255);
   }
 
-  // 8. Warm celebratory 4-note triad arpeggio chime (C5 -> E5 -> G5 -> C6)
+  // 8. Cozy Stardew kalimba/marimba 4-note triad arpeggio (C4 -> E4 -> G4 -> C5)
   _sfxUpgrade(t, vol, pitch) {
-    const triad = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    const triad = [261.63, 329.63, 392.00, 523.25];
     triad.forEach((freq, idx) => {
-      const noteTime = t + idx * 0.075;
+      const noteTime = t + idx * 0.08;
       const osc = this.ctx.createOscillator();
-      const overtone = this.ctx.createOscillator();
+      const oct = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
       const env = this.ctx.createGain();
 
-      osc.type = 'sine';
+      osc.type = 'triangle';
       osc.frequency.setValueAtTime(freq * pitch, noteTime);
 
-      overtone.type = 'sine';
-      overtone.frequency.setValueAtTime(freq * 2.76 * pitch, noteTime);
+      oct.type = 'sine';
+      oct.frequency.setValueAtTime(freq * 2.0 * pitch, noteTime);
       const otGain = this.ctx.createGain();
-      otGain.gain.setValueAtTime(0.12, noteTime);
-      overtone.connect(otGain);
+      otGain.gain.setValueAtTime(0.14, noteTime);
+      oct.connect(otGain);
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1400, noteTime);
 
       env.gain.setValueAtTime(0.0001, noteTime);
-      env.gain.linearRampToValueAtTime(0.20 * vol, noteTime + 0.003);
-      env.gain.exponentialRampToValueAtTime(0.0001, noteTime + 0.52);
+      env.gain.linearRampToValueAtTime(0.18 * vol, noteTime + 0.007);
+      env.gain.exponentialRampToValueAtTime(0.0001, noteTime + 0.48);
 
-      osc.connect(env);
-      otGain.connect(env);
+      osc.connect(filter);
+      otGain.connect(filter);
+      filter.connect(env);
       env.connect(this.sfxGain);
 
       osc.start(noteTime);
-      overtone.start(noteTime);
-      osc.stop(noteTime + 0.55);
-      overtone.stop(noteTime + 0.55);
+      oct.start(noteTime);
+      osc.stop(noteTime + 0.52);
+      oct.stop(noteTime + 0.52);
     });
   }
 
-  // 8b. Celebratory architectural expansion fanfare (rising pentatonic harp + warm fifth chord)
+  // 8b. Celebratory architectural expansion fanfare (warm acoustic harp + marimba chord)
   _sfxExpansionFanfare(t, vol, pitch) {
-    const notes = [293.66, 369.99, 440.00, 587.33, 739.99, 880.00]; // D4, F#4, A4, D5, F#5, A5
+    const notes = [293.66, 369.99, 440.00, 587.33, 739.99]; // D4, F#4, A4, D5, F#5
     notes.forEach((f, idx) => {
-      const noteTime = t + idx * 0.085;
-      const isLast = idx >= 4;
-      const dur = isLast ? 0.95 : 0.45;
+      const noteTime = t + idx * 0.09;
+      const isLast = idx >= 3;
+      const dur = isLast ? 0.85 : 0.44;
 
       const osc = this.ctx.createOscillator();
       const overtone = this.ctx.createOscillator();
+      const filter = this.ctx.createBiquadFilter();
       const env = this.ctx.createGain();
       const otGain = this.ctx.createGain();
 
@@ -2256,13 +2241,17 @@ export class AudioManager {
       overtone.frequency.setValueAtTime(f * 2.0 * pitch, noteTime);
       otGain.gain.setValueAtTime(0.08 * vol, noteTime);
 
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1600, noteTime);
+
       env.gain.setValueAtTime(0.0001, noteTime);
-      env.gain.linearRampToValueAtTime((isLast ? 0.24 : 0.18) * vol, noteTime + 0.01);
+      env.gain.linearRampToValueAtTime((isLast ? 0.20 : 0.16) * vol, noteTime + 0.010);
       env.gain.exponentialRampToValueAtTime(0.0001, noteTime + dur);
 
-      osc.connect(env);
+      osc.connect(filter);
       overtone.connect(otGain);
-      otGain.connect(env);
+      otGain.connect(filter);
+      filter.connect(env);
       env.connect(this.sfxGain);
 
       osc.start(noteTime);
@@ -2272,133 +2261,107 @@ export class AudioManager {
     });
   }
 
-  // 9. Downward muted grumpy two-tone
+  // 9. Soft muted low wood-sigh when guest leaves unhappy
   _sfxComplaint(t, vol, pitch) {
-    // Note 1: G#3 (~207.65 Hz)
-    const o1 = this.ctx.createOscillator();
-    const f1 = this.ctx.createBiquadFilter();
-    const e1 = this.ctx.createGain();
-
-    o1.type = 'sawtooth';
-    o1.frequency.setValueAtTime(207.65 * pitch, t);
-    f1.type = 'lowpass';
-    f1.frequency.setValueAtTime(380, t);
-
-    e1.gain.setValueAtTime(0.0001, t);
-    e1.gain.linearRampToValueAtTime(0.18 * vol, t + 0.008);
-    e1.gain.setValueAtTime(0.16 * vol, t + 0.12);
-    e1.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
-
-    o1.connect(f1);
-    f1.connect(e1);
-    e1.connect(this.sfxGain);
-
-    o1.start(t);
-    o1.stop(t + 0.17);
-
-    // Note 2: E3 (~164.81 Hz dropping to ~135 Hz)
-    const t2 = t + 0.16;
-    const o2 = this.ctx.createOscillator();
-    const f2 = this.ctx.createBiquadFilter();
-    const e2 = this.ctx.createGain();
-
-    o2.type = 'sawtooth';
-    o2.frequency.setValueAtTime(164.81 * pitch, t2);
-    o2.frequency.exponentialRampToValueAtTime(135.00 * pitch, t2 + 0.22);
-    f2.type = 'lowpass';
-    f2.frequency.setValueAtTime(320, t2);
-
-    e2.gain.setValueAtTime(0.0001, t2);
-    e2.gain.linearRampToValueAtTime(0.20 * vol, t2 + 0.008);
-    e2.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.24);
-
-    o2.connect(f2);
-    f2.connect(e2);
-    e2.connect(this.sfxGain);
-
-    o2.start(t2);
-    o2.stop(t2 + 0.26);
+    const step = (start, fStart, fEnd, dur, amp) => {
+      const o = this.ctx.createOscillator();
+      const f = this.ctx.createBiquadFilter();
+      const e = this.ctx.createGain();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(fStart * pitch, start);
+      if (fEnd !== fStart) o.frequency.exponentialRampToValueAtTime(fEnd * pitch, start + dur * 0.9);
+      f.type = 'lowpass';
+      f.frequency.setValueAtTime(340, start);
+      e.gain.setValueAtTime(0.0001, start);
+      e.gain.linearRampToValueAtTime(amp * vol, start + 0.01);
+      e.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+      o.connect(f);
+      f.connect(e);
+      e.connect(this.sfxGain);
+      o.start(start);
+      o.stop(start + dur + 0.02);
+    };
+    step(t, 207.65, 207.65, 0.16, 0.14);
+    step(t + 0.16, 164.81, 138.00, 0.24, 0.16);
   }
 
-  // 10. Dialogue voice blip taking { speaker }
+  // 10. Cozy Animal Crossing / Stardew midrange dialogue voice blips (no harsh buzzers!)
   _sfxBlip(t, speaker, vol, pitch) {
     const s = String(speaker).toLowerCase();
     const osc = this.ctx.createOscillator();
+    const filter = this.ctx.createBiquadFilter();
     const env = this.ctx.createGain();
-    let filter = null;
-    let dur = 0.045;
+    let dur = 0.044;
 
     if (s === 'nyah') {
-      // Sassy higher triangle/square wave ~540 Hz (inflects 510 -> 560 Hz)
-      const baseFreq = 540 * pitch;
+      // Playful warm midrange inflection (355 -> 405 Hz, mellow filtered triangle)
+      const baseFreq = 360 * pitch;
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(baseFreq * 0.95, t);
-      osc.frequency.linearRampToValueAtTime(baseFreq * 1.05, t + 0.04);
-      dur = 0.045;
+      osc.frequency.setValueAtTime(baseFreq * 0.96, t);
+      osc.frequency.linearRampToValueAtTime(baseFreq * 1.10, t + 0.038);
+      dur = 0.044;
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(760, t);
 
       env.gain.setValueAtTime(0.0001, t);
-      env.gain.linearRampToValueAtTime(0.18 * vol, t + 0.004);
+      env.gain.linearRampToValueAtTime(0.14 * vol, t + 0.006);
       env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     } else if (s === 'fifi') {
-      // Soft timid sine/triangle wave ~390 Hz
-      const baseFreq = 390 * pitch;
+      // Gentle soft sine inflection (~295 Hz)
+      const baseFreq = 295 * pitch;
       osc.type = 'sine';
       osc.frequency.setValueAtTime(baseFreq, t);
-      osc.frequency.linearRampToValueAtTime(baseFreq * 0.96, t + 0.04);
-      dur = 0.04;
+      osc.frequency.linearRampToValueAtTime(baseFreq * 0.95, t + 0.038);
+      dur = 0.042;
+
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(680, t);
 
       env.gain.setValueAtTime(0.0001, t);
-      env.gain.linearRampToValueAtTime(0.14 * vol, t + 0.005);
+      env.gain.linearRampToValueAtTime(0.13 * vol, t + 0.006);
       env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     } else if (s === 'barnaby') {
-      // Gruff low ~190 Hz with lowpass filter
-      const baseFreq = 190 * pitch;
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(baseFreq * 1.05, t);
-      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.92, t + 0.06);
-      dur = 0.065;
+      // Cozy warm low bass hum (~135 Hz filtered triangle)
+      const baseFreq = 135 * pitch;
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(baseFreq * 1.04, t);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.92, t + 0.055);
+      dur = 0.06;
 
-      filter = this.ctx.createBiquadFilter();
       filter.type = 'lowpass';
       filter.frequency.setValueAtTime(320, t);
 
       env.gain.setValueAtTime(0.0001, t);
-      env.gain.linearRampToValueAtTime(0.20 * vol, t + 0.005);
+      env.gain.linearRampToValueAtTime(0.17 * vol, t + 0.007);
       env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     } else {
-      // Deterministic seeded variation for hireable staff or patrons
+      // Deterministic cozy midrange voice pip (185..335 Hz sine/triangle)
       let hash = 0;
       for (let i = 0; i < s.length; i++) {
         hash = ((hash << 5) - hash) + s.charCodeAt(i);
         hash |= 0;
       }
       const absHash = Math.abs(hash);
-      const base = 220 + (absHash % 260); // 220Hz .. 480Hz
+      const base = 185 + (absHash % 150);
       const microJitter = 0.97 + Math.random() * 0.06;
       const freq = base * microJitter * pitch;
-      const waveforms = ['sine', 'triangle', 'sawtooth'];
-      osc.type = waveforms[absHash % waveforms.length];
+      osc.type = absHash % 2 === 0 ? 'sine' : 'triangle';
       osc.frequency.setValueAtTime(freq, t);
       dur = 0.042;
 
-      filter = this.ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(800, t);
+      filter.frequency.setValueAtTime(680, t);
 
       env.gain.setValueAtTime(0.0001, t);
-      env.gain.linearRampToValueAtTime(0.15 * vol, t + 0.004);
+      env.gain.linearRampToValueAtTime(0.13 * vol, t + 0.006);
       env.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     }
 
-    if (filter) {
-      osc.connect(filter);
-      filter.connect(env);
-    } else {
-      osc.connect(env);
-    }
-
+    osc.connect(filter);
+    filter.connect(env);
     env.connect(this.sfxGain);
     osc.start(t);
-    osc.stop(t + dur + 0.01);
+    osc.stop(t + dur + 0.015);
   }
 }
