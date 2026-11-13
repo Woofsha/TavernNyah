@@ -292,6 +292,10 @@ async function boot() {
       if (patch.canonSpriteSize === 'orig' || patch.canonSpriteSize === 'small') {
         renderer.canonSpriteSize = patch.canonSpriteSize;
       }
+      if (typeof patch.devUnlockAllRegions === 'boolean') {
+        sim.setDevUnlockAllRegions(patch.devUnlockAllRegions);
+        renderer.clampCamera(sim.layout.bounds);
+      }
       persistSettings();
     },
   });

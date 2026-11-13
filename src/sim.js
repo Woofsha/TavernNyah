@@ -54,6 +54,7 @@ export class TavernSim {
     this.isDancerPerforming = false;
     this.doorOpenTimer = 0;
     this.isDoorOpen = false;
+    this.devUnlockAllRegions = false;
 
     this.layout = buildTavernLayout(this.state, this.data);
     this.banter = new BanterSystem(this.data.dialogue);
@@ -314,10 +315,11 @@ export class TavernSim {
     }
 
     // Room expansions also contribute natural prestige ambience & beverage quality
-    if (this.state.unlockedRooms.has('cellar')) drinkMult += 0.20;
-    if (this.state.unlockedRooms.has('kitchen')) foodMult += 0.15;
-    if (this.state.unlockedRooms.has('garden')) ambience += 12;
-    if (this.state.unlockedRooms.has('main_hall')) ambience += 8;
+    const rooms = this.getEffectiveUnlockedRooms();
+    if (rooms.has('cellar')) drinkMult += 0.20;
+    if (rooms.has('kitchen')) foodMult += 0.15;
+    if (rooms.has('garden')) ambience += 12;
+    if (rooms.has('main_hall')) ambience += 8;
 
     this.ambience = ambience;
     this.maidSpeedMult = maidSpeed;
@@ -329,11 +331,40 @@ export class TavernSim {
     this.repGainMult = repMult;
   }
 
+  getEffectiveUnlockedRooms() {
+    if (!this.devUnlockAllRegions) return this.state.unlockedRooms;
+    return new Set([
+      ...this.state.unlockedRooms,
+      'kitchen',
+      'counter_shop',
+      'main_hall',
+      'upstairs',
+      'cellar',
+      'stage',
+      'garden',
+    ]);
+  }
+
+  isRoomUnlocked(roomKey) {
+    return this.devUnlockAllRegions || this.state.unlockedRooms.has(roomKey);
+  }
+
+  setDevUnlockAllRegions(enabled) {
+    const next = Boolean(enabled);
+    if (this.devUnlockAllRegions === next) return;
+    this.devUnlockAllRegions = next;
+    this.recomputeModifiers();
+    this.rebuildLayoutPreservingOccupancy();
+  }
+
   rebuildLayoutPreservingOccupancy() {
     const prevTables = this.layout ? this.layout.tables : [];
     const prevBeds = this.layout ? this.layout.beds : [];
 
-    const nextLayout = buildTavernLayout(this.state, this.data);
+    const layoutState = this.devUnlockAllRegions
+      ? { ...this.state, unlockedRooms: this.getEffectiveUnlockedRooms() }
+      : this.state;
+    const nextLayout = buildTavernLayout(layoutState, this.data);
 
     for (let t = 0; t < Math.min(prevTables.length, nextLayout.tables.length); t++) {
       const oldT = prevTables[t];
@@ -349,6 +380,33 @@ export class TavernSim {
 
     for (let b = 0; b < Math.min(prevBeds.length, nextLayout.beds.length); b++) {
       nextLayout.beds[b].occupiedBy = prevBeds[b].occupiedBy;
+    }
+
+    // Release any customers whose seat/bed belonged to a wing hidden after toggling dev mode off
+    const validSeats = new Set();
+    for (const t of nextLayout.tables) {
+      for (const s of t.seats) validSeats.add(s);
+    }
+    const validBeds = new Set(nextLayout.beds);
+    for (const c of this.customers || []) {
+      if (c.seat && !validSeats.has(c.seat)) {
+        c.seat = null;
+        if (c.state !== 'LEAVING') {
+          c.state = 'LEAVING';
+          c.anim = 'walk';
+          c.path = [];
+          c.target = { ...nextLayout.waypoints.doorExit };
+        }
+      }
+      if (c.bed && !validBeds.has(c.bed)) {
+        c.bed = null;
+        if (c.state !== 'LEAVING') {
+          c.state = 'LEAVING';
+          c.anim = 'walk';
+          c.path = [];
+          c.target = { ...nextLayout.waypoints.doorExit };
+        }
+      }
     }
 
     this.layout = nextLayout;
@@ -647,7 +705,7 @@ export class TavernSim {
     rate += repBoost + ambienceBoost;
 
     // 3. Building Expansion traffic boosts
-    const rooms = this.state.unlockedRooms;
+    const rooms = this.getEffectiveUnlockedRooms();
     if (rooms.has('kitchen')) rate += 1.65;       // Pushes post-Kitchen into 5-8 guests/min
     if (rooms.has('counter_shop')) rate += 1.45;  // Supply counter attracts questing traffic
     if (rooms.has('main_hall')) rate += 2.4;

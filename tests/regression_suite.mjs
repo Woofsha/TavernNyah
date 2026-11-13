@@ -765,6 +765,53 @@ runCheck('Nyah & Fifi small sprites (-14%) and Settings size toggle (small vs or
   assert.deepEqual(changes, ['orig', 'small']);
 });
 
+runCheck('Dev Wings toggle previews all 7 regions reversibly without mutating save data', () => {
+  const sim = new TavernSim(data);
+  const starterProps = sim.layout.props.length;
+  assert.equal(sim.state.unlockedRooms.size, 0);
+  assert.equal(sim.layout.beds.length, 0);
+
+  // Enable dev preview
+  sim.setDevUnlockAllRegions(true);
+  assert.ok(sim.layout.props.length > starterProps, 'Expected extra wing props when dev wings enabled');
+  assert.ok(sim.layout.beds.length > 0, 'Expected upstairs beds when dev wings enabled');
+  for (const r of ['kitchen', 'counter_shop', 'main_hall', 'upstairs', 'cellar', 'stage', 'garden']) {
+    assert.equal(sim.isRoomUnlocked(r), true);
+  }
+  // Real save data must remain unpolluted
+  assert.equal(sim.state.unlockedRooms.size, 0);
+  assert.deepEqual(sim.serializeSave(Date.now()).unlockedRooms, []);
+
+  // Place a synthetic guest in an upstairs-only bed and toggle OFF safely
+  const expBed = sim.layout.beds[0];
+  const ghostCust = { id: 'c_ghost', seat: null, bed: expBed, state: 'SLEEPING', anim: 'sit', path: [], target: null };
+  sim.customers.push(ghostCust);
+  sim.setDevUnlockAllRegions(false);
+  assert.equal(sim.layout.beds.length, 0);
+  assert.equal(ghostCust.bed, null);
+  assert.equal(ghostCust.state, 'LEAVING');
+
+  // Verify Settings UI exposes tog_dev_regions and enables Camera Jump buttons when active
+  const ui = new TavernUI(makeFakeAssets(), palette, {
+    onSettingsChange: (patch) => {
+      if (typeof patch.devUnlockAllRegions === 'boolean') sim.setDevUnlockAllRegions(patch.devUnlockAllRegions);
+    },
+  });
+  ui.mode = 'playing';
+  ui.settingsOpen = true;
+  ui.render(makeFakeCanvasCtx(), sim, false, {});
+  const devBtn = ui.hitRegions.find((h) => h.id === 'tog_dev_regions');
+  const resetBtn = ui.hitRegions.find((h) => h.id === 'btn_reset_save');
+  assert.ok(devBtn && resetBtn);
+  assert.ok(resetBtn.y >= devBtn.y + devBtn.h, 'tog_dev_regions overlaps lower controls');
+  assert.equal(Boolean(ui.hitRegions.find((h) => h.id === 'jmp_garden')?.onClick), false);
+
+  devBtn.onClick();
+  assert.equal(sim.devUnlockAllRegions, true);
+  ui.render(makeFakeCanvasCtx(), sim, false, {});
+  assert.equal(Boolean(ui.hitRegions.find((h) => h.id === 'jmp_garden')?.onClick), true);
+});
+
 const failed = results.filter((r) => !r.pass);
 console.log(`\nSummary: ${results.length - failed.length}/${results.length} passed (${failed.length} failed)`);
 if (failed.length > 0) {
