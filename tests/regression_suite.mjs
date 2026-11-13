@@ -144,7 +144,7 @@ const RUN_AUDIT = args.has('--audit');
 
 // Promotion mask: enable checks by default once their fix commit lands.
 // At baseline (pre-fixes), ENABLED_AUDITS is empty; `--audit` runs all checks.
-const ENABLED_AUDITS = new Set(['C1', 'C2', 'C3', 'C4']);
+const ENABLED_AUDITS = new Set(['C1', 'C2', 'C3', 'C4', 'C5']);
 
 const results = [];
 function runCheck(name, fn, auditGroup = null) {
@@ -629,13 +629,13 @@ runCheck('Inspector scrolls to reveal all 5 opinions & Shop clips out-of-viewpor
   ui.selectedActorId = null;
   ui.settingsOpen = false;
   ui.shopOpen = true;
-  ui.shopTab = 'upgrades';
+  ui.activeTab = 'decor';
   ui.shopScroll = 140;
   ui.render(ctx, sim, false, {});
-  const listTop = 67; // panelY(16) + 51
-  const listBottom = 16 + 324 - 10;
+  const listTop = 64; // py(31) + 29 + 4
+  const listBottom = 345; // listY(60) + (325 - 36) - 4
   for (const hr of ui.hitRegions) {
-    if (hr.id.startsWith('buy_')) {
+    if (hr.id.startsWith('buy_') || hr.id.startsWith('hover_') || hr.id.startsWith('view_')) {
       assert.ok(hr.y >= listTop && (hr.y + hr.h) <= listBottom, `Shop hit region ${hr.id} leaked outside scroll viewport (${hr.y}..${hr.y + hr.h})`);
     }
   }

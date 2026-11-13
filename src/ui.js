@@ -6,7 +6,7 @@
 // - Live NPC Inspector Panel (Bust/Portrait, Mood Bar, Live Thought, 5 Opinions, Favorite Dish, Event Log)
 // - "While You Were Away" Dual-Voice Offline Summary & Settings / Save Export-Import Modal.
 
-import { drawPixelText, drawWrappedPixelText, measurePixelText } from './font.js';
+import { drawPixelText, drawWrappedPixelText, measurePixelText, wrapPixelText } from './font.js';
 import { INTERNAL_W, INTERNAL_H, drawNineSlice, rgbaFromPalette } from './renderer.js';
 
 const SHOP_TABS = [
@@ -30,8 +30,13 @@ export class TavernUI {
     this.maxShopScroll = 0;
 
     this.selectedActorId = null;
+    this.inspectorScroll = 0;
+    this._inspectorMaxScroll = 0;
+    this._lastInspectorId = null;
+
     this.ambientMode = false;
     this.settingsOpen = false;
+    this.resetConfirmArmed = false;
     this.offlineModal = null; // { minutes, gold, customers, nyahText, fifiText }
 
     this.speedMultiplier = 1; // 1 | 2 | 4
@@ -81,9 +86,19 @@ export class TavernUI {
   }
 
   handleWheel(cx, cy, deltaY) {
-    if (this.mode !== 'playing' || !this.shopOpen || this.settingsOpen || this.offlineModal) return false;
+    if (this.mode !== 'playing' || this.settingsOpen || this.offlineModal) return false;
+    // Inspector panel rect: x = 4..224, y = 31..356
+    if (this.selectedActorId && cx >= 4 && cx <= 224 && cy >= 31 && cy <= 356) {
+      if (this._inspectorMaxScroll > 0) {
+        this.inspectorScroll = Math.max(
+          0,
+          Math.min(this._inspectorMaxScroll, this.inspectorScroll + (deltaY > 0 ? 24 : -24))
+        );
+      }
+      return true;
+    }
     // Shop panel rect: x = 406..636, y = 32..354
-    if (cx >= 406 && cx <= 636 && cy >= 32 && cy <= 354) {
+    if (this.shopOpen && cx >= 406 && cx <= 636 && cy >= 32 && cy <= 354) {
       this.shopScroll = Math.max(0, Math.min(this.maxShopScroll, this.shopScroll + (deltaY > 0 ? 28 : -28)));
       return true;
     }
@@ -123,8 +138,13 @@ export class TavernUI {
     icon = null,
     onClick = null,
     tooltip = null,
+    clipTop = null,
+    clipBottom = null,
   } = {}) {
-    const hovered = !disabled && this.isHovered(x, y, w, h);
+    const hitY0 = clipTop != null ? Math.max(clipTop, y) : y;
+    const hitY1 = clipBottom != null ? Math.min(clipBottom, y + h) : (y + h);
+    const hasHit = (hitY1 - hitY0) >= 6;
+    const hovered = hasHit && !disabled && this.isHovered(x, hitY0, w, hitY1 - hitY0);
     const skinName = gold || active ? 'ui_button_gold' : 'ui_button_wood';
     const skin = this.assets.tavern.get(skinName);
     drawNineSlice(ctx, skin, x, y + (hovered ? -1 : 0), w, h, 6);
@@ -158,14 +178,19 @@ export class TavernUI {
       align: 'center',
     });
 
-    this.addHit(id, x, y, w, h, disabled ? null : () => {
-      this.callbacks.onPlaySfx?.('ui_click');
-      onClick?.();
-    }, tooltip);
+    if (hasHit) {
+      this.addHit(id, x, hitY0, w, hitY1 - hitY0, disabled ? null : () => {
+        this.callbacks.onPlaySfx?.('ui_click');
+        onClick?.();
+      }, tooltip);
+    }
   }
 
   render(ctx, sim, hasAutosave = false, audioState = {}) {
     this.hitRegions = [];
+    if (!this.settingsOpen) {
+      this.resetConfirmArmed = false;
+    }
 
     if (this.mode === 'title') {
       this.renderTitleScreen(ctx, sim, hasAutosave);
@@ -325,19 +350,23 @@ export class TavernUI {
     const isNyah = beat.speaker === 'nyah';
     const isFifi = beat.speaker === 'fifi';
 
-    // Draw both portraits; active speaker steps forward & brightens!
+    // Draw both portraits cleanly; inactive speaker steps back and dims without background bleed-through
     if (nyahP) {
       ctx.save();
-      ctx.globalAlpha = isNyah || !isFifi ? 1.0 : 0.55;
-      const ny = isNyah ? 62 : 72;
-      ctx.drawImage(nyahP, 36, ny, 225, 168);
+      if (!(isNyah || !isFifi)) {
+        ctx.filter = 'brightness(0.58) saturate(0.85)';
+      }
+      const ny = isNyah ? 50 : 60;
+      ctx.drawImage(nyahP, 36, ny, 220, 164);
       ctx.restore();
     }
     if (fifiP) {
       ctx.save();
-      ctx.globalAlpha = isFifi || !isNyah ? 1.0 : 0.55;
-      const fy = isFifi ? 62 : 72;
-      ctx.drawImage(fifiP, INTERNAL_W - 261, fy, 225, 168);
+      if (!(isFifi || !isNyah)) {
+        ctx.filter = 'brightness(0.58) saturate(0.85)';
+      }
+      const fy = isFifi ? 50 : 60;
+      ctx.drawImage(fifiP, INTERNAL_W - 256, fy, 220, 164);
       ctx.restore();
     }
 
@@ -491,9 +520,9 @@ export class TavernUI {
     const parchSkin = this.assets.tavern.get('ui_panel_parchment');
     drawNineSlice(ctx, woodSkin, px, py, pw, ph, 8);
 
-    // 5 Category Tabs across top
+    // 5 Category Tabs across top + affordable gold notification pips
     const tabW = 43;
-     SHOP_TABS.forEach((t, idx) => {
+    SHOP_TABS.forEach((t, idx) => {
       const tx = px + 6 + idx * (tabW + 1);
       const isAct = this.activeTab === t.id;
       this.drawButton(ctx, `tab_${t.id}`, tx, py + 5, tabW, 20, t.label, {
@@ -504,6 +533,13 @@ export class TavernUI {
           this.callbacks.onPlaySfx?.('ui_tab');
         },
       });
+      const tabHasAffordable = this.buildShopItemsForTab(sim, t.id).some((it) => it.canBuy);
+      if (tabHasAffordable) {
+        ctx.fillStyle = this.pal.OUTLINE_WARM;
+        ctx.fillRect(tx + tabW - 7, py + 6, 5, 5);
+        ctx.fillStyle = this.pal.GOLD_LIGHT;
+        ctx.fillRect(tx + tabW - 6, py + 7, 3, 3);
+      }
     });
 
     // List viewport
@@ -585,11 +621,25 @@ export class TavernUI {
       });
 
       const bottomRowY = cy + cardH - 16;
+      const viewBottom = viewTop + viewH;
       if (item.ownedMax) {
-        drawPixelText(ctx, item.doneBadge || 'OWNED', cx + cw - 6, bottomRowY, {
-          color: this.pal.LEAF_SHADOW,
-          align: 'right',
-        });
+        if (item.focusRoomKey) {
+          drawPixelText(ctx, item.doneBadge || 'BUILT', cx + cw - 46, bottomRowY, {
+            color: this.pal.LEAF_SHADOW,
+            align: 'right',
+          });
+          this.drawButton(ctx, `view_${item.id}`, cx + cw - 42, cy + cardH - 21, 38, 17, 'View', {
+            clipTop: viewTop,
+            clipBottom: viewBottom,
+            onClick: () => this.callbacks.onFocusRoom?.(item.focusRoomKey),
+            tooltip: { title: item.title, body: 'Center camera on this tavern wing.' },
+          });
+        } else {
+          drawPixelText(ctx, item.doneBadge || 'OWNED', cx + cw - 6, bottomRowY, {
+            color: this.pal.LEAF_SHADOW,
+            align: 'right',
+          });
+        }
       } else {
         if (item.reqNote) {
           drawPixelText(ctx, item.reqNote, cx + 5, bottomRowY, {
@@ -600,13 +650,19 @@ export class TavernUI {
         this.drawButton(ctx, `buy_${item.id}`, cx + cw - btnW - 4, cy + cardH - 21, btnW, 17, `${item.cost}g`, {
           gold: item.canBuy,
           disabled: !item.canBuy,
+          clipTop: viewTop,
+          clipBottom: viewBottom,
           onClick: item.onBuy,
           tooltip: item.tooltip,
         });
       }
 
-      // Hovering anywhere on card shows tooltip
-      this.addHit(`hover_${item.id}`, cx, cy, cw - 68, cardH, null, item.tooltip);
+      // Hovering anywhere on visible card bounds shows tooltip (strictly clipped to viewport)
+      const hoverY0 = Math.max(viewTop, cy);
+      const hoverY1 = Math.min(viewBottom, cy + cardH);
+      if (hoverY1 - hoverY0 >= 8) {
+        this.addHit(`hover_${item.id}`, cx, hoverY0, cw - 68, hoverY1 - hoverY0, null, item.tooltip);
+      }
     });
 
     ctx.restore();
@@ -663,7 +719,7 @@ export class TavernUI {
     const eff = u.effect || {};
     switch (u.id) {
       case 'add_table':
-        return `Add a 2-to-4 seat dining table (${sim.layout.tables.length}/${sim.layout.maxTableSlots} placed).`;
+        return `Add a 4-seat dining table (${sim.layout.tables.length}/${sim.layout.maxTableSlots} placed).`;
       case 'train_maids':
         return `Maid speed +5%/lv (Now ${Math.round(sim.maidSpeedMult * 100)}%).`;
       case 'train_chefs':
@@ -673,11 +729,11 @@ export class TavernUI {
       case 'town_crier':
         return `Arrival rate +6%/lv (Now +${Math.round((sim.patronSpawnMult - 1) * 100)}%).`;
       case 'table_tier_2':
-        return '3 seats/table +14% meal value.';
+        return 'Hardwood pine suites +14% meal value.';
       case 'table_tier_3':
-        return '4 seats/table +28% meal value.';
+        return 'Cushioned stained oak +28% meal value.';
       case 'table_tier_4':
-        return '4 royal seats +42% meal value.';
+        return 'Royal mahogany suites +42% meal value.';
       case 'bed_tier_2':
         return 'Doubles overnight room rental fees.';
       default:
@@ -777,6 +833,7 @@ export class TavernUI {
         canBuy,
         ownedMax: maxed,
         doneBadge: u.kind === 'staff_hire' ? 'HIRED' : 'BUILT',
+        focusRoomKey: u.kind === 'expansion' ? (u.effect?.value || null) : null,
         reqNote: reqShort,
         onBuy: () => {
           if (sim.buyUpgrade(u.id)) {
@@ -803,6 +860,11 @@ export class TavernUI {
   }
 
   renderInspectorPanel(ctx, sim, actor) {
+    if (this._lastInspectorId !== actor.id) {
+      this._lastInspectorId = actor.id;
+      this.inspectorScroll = 0;
+    }
+
     const snap = actor.getInspectorSnapshot(sim);
     const px = 4;
     const py = 31;
@@ -825,12 +887,12 @@ export class TavernUI {
     ctx.fillStyle = this.pal.WOOD_DEEP;
     ctx.fillRect(bx, by, 56, 56);
     ctx.strokeStyle = this.pal.GOLD_BASE;
+    ctx.lineWidth = 1;
     ctx.strokeRect(bx + 0.5, by + 0.5, 55, 55);
 
     if (snap.isCanon) {
       const pImg = this.assets.chars.get(`${actor.id}_portrait`);
       if (pImg) {
-        // Crop upper-center face/bust region cleanly
         ctx.drawImage(pImg, 44, 8, 192, 192, bx + 2, by + 2, 52, 52);
       }
     } else {
@@ -840,78 +902,153 @@ export class TavernUI {
       }
     }
 
-    // Header Bio Stats
-    drawPixelText(ctx, snap.name.slice(0, 19), bx + 62, by + 2, {
+    // Pinned Header Bio Stats (wrapped role so nothing truncates mid-word!)
+    const headerMaxW = pw - 98; // keeps clear of X close button
+    drawPixelText(ctx, String(snap.name || '').slice(0, 19), bx + 62, by + 1, {
       color: this.pal.OUTLINE_WARM,
     });
-    drawPixelText(ctx, snap.role.slice(0, 22), bx + 62, by + 13, {
+    const roleH = drawWrappedPixelText(ctx, snap.role, bx + 62, by + 11, headerMaxW, {
       color: this.pal.CLOTH_RED_BASE,
+      lineHeight: 8,
+      maxLines: 2,
     });
-    drawPixelText(ctx, `Lv.${snap.level} | ${snap.gold}g | ${snap.quirk}`, bx + 62, by + 24, {
+    const metaY = by + 13 + roleH;
+    const quirkText = String(snap.quirk || '').replace(/_/g, ' ');
+    const metaH = drawWrappedPixelText(ctx, `Lv.${snap.level} | ${snap.gold}g | ${quirkText}`, bx + 62, metaY, pw - 86, {
       color: this.pal.WOOD_SHADOW,
+      lineHeight: 8,
+      maxLines: 2,
     });
 
     // Mood Label + Pixel Bar
-    drawPixelText(ctx, `Mood: ${snap.moodLabel} (${snap.mood}%)`, bx + 62, by + 36, {
+    const moodY = Math.max(by + 36, metaY + metaH + 2);
+    drawPixelText(ctx, `Mood: ${snap.moodLabel} (${snap.mood}%)`, bx + 62, moodY, {
       color: this.pal.OUTLINE_WARM,
     });
     const barW = 128;
     ctx.fillStyle = this.pal.OUTLINE_WARM;
-    ctx.fillRect(bx + 62, by + 46, barW, 7);
+    ctx.fillRect(bx + 62, moodY + 10, barW, 7);
     const fillW = Math.round((barW - 2) * Math.max(0, Math.min(100, snap.mood)) / 100);
     ctx.fillStyle =
       snap.mood >= 70 ? this.pal.LEAF_LIGHT : snap.mood >= 45 ? this.pal.GOLD_LIGHT : this.pal.POTION_RED;
-    ctx.fillRect(bx + 63, by + 47, fillW, 5);
+    ctx.fillRect(bx + 63, moodY + 11, fillW, 5);
 
-    let curY = by + 62;
-    drawPixelText(ctx, `Now: ${snap.activity.slice(0, 28)}`, px + 11, curY, {
-      color: this.pal.CLOTH_ACCENT_SHADOW,
-    });
-    curY += 11;
-    drawPixelText(ctx, `Fav: ${snap.favoriteDish.slice(0, 28)}`, px + 11, curY, {
+    let headerY = Math.max(by + 61, moodY + 22);
+    const actLines = wrapPixelText(`Now: ${snap.activity}`, pw - 24, 1).slice(0, 2);
+    for (const line of actLines) {
+      drawPixelText(ctx, line, px + 11, headerY, { color: this.pal.CLOTH_ACCENT_SHADOW });
+      headerY += 9;
+    }
+    headerY += 1;
+    drawPixelText(ctx, `Fav: ${snap.favoriteDish}`.slice(0, 32), px + 11, headerY, {
       color: this.pal.WOOD_DEEP,
     });
-    curY += 13;
+    headerY += 11;
 
-    // Live Thought Card
-    ctx.fillStyle = rgbaFromPalette(this.pal, 'CREAM_LIGHT', 0.8);
-    ctx.fillRect(px + 10, curY, pw - 20, 34);
-    ctx.strokeStyle = this.pal.PARCHMENT_SHADOW;
-    ctx.strokeRect(px + 10.5, curY + 0.5, pw - 21, 33);
-    drawWrappedPixelText(ctx, `"${snap.liveThought}"`, px + 14, curY + 5, pw - 28, {
-      color: this.pal.OUTLINE_WARM,
-      lineHeight: 9,
-      maxLines: 3,
-    });
-    curY += 39;
+    // Divider line
+    ctx.fillStyle = this.pal.PARCHMENT_SHADOW;
+    ctx.fillRect(px + 10, headerY, pw - 20, 1);
 
-    // 5 Opinions (2-line wrapped so full thoughts are readable)
-    drawPixelText(ctx, 'OPINIONS:', px + 11, curY, { color: this.pal.CLOTH_RED_SHADOW });
-    curY += 10;
+    const scrollTop = headerY + 4;
+    const scrollBottom = py + ph - 10;
+    const scrollH = Math.max(40, scrollBottom - scrollTop);
+
+    // Measure scrollable content height before drawing so scrollbar & clamp are exact
+    const contentW = pw - 32; // reserves 12px on right for scrollbar
+    const thoughtLines = wrapPixelText(`"${snap.liveThought}"`, contentW - 8, 1).slice(0, 5);
+    const thoughtCardH = Math.max(24, 10 + thoughtLines.length * 9);
+
     const opRows = [
       ['Tavern', snap.opinions.tavern],
       ['Food', snap.opinions.food],
       ['Prices', snap.opinions.prices],
       ['Nyah', snap.opinions.nyah],
       ['Fifi', snap.opinions.fifi],
-    ];
-    for (const [topic, text] of opRows) {
-      const used = drawWrappedPixelText(ctx, `${topic}: ${text}`, px + 11, curY, pw - 22, {
-        color: this.pal.OUTLINE_WARM,
-        lineHeight: 8,
-        maxLines: 2,
-      });
-      curY += used + 3;
+    ].map(([topic, text]) => ({
+      topic,
+      lines: wrapPixelText(`${topic}: ${text}`, contentW, 1).slice(0, 5),
+    }));
+
+    const eventLines = snap.recentEvents.slice(0, 6).map((ev) => (
+      wrapPixelText(`- ${ev}`, contentW, 1).slice(0, 2)
+    ));
+
+    let totalContentH = thoughtCardH + 6 + 10; // Thought card + gap + 'OPINIONS:' header
+    for (const row of opRows) {
+      totalContentH += row.lines.length * 8 + 4;
+    }
+    totalContentH += 14; // 'RECENT EVENTS:' gap + header
+    for (const evl of eventLines) {
+      totalContentH += evl.length * 8 + 2;
+    }
+    totalContentH += 4;
+
+    this._inspectorMaxScroll = Math.max(0, totalContentH - scrollH);
+    this.inspectorScroll = Math.max(0, Math.min(this._inspectorMaxScroll, this.inspectorScroll));
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(px + 8, scrollTop, pw - 16, scrollH);
+    ctx.clip();
+
+    let curY = Math.round(scrollTop - this.inspectorScroll);
+
+    // Live Thought Card
+    ctx.fillStyle = rgbaFromPalette(this.pal, 'CREAM_LIGHT', 0.8);
+    ctx.fillRect(px + 10, curY, contentW, thoughtCardH);
+    ctx.strokeStyle = this.pal.PARCHMENT_SHADOW;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px + 10.5, curY + 0.5, contentW - 1, thoughtCardH - 1);
+    let tyCursor = curY + 5;
+    for (const tl of thoughtLines) {
+      drawPixelText(ctx, tl, px + 14, tyCursor, { color: this.pal.OUTLINE_WARM });
+      tyCursor += 9;
+    }
+    curY += thoughtCardH + 6;
+
+    // All 5 Opinions (untruncated, scrollable!)
+    drawPixelText(ctx, 'OPINIONS:', px + 11, curY, { color: this.pal.CLOTH_RED_SHADOW });
+    curY += 10;
+    for (const row of opRows) {
+      for (const ol of row.lines) {
+        drawPixelText(ctx, ol, px + 11, curY, { color: this.pal.OUTLINE_WARM });
+        curY += 8;
+      }
+      curY += 4;
     }
 
-    curY += 2;
+    curY += 3;
     drawPixelText(ctx, 'RECENT EVENTS:', px + 11, curY, { color: this.pal.CLOTH_RED_SHADOW });
-    curY += 9;
-    for (const ev of snap.recentEvents.slice(0, 3)) {
-      drawPixelText(ctx, `- ${ev.slice(0, 32)}`, px + 11, curY, {
-        color: this.pal.WOOD_SHADOW,
+    curY += 10;
+    for (const evl of eventLines) {
+      for (const line of evl) {
+        drawPixelText(ctx, line, px + 11, curY, { color: this.pal.WOOD_SHADOW });
+        curY += 8;
+      }
+      curY += 2;
+    }
+
+    ctx.restore();
+
+    if (this._inspectorMaxScroll > 0) {
+      const sbX = px + pw - 19;
+      this.drawButton(ctx, 'insp_scroll_up', sbX, scrollTop, 10, 16, '^', {
+        disabled: this.inspectorScroll <= 0,
+        onClick: () => { this.inspectorScroll = Math.max(0, this.inspectorScroll - 28); },
       });
-      curY += 9;
+      // Track + proportional thumb
+      const trackY = scrollTop + 18;
+      const trackH = Math.max(12, scrollH - 36);
+      ctx.fillStyle = rgbaFromPalette(this.pal, 'OUTLINE_WARM', 0.16);
+      ctx.fillRect(sbX + 3, trackY, 4, trackH);
+      const thumbH = Math.max(10, Math.round(trackH * (scrollH / totalContentH)));
+      const thumbY = trackY + Math.round((trackH - thumbH) * (this.inspectorScroll / this._inspectorMaxScroll));
+      ctx.fillStyle = this.pal.GOLD_BASE;
+      ctx.fillRect(sbX + 3, thumbY, 4, thumbH);
+      this.drawButton(ctx, 'insp_scroll_dn', sbX, scrollBottom - 16, 10, 16, 'v', {
+        disabled: this.inspectorScroll >= this._inspectorMaxScroll,
+        onClick: () => { this.inspectorScroll = Math.min(this._inspectorMaxScroll, this.inspectorScroll + 28); },
+      });
     }
   }
 
@@ -927,7 +1064,7 @@ export class TavernUI {
     if (this.toasts.length > 0) {
       const t = this.toasts[0];
       const th = 30;
-      const ty = INTERNAL_H - 60;
+      const ty = INTERNAL_H - 64;
       drawNineSlice(ctx, woodSkin, leftBound, ty, availW, th, 6);
       drawPixelText(ctx, t.title.slice(0, 32), leftBound + 6, ty + 5, {
         color: this.pal.GOLD_LIGHT,
@@ -939,18 +1076,30 @@ export class TavernUI {
       });
     }
 
-    // Latest Banter Line Ticker
+    // Latest Banter Line Ticker (2 wrapped lines with clean ellipsis if narrowed!)
     const latest = sim.banter.currentBeat || sim.banter.history[0];
     if (latest) {
-      const ty = INTERNAL_H - 26;
-      drawNineSlice(ctx, woodSkin, leftBound, ty, availW, 22, 6);
+      const ty = INTERNAL_H - 30;
+      drawNineSlice(ctx, woodSkin, leftBound, ty, availW, 26, 6);
       const spk = String(latest.speaker || 'nyah').toUpperCase();
-      const maxChars = Math.max(12, Math.floor((availW - 14) / 6));
       const fullLine = `${spk}: ${latest.text}`;
-      const clipped = fullLine.length > maxChars ? fullLine.slice(0, maxChars - 2) + '..' : fullLine;
-      drawPixelText(ctx, clipped, leftBound + 7, ty + 8, {
-        color: spk === 'NYAH' ? this.pal.GOLD_LIGHT : spk === 'FIFI' ? this.pal.CREAM_LIGHT : this.pal.PARCHMENT_LIGHT,
-        shadow: this.pal.OUTLINE_WARM,
+      const maxTextW = availW - 14;
+      const wrapped = wrapPixelText(fullLine, maxTextW, 1);
+      const lines = wrapped.slice(0, 2);
+      if (wrapped.length > 2 && lines[1]) {
+        let trimmed = lines[1];
+        while (trimmed.length > 0 && measurePixelText(`${trimmed}...`, 1) > maxTextW) {
+          trimmed = trimmed.slice(0, -1).trimEnd();
+        }
+        lines[1] = `${trimmed}...`;
+      }
+      const tickerCol =
+        spk === 'NYAH' ? this.pal.GOLD_LIGHT : spk === 'FIFI' ? this.pal.CREAM_LIGHT : this.pal.PARCHMENT_LIGHT;
+      lines.forEach((line, idx) => {
+        drawPixelText(ctx, line, leftBound + 7, ty + 5 + idx * 9, {
+          color: tickerCol,
+          shadow: this.pal.OUTLINE_WARM,
+        });
       });
     }
   }
@@ -1088,56 +1237,86 @@ export class TavernUI {
       },
     });
 
-    // Camera Quick-Jumps
-    drawPixelText(ctx, 'Camera Jump:', mx + 20, my + 140, { color: this.pal.WOOD_SHADOW });
+    // Camera Quick-Jumps (2 tidy rows covering all 6 wings, disabling unbuilt wings)
+    drawPixelText(ctx, 'Camera Jump:', mx + 20, my + 139, { color: this.pal.WOOD_SHADOW });
     const jumps = [
-      ['Hall', 'center'],
-      ['Kitchen', 'kitchen'],
-      ['Rooms', 'upstairs'],
-      ['Stage', 'stage'],
+      ['Hall', 'center', null],
+      ['Kitchen', 'kitchen', 'kitchen'],
+      ['Rooms', 'upstairs', 'upstairs'],
+      ['Cellar', 'cellar', 'cellar'],
+      ['Stage', 'stage', 'stage'],
+      ['Garden', 'garden', 'garden'],
     ];
-    jumps.forEach(([lbl, key], i) => {
-      this.drawButton(ctx, `jmp_${key}`, mx + 98 + i * 54, my + 135, 50, 18, lbl, {
+    jumps.forEach(([lbl, key, reqRoom], i) => {
+      const col = i % 3;
+      const row = Math.floor(i / 3);
+      const unlocked = !reqRoom || sim.state.unlockedRooms.has(reqRoom);
+      this.drawButton(ctx, `jmp_${key}`, mx + 98 + col * 72, my + 134 + row * 21, 68, 18, lbl, {
+        disabled: !unlocked,
+        tooltip: unlocked ? null : { title: lbl, body: 'Unlock this wing under Shop -> Build first.' },
         onClick: () => {
           this.callbacks.onFocusRoom?.(key);
           this.settingsOpen = false;
+          this.resetConfirmArmed = false;
         },
       });
     });
 
     // Save Controls
-    this.drawButton(ctx, 'btn_save_now', mx + 20, my + 166, 92, 22, 'Save Now', {
+    this.drawButton(ctx, 'btn_save_now', mx + 20, my + 180, 92, 22, 'Save Now', {
       gold: true,
       onClick: () => {
         this.callbacks.onSaveNow?.();
         this.pushToast('Autosave', 'Tavern progress saved locally!');
       },
     });
-    this.drawButton(ctx, 'btn_exp_imp', mx + 120, my + 166, 102, 22, 'Export/Import', {
+    this.drawButton(ctx, 'btn_exp_imp', mx + 120, my + 180, 102, 22, 'Export/Import', {
       onClick: () => {
         this.callbacks.onOpenSaveDialog?.();
       },
     });
-    this.drawButton(ctx, 'btn_replay_intro', mx + 228, my + 166, 86, 22, 'Story Intro', {
+    this.drawButton(ctx, 'btn_replay_intro', mx + 228, my + 180, 86, 22, 'Story Intro', {
       onClick: () => {
         this.settingsOpen = false;
+        this.resetConfirmArmed = false;
         this.mode = 'playing';
         sim.banter.startIntro();
       },
     });
 
-    this.drawButton(ctx, 'btn_reset_save', mx + 20, my + 196, 118, 20, 'Reset Save Data', {
-      onClick: () => {
-        this.callbacks.onResetSave?.();
-        this.settingsOpen = false;
-      },
-    });
+    this.drawButton(
+      ctx,
+      'btn_reset_save',
+      mx + 20,
+      my + 210,
+      118,
+      20,
+      this.resetConfirmArmed ? 'Confirm Wipe?' : 'Reset Save Data',
+      {
+        gold: this.resetConfirmArmed,
+        tooltip: {
+          title: 'Reset Local Save',
+          body: this.resetConfirmArmed
+            ? 'Click again right now to permanently wipe local tavern progress.'
+            : 'Requires a second confirmation click so saves cannot be lost by accident.',
+        },
+        onClick: () => {
+          if (!this.resetConfirmArmed) {
+            this.resetConfirmArmed = true;
+            return;
+          }
+          this.resetConfirmArmed = false;
+          this.callbacks.onResetSave?.();
+          this.settingsOpen = false;
+        },
+      }
+    );
 
     drawPixelText(
       ctx,
       `Served: ${sim.stats.customersServed} | Rooms: ${sim.stats.roomsRented}`,
       mx + 148,
-      my + 202,
+      my + 216,
       { color: this.pal.WOOD_SHADOW }
     );
   }
@@ -1145,12 +1324,13 @@ export class TavernUI {
   renderTooltip(ctx, tip) {
     const woodSkin = this.assets.tavern.get('ui_panel_wood');
     const tw = 196;
-    const bodyLines = Math.ceil((tip.body || '').length / 30);
-    const quoteLines = tip.quote ? Math.ceil(tip.quote.length / 30) : 0;
-    const th = 24 + bodyLines * 9 + (quoteLines > 0 ? quoteLines * 9 + 6 : 0);
+    const bodyLines = wrapPixelText(tip.body || '', tw - 14, 1).slice(0, 6);
+    const quoteLines = tip.quote ? wrapPixelText(tip.quote, tw - 14, 1).slice(0, 4) : [];
+    const th = 22 + bodyLines.length * 9 + (quoteLines.length > 0 ? quoteLines.length * 9 + 6 : 0);
 
     let tx = this.hoverX - tw - 8;
     if (tx < 6) tx = this.hoverX + 12;
+    tx = Math.max(6, Math.min(INTERNAL_W - tw - 6, tx));
     let ty = Math.min(INTERNAL_H - th - 6, Math.max(32, this.hoverY - 10));
 
     drawNineSlice(ctx, woodSkin, tx, ty, tw, th, 6);
@@ -1162,14 +1342,14 @@ export class TavernUI {
       color: this.pal.CREAM_LIGHT,
       shadow: this.pal.OUTLINE_WARM,
       lineHeight: 9,
-      maxLines: 5,
+      maxLines: 6,
     });
     if (tip.quote) {
       drawWrappedPixelText(ctx, tip.quote, tx + 7, ty + 20 + usedH, tw - 14, {
         color: this.pal.PARCHMENT_LIGHT,
         shadow: this.pal.OUTLINE_WARM,
         lineHeight: 9,
-        maxLines: 3,
+        maxLines: 4,
       });
     }
   }
