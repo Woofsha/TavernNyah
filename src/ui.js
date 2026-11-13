@@ -479,32 +479,32 @@ export class TavernUI {
 
     // Speed Button (`1x` -> `2x` -> `4x`)
     const nextSpeed = this.speedMultiplier === 1 ? 2 : this.speedMultiplier === 2 ? 4 : 1;
-    this.drawButton(ctx, 'btn_speed', 416, 6, 40, 19, `${this.speedMultiplier}x`, {
+    this.drawButton(ctx, 'btn_speed', 416, 6, 26, 19, `${this.speedMultiplier}x`, {
       active: this.speedMultiplier > 1,
       onClick: () => { this.speedMultiplier = nextSpeed; },
       tooltip: { title: 'Sim Speed', body: 'Toggle 1x / 2x / 4x tavern speed.' },
     });
 
     // Camera Recenter
-    this.drawButton(ctx, 'btn_cam_center', 459, 6, 38, 19, 'Cam', {
+    this.drawButton(ctx, 'btn_cam_center', 445, 6, 32, 19, 'Cam', {
       onClick: () => { this.callbacks.onFocusRoom?.('center'); },
       tooltip: { title: 'Center Camera', body: 'Drag canvas or use WASD/Arrows to pan across rooms.' },
     });
 
     // Ambient Mode `[H]`
-    this.drawButton(ctx, 'btn_ambient', 500, 6, 34, 19, '[H]', {
+    this.drawButton(ctx, 'btn_ambient', 480, 6, 30, 19, '[H]', {
       onClick: () => { this.ambientMode = true; },
       tooltip: { title: 'Ambient Mode (H)', body: 'Hide all UI panels to watch the cozy tavern.' },
     });
 
     // Settings Modal
-    this.drawButton(ctx, 'btn_settings', 537, 6, 42, 19, 'Opts', {
+    this.drawButton(ctx, 'btn_settings', 513, 6, 64, 19, 'Settings', {
       onClick: () => { this.settingsOpen = !this.settingsOpen; },
-      tooltip: { title: 'Options & Save', body: 'Audio sliders, toggles, FPS cap & save export.' },
+      tooltip: { title: 'Settings & Save', body: 'Audio sliders, toggles, FPS cap & save export.' },
     });
 
     // Shop Toggle
-    this.drawButton(ctx, 'btn_shop_toggle', 582, 6, 50, 19, this.shopOpen ? 'Hide' : 'Shop', {
+    this.drawButton(ctx, 'btn_shop_toggle', 580, 6, 52, 19, this.shopOpen ? 'Hide' : 'Shop', {
       gold: !this.shopOpen,
       onClick: () => { this.shopOpen = !this.shopOpen; },
     });
