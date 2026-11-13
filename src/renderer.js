@@ -555,8 +555,8 @@ export class TavernRenderer {
             ctx.fillRect(gx, gy - 1, 1, 3);
           }
         }
-        if (p.tableIndex !== undefined) {
-          const tbl = sim.layout.tables[p.tableIndex];
+        if (p.hasCandles || p.tableIndex !== undefined) {
+          const tbl = p.tableIndex !== undefined ? sim.layout.tables[p.tableIndex] : null;
           if (p.hasCandles) {
             const cand = this.assets.tavern.get('candles_cluster');
             if (cand) {
@@ -751,6 +751,10 @@ export class TavernRenderer {
       const hasTop = interiorSet.has(`${f.tx},${f.ty - 1}`);
       const hasBottom = interiorSet.has(`${f.tx},${f.ty + 1}`);
       const extendWallUp = !hasTop && wallBottomSet.has(`${f.tx},${f.ty}`) ? 64 : 0;
+      const isStoneRoom = f.asset === 'floor_kitchen' || f.asset === 'floor_cellar';
+      const railOuter = isStoneRoom ? this.pal.STONE_SHADOW : this.pal.WOOD_SHADOW;
+      const railInnerL = isStoneRoom ? this.pal.STONE_BASE : this.pal.WOOD_LIGHT;
+      const railInnerR = isStoneRoom ? this.pal.STONE_BASE : this.pal.WOOD_BASE;
 
       // Left cutaway timber/stone wall sill (extends along 64px back wall at top corners)
       if (!hasLeft) {
@@ -760,9 +764,9 @@ export class TavernRenderer {
         const innerH = wh - (extendWallUp > 0 ? 1 : 0);
         ctx.fillStyle = this.pal.OUTLINE_WARM;
         ctx.fillRect(sx - 6, wy, 6, wh);
-        ctx.fillStyle = this.pal.WOOD_SHADOW;
+        ctx.fillStyle = railOuter;
         ctx.fillRect(sx - 5, innerY, 4, innerH);
-        ctx.fillStyle = this.pal.WOOD_LIGHT;
+        ctx.fillStyle = railInnerL;
         ctx.fillRect(sx - 3, innerY, 2, innerH);
       }
 
@@ -774,9 +778,9 @@ export class TavernRenderer {
         const innerH = wh - (extendWallUp > 0 ? 1 : 0);
         ctx.fillStyle = this.pal.OUTLINE_WARM;
         ctx.fillRect(sx + 32, wy, 6, wh);
-        ctx.fillStyle = this.pal.WOOD_SHADOW;
+        ctx.fillStyle = railOuter;
         ctx.fillRect(sx + 33, innerY, 4, innerH);
-        ctx.fillStyle = this.pal.WOOD_BASE;
+        ctx.fillStyle = railInnerR;
         ctx.fillRect(sx + 33, innerY, 2, innerH);
       }
 
@@ -784,10 +788,10 @@ export class TavernRenderer {
       if (!hasBottom) {
         const isDoorway = f.ty === doorTY && (f.tx === doorTX || f.tx === doorTX + 1);
         if (!isDoorway) {
-          // 10px tall cutaway front wall (timber top rail + stone base + warm outline)
+          // 10px tall cutaway front wall (timber/stone top rail + stone base + warm outline)
           ctx.fillStyle = this.pal.OUTLINE_WARM;
           ctx.fillRect(sx - (!hasLeft ? 6 : 0), sy + 28, 32 + (!hasLeft ? 6 : 0) + (!hasRight ? 6 : 0), 10);
-          ctx.fillStyle = this.pal.WOOD_LIGHT;
+          ctx.fillStyle = isStoneRoom ? this.pal.STONE_BASE : this.pal.WOOD_LIGHT;
           ctx.fillRect(sx - (!hasLeft ? 5 : 0), sy + 29, 32 + (!hasLeft ? 5 : 0) + (!hasRight ? 5 : 0), 2);
           ctx.fillStyle = this.pal.STONE_BASE;
           ctx.fillRect(sx - (!hasLeft ? 5 : 0), sy + 31, 32 + (!hasLeft ? 5 : 0) + (!hasRight ? 5 : 0), 4);

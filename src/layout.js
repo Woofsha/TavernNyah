@@ -66,10 +66,10 @@ export function buildTavernLayout(state, data) {
   };
 
   // Exterior surrounding grass & cobble approach path
-  fillFloor(-1, -1, 25, 17, 'floor_grass');
+  fillFloor(-1, -1, 25, 19, 'floor_grass');
   const doorTileX = 12;
   const doorTileY = mainBottom;
-  for (let ty = doorTileY + 1; ty <= 17; ty++) {
+  for (let ty = doorTileY + 1; ty <= 18; ty++) {
     fillFloor(doorTileX, ty, doorTileX + 1, ty, 'floor_cobble');
   }
 
@@ -92,16 +92,22 @@ export function buildTavernLayout(state, data) {
         ty: 4,
         x: tx * TILE,
         y: 4 * TILE,
-        asset: tx === 22 ? 'wall_corner_r' : 'wall_stone_mid',
+        asset: 'wall_stone_mid',
       });
     }
     props.push(
-      { id: 'kitchen_stove', asset: 'stove_cauldron', x: 19 * TILE + 16, y: 6 * TILE + 24, shadow: true },
-      { id: 'kitchen_prep', asset: 'prep_counter', x: 19 * TILE + 16, y: 9 * TILE + 8, shadow: true },
-      { id: 'kitchen_spit', asset: 'spit_roast', x: 21 * TILE + 16, y: 10 * TILE + 20, shadow: true },
-      { id: 'kitchen_pantry', asset: 'pantry', x: 21 * TILE + 20, y: 6 * TILE + 24, shadow: true },
+      { id: 'kitchen_stove', asset: 'stove_cauldron', x: 19 * TILE + 12, y: 6 * TILE + 24, lightPool: true, shadow: true },
+      { id: 'kitchen_pantry', asset: 'pantry', x: 21 * TILE + 14, y: 6 * TILE + 24, shadow: true },
+      { id: 'kitchen_prep', asset: 'prep_counter', x: 19 * TILE + 20, y: 8 * TILE + 26, shadow: true },
+      { id: 'kitchen_larder', asset: 'crates_sacks', x: 22 * TILE - 2, y: 8 * TILE + 20, shadow: true },
+      { id: 'kitchen_spit', asset: 'spit_roast', x: 21 * TILE + 12, y: 10 * TILE + 20, lightPool: true, shadow: true },
+      { id: 'kitchen_crate_herb', asset: 'plant_pot', x: 18 * TILE + 10, y: 11 * TILE + 6, shadow: true },
     );
-    wallMounts.push({ asset: 'drying_rack_herbs', x: 19 * TILE + 16, y: 4 * TILE + 4 });
+    wallMounts.push(
+      { asset: 'lantern_wall', x: 18 * TILE + 8, y: 4 * TILE + 6, lightPool: true },
+      { asset: 'drying_rack_herbs', x: 19 * TILE + 4, y: 4 * TILE + 4 },
+      { asset: 'lantern_wall', x: 22 * TILE + 12, y: 4 * TILE + 6, lightPool: true },
+    );
   } else {
     // Compact starter hearth cook-pot tucked right behind the bar
     props.push({
@@ -149,16 +155,22 @@ export function buildTavernLayout(state, data) {
     props.push({ id: 'upstairs_chest', asset: 'chest', x: 17 * TILE + 10, y: 3 * TILE + 12, shadow: true });
   }
 
-  // 5. Deep Stone Wine Cellar (lower-right vault: tx = 18..22, ty = 12..15)
+  // 5. Deep Stone Wine Cellar (lower-right candlelit reserve vault: tx = 18..22, ty = 13..14 flush with hall)
   if (hasCellar) {
-    fillFloor(18, 13, 22, 15, 'floor_cellar');
+    fillFloor(18, 13, 22, 14, 'floor_cellar');
     for (let tx = 18; tx <= 22; tx++) {
       walls.push({ tx, ty: 11, x: tx * TILE, y: 11 * TILE, asset: 'wall_stone_mid' });
     }
     props.push(
-      { id: 'cellar_stairs', asset: 'stairs_down', x: 18 * TILE + 28, y: 13 * TILE + 20, shadow: true },
-      { id: 'cellar_kegs_1', asset: 'keg_rack', x: 20 * TILE + 16, y: 13 * TILE + 22, shadow: true },
-      { id: 'cellar_kegs_2', asset: 'keg_rack', x: 22 * TILE, y: 15 * TILE + 8, shadow: true },
+      { id: 'cellar_stairs', asset: 'stairs_down', x: 18 * TILE + 26, y: 13 * TILE + 18, shadow: false },
+      { id: 'cellar_kegs_1', asset: 'keg_rack', x: 20 * TILE + 14, y: 13 * TILE + 20, shadow: true },
+      { id: 'cellar_vintages', asset: 'shelves_bottles', x: 22 * TILE, y: 13 * TILE + 20, shadow: true },
+      { id: 'cellar_crates', asset: 'crates_sacks', x: 19 * TILE + 6, y: 14 * TILE + 22, shadow: true },
+      { id: 'cellar_tasting', asset: 'table_round', x: 21 * TILE + 18, y: 14 * TILE + 20, hasCandles: true, shadow: true },
+    );
+    wallMounts.push(
+      { asset: 'lantern_wall', x: 19 * TILE + 12, y: 11 * TILE + 8, lightPool: true },
+      { asset: 'lantern_wall', x: 21 * TILE + 12, y: 11 * TILE + 8, lightPool: true },
     );
   }
 
@@ -185,15 +197,22 @@ export function buildTavernLayout(state, data) {
     };
   }
 
-  // 7. Verdant Garden Terrace (open-air courtyard: tx = 0..4, ty = 14..16 or west patio tx = 0..4, ty = 3..7)
+  // 7. Verdant Garden Terrace (open-air south-west courtyard beside front doorway, connected to main cobble walk)
+  const patioTop = doorTileY + 1;
   if (hasGarden) {
-    fillFloor(0, 3, 4, 7, 'floor_cobble');
+    fillFloor(5, patioTop, 10, patioTop + 2, 'floor_cobble');
+    fillFloor(11, patioTop + 1, 11, patioTop + 1, 'floor_cobble'); // stone path joining front door walk
     props.push(
-      { id: 'garden_tree_1', asset: 'tree_oak', x: 0 * TILE + 24, y: 3 * TILE + 16, shadow: true },
-      { id: 'garden_bush_1', asset: 'bush_berry', x: 4 * TILE + 12, y: 3 * TILE + 20, shadow: true },
-      { id: 'garden_lamp_1', asset: 'lamppost', x: 0 * TILE + 20, y: 7 * TILE + 16, shadow: true },
+      { id: 'garden_tree_1', asset: 'tree_oak', x: 3 * TILE + 22, y: (patioTop + 1) * TILE + 24, shadow: true },
+      { id: 'garden_bush_1', asset: 'bush_berry', x: 4 * TILE + 20, y: patioTop * TILE + 20, shadow: true },
+      { id: 'garden_bush_2', asset: 'bush_berry', x: 11 * TILE + 14, y: (patioTop + 2) * TILE + 18, shadow: true },
+      { id: 'garden_lamp_1', asset: 'lamppost', x: 7 * TILE + 30, y: patioTop * TILE + 22, shadow: true },
+      { id: 'garden_pot_1', asset: 'plant_pot', x: 11 * TILE + 16, y: patioTop * TILE + 22, shadow: true },
     );
-    wallMounts.push({ asset: 'string_lights', x: 1 * TILE + 16, y: 2 * TILE + 20 });
+    wallMounts.push(
+      { asset: 'string_lights', x: 6 * TILE, y: doorTileY * TILE + 26, foreground: true },
+      { asset: 'string_lights', x: 9 * TILE, y: doorTileY * TILE + 26, foreground: true },
+    );
   } else {
     // Exterior decorative trees framing the building outside active expansions
     const leftTreeTileX = hasStage ? 0 : hasCounter ? 3 : 6;
@@ -254,7 +273,7 @@ export function buildTavernLayout(state, data) {
   if ((upg.decor_herbs || 0) > 0) {
     wallMounts.push({
       asset: 'drying_rack_herbs',
-      x: hasKitchen ? 17 * TILE + 28 : 16 * TILE + 24,
+      x: hasKitchen ? 20 * TILE + 24 : 16 * TILE + 24,
       y: 4 * TILE + 6,
     });
   }
@@ -297,9 +316,9 @@ export function buildTavernLayout(state, data) {
     { x: 12 * TILE + 16, y: 12 * TILE + 20, zone: 'hall', req: 'main_hall' },
     { x: 15 * TILE + 16, y: 13 * TILE + 4, zone: 'hall', req: 'main_hall' },
     { x: 6 * TILE + 24, y: 12 * TILE + 16, zone: 'hall', req: 'main_hall' },
-    // Unlocked with Verdant Garden Terrace (requires Stage -> Cellar -> Upstairs -> Hall)
-    { x: 2 * TILE + 16, y: 5 * TILE + 12, zone: 'garden', req: 'garden' },
-    { x: 2 * TILE + 16, y: 7 * TILE + 8, zone: 'garden', req: 'garden' },
+    // Unlocked with Verdant Garden Terrace (south-west courtyard patio beside front walk)
+    { x: 6 * TILE + 8, y: (patioTop + 1) * TILE + 22, zone: 'garden', req: 'garden' },
+    { x: 9 * TILE + 20, y: (patioTop + 1) * TILE + 22, zone: 'garden', req: 'garden' },
   ];
 
   const availableSlots = candidateTableCoords.filter((s) => !s.req || unlockedRooms.has(s.req));
@@ -381,13 +400,13 @@ export function buildTavernLayout(state, data) {
     barPickup: { x: barX - 8, y: barY + 20 },
     barBehind: { x: barX, y: barY - 12 },
     kitchenPickup: hasKitchen
-      ? { x: 18 * TILE + 12, y: 8 * TILE + 16 }
+      ? { x: 18 * TILE + 14, y: 8 * TILE + 16 }
       : { x: 16 * TILE + 4, y: 7 * TILE + 24 },
     kitchenCookSpot: hasKitchen
-      ? { x: 19 * TILE + 16, y: 7 * TILE + 18 }
+      ? { x: 19 * TILE + 12, y: 7 * TILE + 22 }
       : { x: 16 * TILE + 12, y: 7 * TILE + 10 },
     kitchenSousSpot: hasKitchen
-      ? { x: 20 * TILE + 20, y: 9 * TILE + 20 }
+      ? { x: 20 * TILE + 16, y: 9 * TILE + 24 }
       : { x: 16 * TILE + 24, y: 7 * TILE + 16 },
     counterCustomerSpot: hasCounter
       ? { x: 6 * TILE + 8, y: 7 * TILE + 24 }
@@ -412,10 +431,10 @@ export function buildTavernLayout(state, data) {
   };
 
   // Camera bounds in world pixels
-  const minTileX = hasGarden ? 0 : hasStage ? 2 : mainLeft - 1;
-  const maxTileX = hasKitchen ? 23 : mainRight + 2;
+  const minTileX = (hasStage || hasGarden) ? 1 : mainLeft - 1;
+  const maxTileX = (hasKitchen || hasCellar) ? 23 : mainRight + 2;
   const minTileY = hasUpstairs ? -1 : mainTop - 2;
-  const maxTileY = Math.max(doorTileY + 3, hasCellar ? 16 : mainBottom + 2);
+  const maxTileY = Math.max(doorTileY + 3, hasCellar ? 15 : mainBottom + 2, hasGarden ? patioTop + 3 : 0);
 
   return {
     tavernTier,

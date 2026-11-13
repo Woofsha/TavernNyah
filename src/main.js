@@ -171,14 +171,14 @@ async function boot() {
       fx = 12.5 * 32;
       fy = 2.5 * 32;
     } else if (roomKey === 'cellar') {
-      fx = 19 * 32;
-      fy = 3 * 32;
+      fx = 20.5 * 32;
+      fy = 13.5 * 32;
     } else if (roomKey === 'stage') {
       fx = 3.5 * 32;
       fy = 9.5 * 32;
     } else if (roomKey === 'garden') {
-      fx = 12.5 * 32;
-      fy = 15.5 * 32;
+      fx = 8 * 32;
+      fy = (sim.layout.doorTileY + 2) * 32;
     }
     renderer.centerCameraOn(fx, fy, b);
     if (roomKey && roomKey !== 'center') {
