@@ -144,7 +144,7 @@ const RUN_AUDIT = args.has('--audit');
 
 // Promotion mask: enable checks by default once their fix commit lands.
 // At baseline (pre-fixes), ENABLED_AUDITS is empty; `--audit` runs all checks.
-const ENABLED_AUDITS = new Set(['C1', 'C2', 'C3']);
+const ENABLED_AUDITS = new Set(['C1', 'C2', 'C3', 'C4']);
 
 const results = [];
 function runCheck(name, fn, auditGroup = null) {
@@ -519,7 +519,7 @@ runCheck('index.html uses native <dialog id="save-dialog" closedby="any">', () =
 }, 'C3');
 
 // Commit 4: North wall mount de-overlapping & crisp 0.5px strokes
-runCheck('Grand tavern north wallMounts do not overlap windows, fireplace, stairs, or sign_tavern', () => {
+runCheck('Grand tavern north wallMounts do not overlap windows, fireplace, or each other', () => {
   const sim = new TavernSim(data);
   sim.state.gold = 99999999;
   sim.state.reputation = 99999;
@@ -529,46 +529,60 @@ runCheck('Grand tavern north wallMounts do not overlap windows, fireplace, stair
     }
   }
   const l = sim.layout;
-  const spriteBox = (asset, x, y) => {
+  const topLeftBox = (asset, x, y) => {
+    const spec = manifest.frames?.[asset] || manifest.assets?.[asset] || manifest[asset];
+    assert.ok(spec, `Missing manifest entry for ${asset}`);
+    const [w, h] = spec.size;
+    return { asset, left: x, right: x + w, top: y, bottom: y + h };
+  };
+  const bottomCenterBox = (asset, x, y) => {
     const spec = manifest.frames?.[asset] || manifest.assets?.[asset] || manifest[asset];
     assert.ok(spec, `Missing manifest entry for ${asset}`);
     const [w, h] = spec.size;
     return { asset, left: x - w / 2, right: x + w / 2, top: y - h, bottom: y };
   };
-  const boxesOverlap = (a, b, pad = 0) => (
+  const boxesOverlap = (a, b, pad = 1) => (
     a.left < b.right - pad &&
     a.right > b.left + pad &&
     a.top < b.bottom - pad &&
     a.bottom > b.top + pad
   );
 
-  // North wall structural props (y <= 215, excluding floor/ceiling items like chandelier)
-  const mainNorthMounts = l.wallMounts.filter((m) => m.y >= 120 && m.y <= 150 && m.x >= 160 && m.x <= 544);
+  // North wall structural props (top-left anchored walls & wallMounts along y=110..150, excluding foreground chandelier)
+  const northMounts = l.wallMounts.filter((m) => !m.foreground && m.y >= 110 && m.y <= 155);
   const windows = l.walls
     .filter((w) => w.asset === 'wall_timber_window' && w.y >= 100)
-    .map((w) => ({ asset: w.asset, left: w.x, right: w.x + 32, top: w.y - 32, bottom: w.y + 32 }));
+    .map((w) => topLeftBox(w.asset, w.x, w.y));
   const fireplace = l.props.find((p) => p.asset === 'fireplace_1');
-  const fireplaceBox = fireplace ? spriteBox('fireplace_1', fireplace.x, fireplace.y) : null;
+  const fireplaceBox = fireplace ? bottomCenterBox('fireplace_1', fireplace.x, fireplace.y) : null;
 
-  const decorMounts = mainNorthMounts.filter((m) => m.asset !== 'chandelier');
-  for (const m of decorMounts) {
-    const mb = spriteBox(m.asset, m.x, m.y);
-    for (const wb of windows) {
-      assert.equal(boxesOverlap(mb, wb, 2), false, `${m.asset}@(${m.x},${m.y}) overlaps window [${wb.left}..${wb.right}]`);
+  const boxes = northMounts.map((m) => topLeftBox(m.asset, m.x, m.y));
+  for (let i = 0; i < boxes.length; i++) {
+    const mb = boxes[i];
+    for (let j = i + 1; j < boxes.length; j++) {
+      const ob = boxes[j];
+      assert.equal(
+        boxesOverlap(mb, ob, 1),
+        false,
+        `wallMount ${mb.asset}@(${mb.left},${mb.top}) overlaps ${ob.asset}@(${ob.left},${ob.top})`
+      );
     }
-    if (fireplaceBox && m.asset !== 'quest_board_full') {
-      assert.equal(boxesOverlap(mb, fireplaceBox, 4), false, `${m.asset}@(${m.x},${m.y}) overlaps fireplace_1 [${fireplaceBox.left}..${fireplaceBox.right}]`);
+    for (const wb of windows) {
+      assert.equal(boxesOverlap(mb, wb, 1), false, `${mb.asset}@(${mb.left},${mb.top}) overlaps window [${wb.left}..${wb.right}]`);
+    }
+    if (fireplaceBox) {
+      assert.equal(boxesOverlap(mb, fireplaceBox, 2), false, `${mb.asset}@(${mb.left},${mb.top}) overlaps fireplace_1 [${fireplaceBox.left}..${fireplaceBox.right}]`);
     }
   }
-  // Check sign_tavern doesn't overlap drying_rack_herbs
-  const sign = decorMounts.find((m) => m.asset === 'sign_tavern');
-  const herbs = decorMounts.filter((m) => m.asset === 'drying_rack_herbs');
-  if (sign) {
-    const sb = spriteBox(sign.asset, sign.x, sign.y);
-    for (const h of herbs) {
-      const hb = spriteBox(h.asset, h.x, h.y);
-      assert.equal(boxesOverlap(sb, hb, 2), false, `sign_tavern overlaps drying_rack_herbs at (${h.x},${h.y})`);
-    }
+  // Partial / starter-wing combination must build cleanly with finite mount coords
+  const partialLayout = buildTavernLayout({
+    tableTier: 1,
+    bedTier: 1,
+    unlockedRooms: new Set(),
+    upgradeLevels: { town_crier: 1, decor_banners: 1, decor_herbs: 1, decor_hearth: 1, decor_painting: 1, decor_trophy: 1 },
+  }, data);
+  for (const m of partialLayout.wallMounts) {
+    assert.ok(Number.isFinite(m.x) && Number.isFinite(m.y));
   }
 }, 'C4');
 

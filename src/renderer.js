@@ -578,7 +578,7 @@ export class TavernRenderer {
         if (selectedActorId && actor.id === selectedActorId) {
           ctx.strokeStyle = this.pal.GOLD_LIGHT;
           ctx.lineWidth = 1;
-          ctx.strokeRect(sx - 12, sy - 6, 24, 8);
+          ctx.strokeRect(sx - 11.5, sy - 5.5, 23, 7);
         }
 
         if (actor.isCanon) {

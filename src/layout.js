@@ -101,7 +101,7 @@ export function buildTavernLayout(state, data) {
       { id: 'kitchen_spit', asset: 'spit_roast', x: 21 * TILE + 16, y: 10 * TILE + 20, shadow: true },
       { id: 'kitchen_pantry', asset: 'pantry', x: 21 * TILE + 20, y: 6 * TILE + 24, shadow: true },
     );
-    wallMounts.push({ asset: 'drying_rack_herbs', x: 19 * TILE + 8, y: 4 * TILE + 10 });
+    wallMounts.push({ asset: 'drying_rack_herbs', x: 19 * TILE + 16, y: 4 * TILE + 4 });
   } else {
     // Compact starter hearth cook-pot tucked right behind the bar
     props.push({
@@ -119,7 +119,7 @@ export function buildTavernLayout(state, data) {
       { id: 'supply_potions', asset: 'potion_display', x: 6 * TILE, y: 6 * TILE + 20, shadow: true },
       { id: 'supply_crates', asset: 'crates_sacks', x: 5 * TILE + 24, y: 10 * TILE + 8, shadow: true },
     );
-    wallMounts.push({ asset: 'quest_board_full', x: 6 * TILE + 20, y: 4 * TILE + 8 });
+    wallMounts.push({ asset: 'quest_board_full', x: 5 * TILE + 26, y: 4 * TILE + 4 });
   }
 
   // 4. Upstairs Lodging Wing (cutaway upper terrace: tx = 8..17, ty = 1..3)
@@ -212,9 +212,9 @@ export function buildTavernLayout(state, data) {
     { id: 'front_door', asset: 'door_front', x: (doorTileX + 1) * TILE, y: (doorTileY + 1) * TILE, shadow: false },
   );
   wallMounts.push(
-    { asset: 'sign_tavern', x: 13 * TILE + 6, y: (mainTop - 2) * TILE + 8, sways: true },
-    { asset: 'lantern_wall', x: 9 * TILE + 8, y: (mainTop - 2) * TILE + 14, lightPool: true },
-    { asset: 'lantern_wall', x: 16 * TILE + 8, y: (mainTop - 2) * TILE + 14, lightPool: true },
+    { asset: 'sign_tavern', x: 12 * TILE + 22, y: (mainTop - 2) * TILE - 2, sways: true },
+    { asset: 'lantern_wall', x: 9 * TILE - 4, y: (mainTop - 2) * TILE + 4, lightPool: true },
+    { asset: 'lantern_wall', x: 16 * TILE + 4, y: (mainTop - 2) * TILE + 4, lightPool: true },
   );
 
   // Decor & Repeatable Upgrades -> Visible World Props (B2)!
@@ -230,10 +230,10 @@ export function buildTavernLayout(state, data) {
     });
   }
   if ((upg.train_chefs || 0) > 0 && !hasKitchen) {
-    wallMounts.push({ asset: 'drying_rack_herbs', x: 16 * TILE + 4, y: 4 * TILE + 12 });
+    wallMounts.push({ asset: 'drying_rack_herbs', x: 16 * TILE + 24, y: 4 * TILE + 4 });
   }
   if ((upg.town_crier || 0) > 0 && !hasCounter) {
-    wallMounts.push({ asset: 'quest_board_full', x: 8 * TILE + 12, y: 4 * TILE + 10 });
+    wallMounts.push({ asset: 'quest_board_full', x: 7 * TILE + 30, y: 4 * TILE + 4 });
   }
   if ((upg.decor_hearth || 0) > 0) {
     props.push({ id: 'hearth_fire', asset: 'fireplace_1', x: 10 * TILE + 16, y: 6 * TILE + 16, shadow: false, emitsEmbers: true, lightPool: true });
@@ -245,7 +245,11 @@ export function buildTavernLayout(state, data) {
     rugs.push({ group: 'rug_accent', x: 8 * TILE + 16, y: 8 * TILE + 16 });
   }
   if ((upg.decor_herbs || 0) > 0) {
-    wallMounts.push({ asset: 'drying_rack_herbs', x: 13 * TILE, y: 4 * TILE + 8 });
+    wallMounts.push({
+      asset: 'drying_rack_herbs',
+      x: hasKitchen ? 17 * TILE + 28 : 16 * TILE + 24,
+      y: 4 * TILE + 6,
+    });
   }
   if ((upg.decor_plants || 0) > 0) {
     props.push(
@@ -255,18 +259,18 @@ export function buildTavernLayout(state, data) {
   }
   if ((upg.decor_banners || 0) > 0) {
     wallMounts.push(
-      { asset: 'banner_red', x: 8 * TILE + 20, y: 4 * TILE + 8 },
-      { asset: 'banner_accent', x: 15 * TILE + 20, y: 4 * TILE + 8 },
+      { asset: 'banner_red', x: hasCounter ? 5 * TILE : 8 * TILE + 4, y: 4 * TILE + 2 },
+      { asset: 'banner_accent', x: hasKitchen ? 17 * TILE : 16 * TILE + 22, y: 4 * TILE + 2 },
     );
   }
   if ((upg.decor_painting || 0) > 0) {
-    wallMounts.push({ asset: 'painting_landscape', x: 11 * TILE + 16, y: 4 * TILE + 14 });
+    wallMounts.push({ asset: 'painting_landscape', x: 11 * TILE + 18, y: 4 * TILE - 2 });
   }
   if ((upg.decor_armor || 0) > 0) {
     props.push({ id: 'armor_1', asset: 'armor_stand', x: (doorTileX - 1) * TILE + 16, y: (doorTileY + 1) * TILE - 4, shadow: true });
   }
   if ((upg.decor_trophy || 0) > 0) {
-    wallMounts.push({ asset: 'trophy_stag', x: 10 * TILE, y: 4 * TILE + 2 });
+    wallMounts.push({ asset: 'trophy_stag', x: 14 * TILE, y: 4 * TILE - 6 });
   }
   if ((upg.decor_chandelier || 0) > 0) {
     wallMounts.push({ asset: 'chandelier', x: 12 * TILE, y: 5 * TILE + 8, foreground: true, lightPool: true });
@@ -302,7 +306,6 @@ export function buildTavernLayout(state, data) {
     4: 'table_t4_ornate',
   };
   const tableAsset = tableAssetByTier[tableTier] || 'table_round';
-  const seatsPerTable = tableTier >= 3 ? 4 : tableTier === 2 ? 3 : 2;
   const hasCandles = (upg.decor_candles || 0) > 0;
 
   const tables = [];

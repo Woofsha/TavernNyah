@@ -134,7 +134,8 @@ export class TavernUI {
       ctx.fillRect(Math.round(x + 2), Math.round(y + 2), Math.round(w - 4), Math.round(h - 4));
     } else if (hovered) {
       ctx.strokeStyle = this.pal.GOLD_LIGHT;
-      ctx.strokeRect(Math.round(x + 1), Math.round(y), Math.round(w - 2), Math.round(h - 2));
+      ctx.lineWidth = 1;
+      ctx.strokeRect(Math.round(x) + 1.5, Math.round(y) + 0.5, Math.round(w) - 3, Math.round(h) - 2);
     }
 
     let textX = x + w / 2;
