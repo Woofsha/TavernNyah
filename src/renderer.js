@@ -384,10 +384,16 @@ export class TavernRenderer {
       }
     }
 
+    const drawX = Math.round(sx);
+    if (actor.state === 'SLEEPING' || actor.anim === 'sleep') {
+      // Render head + collar tucked onto pillow, clipped cleanly at the bedsheet fold (`by - 29`)
+      const sleepDrawY = Math.round(sy - 57);
+      this.ctx.drawImage(sheet, 1 * cellW, 0, cellW, 29, drawX - cellW / 2, sleepDrawY, cellW, 29);
+      return;
+    }
+
     const isSitting = actor.anim === 'sit' || actor.anim === 'eat';
     const sitOffsetY = isSitting ? -8 : 0;
-
-    const drawX = Math.round(sx);
     const drawY = Math.round(sy - cellH + bobY + sitOffsetY);
 
     if (flipX) {
@@ -496,7 +502,7 @@ export class TavernRenderer {
 
     for (const c of sim.customers) {
       renderables.push({
-        footY: c.y,
+        footY: c.state === 'SLEEPING' ? c.y + 2 : c.y,
         kind: 'actor',
         actor: c,
       });
@@ -576,12 +582,14 @@ export class TavernRenderer {
         const sy = Math.round(actor.y - camY);
         if (sx < -48 || sx > INTERNAL_W + 48 || sy < -16 || sy > INTERNAL_H + 64) continue;
 
-        this.drawContactShadow(sx, sy - 1, 10, 4);
+        if (actor.state !== 'SLEEPING') {
+          this.drawContactShadow(sx, sy - 1, 10, 4);
+        }
 
         if (selectedActorId && actor.id === selectedActorId) {
           ctx.strokeStyle = this.pal.GOLD_LIGHT;
           ctx.lineWidth = 1;
-          ctx.strokeRect(sx - 11.5, sy - 5.5, 23, 7);
+          ctx.strokeRect(sx - 11.5, actor.state === 'SLEEPING' ? sy - 49.5 : sy - 5.5, 23, actor.state === 'SLEEPING' ? 22 : 7);
         }
 
         if (actor.isCanon) {
@@ -595,7 +603,9 @@ export class TavernRenderer {
           const emImg = this.assets.tavern.get(actor.emote);
           if (emImg) {
             const floatY = Math.round(Math.sin(this.animClock * 5.0 + (actor.seed || 0)) * 2);
-            const emoteBaseY = actor.isCanon && this.canonSpriteSize !== 'orig' ? 52 : 58;
+            const emoteBaseY = actor.state === 'SLEEPING'
+              ? 62
+              : (actor.isCanon && this.canonSpriteSize !== 'orig' ? 52 : 58);
             ctx.drawImage(emImg, Math.round(sx - emImg.width / 2), Math.round(sy - emoteBaseY + floatY));
           }
         }

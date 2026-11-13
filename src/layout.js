@@ -130,16 +130,23 @@ export function buildTavernLayout(state, data) {
       const wAsset = tx === 8 ? 'wall_corner_l' : tx === 17 ? 'wall_corner_r' : (tx % 3 === 0 ? 'wall_timber_window' : 'wall_timber_mid');
       walls.push({ tx, ty: -1, x: tx * TILE, y: -1 * TILE, asset: wAsset });
     }
-    props.push({ id: 'stairs_up_prop', asset: 'stairs_up', x: 8 * TILE + 28, y: 6 * TILE + 20, shadow: true });
+    props.push(
+      { id: 'stairs_up_prop', asset: 'stairs_up', x: 8 * TILE + 28, y: 6 * TILE + 20, shadow: true },
+      { id: 'upstairs_landing', asset: 'stairs_down', x: 8 * TILE + 28, y: 3 * TILE + 12, sortY: 2 * TILE + 16, shadow: false },
+    );
+    wallMounts.push(
+      { asset: 'lantern_wall', x: 10 * TILE + 16, y: -1 * TILE + 8, lightPool: true },
+      { asset: 'lantern_wall', x: 14 * TILE + 16, y: -1 * TILE + 8, lightPool: true },
+    );
     const bedAsset = state.bedTier >= 2 ? 'bed_t2' : 'bed_t1';
     const bedCols = [10, 12, 14, 16];
     bedCols.forEach((btx, idx) => {
       const bx = btx * TILE + 8;
       const by = 2 * TILE + 26;
       props.push({ id: `guest_bed_${idx}`, asset: bedAsset, x: bx, y: by, shadow: true });
-      beds.push({ id: `bed_${idx}`, index: idx, x: bx, y: by - 8, occupiedBy: null });
+      beds.push({ id: `bed_${idx}`, index: idx, x: bx, y: by, occupiedBy: null });
     });
-    props.push({ id: 'upstairs_chest', asset: 'chest', x: 9 * TILE, y: 3 * TILE + 12, shadow: true });
+    props.push({ id: 'upstairs_chest', asset: 'chest', x: 17 * TILE + 10, y: 3 * TILE + 12, shadow: true });
   }
 
   // 5. Deep Stone Wine Cellar (lower-right vault: tx = 18..22, ty = 12..15)
@@ -388,8 +395,9 @@ export function buildTavernLayout(state, data) {
     questBoardSpot: hasCounter
       ? { x: 6 * TILE + 28, y: 6 * TILE + 24 }
       : { x: 9 * TILE + 16, y: 6 * TILE + 24 },
-    stairsBottom: { x: 8 * TILE + 28, y: 7 * TILE },
-    stairsTop: { x: 8 * TILE + 28, y: 3 * TILE },
+    stairsBottom: { x: 8 * TILE + 28, y: 7 * TILE - 2 },
+    stairsUpMid: { x: 8 * TILE + 28, y: 5 * TILE + 12 },
+    stairsTop: { x: 8 * TILE + 28, y: 3 * TILE + 4 },
     maidIdleSpots: [
       { x: 13 * TILE + 8, y: 8 * TILE + 12 },
       { x: 11 * TILE + 8, y: 8 * TILE + 16 },

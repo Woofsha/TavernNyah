@@ -466,7 +466,8 @@ export class CustomerActor {
             if (bedIdx !== null) {
               this.bedIndex = bedIdx;
               pushBounded(this.recentEvents, 'Rented an upstairs room for the night');
-              this.transition('SEEKING_ROOM', 16.0);
+              this.stairPhase = 'to_bottom';
+              this.transition('SEEKING_ROOM', 22.0);
               break;
             }
           }
@@ -478,21 +479,30 @@ export class CustomerActor {
       case 'SEEKING_ROOM': {
         const bed = this.bedIndex !== null ? sim.layout.beds[this.bedIndex] : null;
         if (!bed) {
-          this.transition('PAYING', 4.0);
+          this.stairPhase = null;
+          this.transition('PAYING', 12.0);
           break;
         }
         this.anim = 'walk';
         const sb = sim.layout.waypoints.stairsBottom;
+        const sm = sim.layout.waypoints.stairsUpMid || sb;
         const st = sim.layout.waypoints.stairsTop;
-        // Two-stage stair climb: if still downstairs (y > st.y + 24), walk to stairsBottom then hop up to stairsTop
         if (this.y > st.y + 36) {
-          if (stepTowards(this, sb.x, sb.y, walkSpeed, dt)) {
-            this.x = st.x;
-            this.y = st.y;
+          if (this.stairPhase === 'climbing') {
+            if (stepTowards(this, sm.x, sm.y, walkSpeed * 0.85, dt)) {
+              this.x = st.x;
+              this.y = st.y;
+              this.stairPhase = 'upstairs';
+            }
+          } else {
+            if (stepTowards(this, sb.x, sb.y, walkSpeed, dt)) {
+              this.stairPhase = 'climbing';
+            }
           }
         } else if (stepTowards(this, bed.x, bed.y, walkSpeed, dt)) {
           this.dir = 'down';
-          this.anim = 'sit';
+          this.anim = 'sleep';
+          this.stairPhase = null;
           this.setEmote('emote_zzz', 3.5);
           this.transition('SLEEPING', 34.0);
         }
@@ -500,7 +510,7 @@ export class CustomerActor {
       }
 
       case 'SLEEPING': {
-        this.anim = 'sit';
+        this.anim = 'sleep';
         if (!this.emote) this.setEmote('emote_zzz', 2.8);
         this.mood = Math.min(100, this.mood + 0.7 * dt);
         const sleepDur = 20.0 + (this.seed % 7);
@@ -509,17 +519,34 @@ export class CustomerActor {
           const tierMult = 1 + 0.25 * ((this.archetype.maxRecipeTier || 1) - 1);
           this.roomFee += Math.round(baseRoomRate * tierMult);
           this.releaseBed(sim);
-          // Step back down stairs to common room
-          const sb = sim.layout.waypoints.stairsBottom;
-          this.x = sb.x;
-          this.y = sb.y;
+          this.stairPhase = 'to_top';
           pushBounded(this.recentEvents, 'Woke up refreshed from lodging suite');
-          this.transition('PAYING', 4.0);
+          this.transition('PAYING', 12.0);
         }
         break;
       }
 
       case 'PAYING': {
+        const sb = sim.layout.waypoints.stairsBottom;
+        const sm = sim.layout.waypoints.stairsUpMid || sb;
+        const st = sim.layout.waypoints.stairsTop;
+        // If still upstairs after sleeping, walk cleanly back through the stair landing & steps
+        if (this.y < st.y + 40) {
+          this.anim = 'walk';
+          if (stepTowards(this, st.x, st.y, walkSpeed, dt)) {
+            this.x = sm.x;
+            this.y = sm.y;
+            this.stairPhase = 'descending';
+          }
+          break;
+        }
+        if (this.stairPhase === 'descending') {
+          this.anim = 'walk';
+          if (stepTowards(this, sb.x, sb.y, walkSpeed * 0.85, dt)) {
+            this.stairPhase = null;
+          }
+          break;
+        }
         this.anim = 'idle';
         if (!this.hasPaid) {
           this.hasPaid = true;
