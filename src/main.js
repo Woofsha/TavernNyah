@@ -137,9 +137,6 @@ async function boot() {
   if (typeof savedSettings.atmosphereEnabled === 'boolean') {
     renderer.atmosphereEnabled = savedSettings.atmosphereEnabled;
   }
-  if (savedSettings.canonSpriteSize === 'orig' || savedSettings.canonSpriteSize === 'small') {
-    renderer.canonSpriteSize = savedSettings.canonSpriteSize;
-  }
 
   renderer.resizeToWindow(window.innerWidth, window.innerHeight);
   renderer.centerCameraOn(sim.layout.bounds.defaultCenterX, sim.layout.bounds.defaultCenterY, sim.layout.bounds);
@@ -148,7 +145,6 @@ async function boot() {
     writeLocalJson(SETTINGS_STORAGE_KEY, {
       ...audio.getState(),
       atmosphereEnabled: renderer.atmosphereEnabled,
-      canonSpriteSize: renderer.canonSpriteSize,
       fpsCap: ui.fpsCap,
     });
   };
@@ -288,13 +284,6 @@ async function boot() {
       audio.applySettings(patch);
       if (typeof patch.atmosphereEnabled === 'boolean') {
         renderer.atmosphereEnabled = patch.atmosphereEnabled;
-      }
-      if (patch.canonSpriteSize === 'orig' || patch.canonSpriteSize === 'small') {
-        renderer.canonSpriteSize = patch.canonSpriteSize;
-      }
-      if (typeof patch.devUnlockAllRegions === 'boolean') {
-        sim.setDevUnlockAllRegions(patch.devUnlockAllRegions);
-        renderer.clampCamera(sim.layout.bounds);
       }
       persistSettings();
     },
@@ -562,7 +551,6 @@ async function boot() {
       ui.render(renderer.ctx, sim, hasAutosave, {
         ...audio.getState(),
         atmosphereEnabled: renderer.atmosphereEnabled,
-        canonSpriteSize: renderer.canonSpriteSize,
       });
     }
   }

@@ -10,7 +10,7 @@ import { wrapPixelText, measurePixelText } from '../src/font.js';
 import * as fontMod from '../src/font.js';
 import { AudioManager } from '../src/audio.js';
 import { TavernRenderer } from '../src/renderer.js';
-import { TavernUI } from '../src/ui.js';
+import { TavernUI, GAME_VERSION } from '../src/ui.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -691,7 +691,7 @@ runCheck('Music style toggle (new vs old) switches seamlessly and schedules all 
   }
 });
 
-runCheck('Nyah & Fifi small sprites (-14%) and Settings size toggle (small vs orig) work cleanly', () => {
+runCheck('Nyah & Fifi always use slimmed (-14%) world sprites while NPCs stay unchanged', () => {
   const charManifest = loadJson('assets/characters/manifest.json');
   for (const id of ['nyah', 'fifi']) {
     const meta = charManifest.characters[id];
@@ -705,7 +705,7 @@ runCheck('Nyah & Fifi small sprites (-14%) and Settings size toggle (small vs or
     assert.equal(smallBuf.readUInt32BE(20), 192);
   }
 
-  // Verify drawCanonCharacter switches sheet cleanly while NPC draw is untouched
+  // Verify drawCanonCharacter prefers *_small while NPC draw is untouched
   const ctx = makeFakeCanvasCtx();
   const drawnSheets = [];
   ctx.drawImage = (img) => { drawnSheets.push(img?.id || 'img'); };
@@ -718,7 +718,6 @@ runCheck('Nyah & Fifi small sprites (-14%) and Settings size toggle (small vs or
   assets.npcs.set('barnaby', { id: 'barnaby_orig' });
 
   const ren = new TavernRenderer(fakeCanvas, assets, palette);
-  assert.equal(ren.canonSpriteSize, 'small');
   const nyahActor = { id: 'nyah', isCanon: true, dir: 'down', anim: 'idle', animTime: 0 };
   const fifiActor = { id: 'fifi', isCanon: true, dir: 'down', anim: 'idle', animTime: 0 };
   const npcActor = { id: 'barnaby_1', spriteKey: 'barnaby', isCanon: false, dir: 'down', anim: 'idle', animTime: 0 };
@@ -727,94 +726,41 @@ runCheck('Nyah & Fifi small sprites (-14%) and Settings size toggle (small vs or
   ren.drawCanonCharacter(fifiActor, 120, 100);
   ren.drawGeneratedNpc(npcActor, 140, 100);
   assert.deepEqual(drawnSheets, ['nyah_small', 'fifi_small', 'barnaby_orig']);
-
-  drawnSheets.length = 0;
-  ren.canonSpriteSize = 'orig';
-  ren.drawCanonCharacter(nyahActor, 100, 100);
-  ren.drawCanonCharacter(fifiActor, 120, 100);
-  ren.drawGeneratedNpc(npcActor, 140, 100);
-  assert.deepEqual(drawnSheets, ['nyah_orig', 'fifi_orig', 'barnaby_orig']);
-
-  // Verify Settings UI exposes non-overlapping tog_canon_size toggle
-  const sim = new TavernSim(data);
-  let sizeState = 'small';
-  const changes = [];
-  const ui = new TavernUI(makeFakeAssets(), palette, {
-    onSettingsChange: (patch) => {
-      if (patch.canonSpriteSize) {
-        sizeState = patch.canonSpriteSize;
-        changes.push(patch.canonSpriteSize);
-      }
-    },
-  });
-  ui.mode = 'playing';
-  ui.settingsOpen = true;
-  ui.render(makeFakeCanvasCtx(), sim, false, { canonSpriteSize: sizeState });
-  const sizeBtn = ui.hitRegions.find((h) => h.id === 'tog_canon_size');
-  const musicBtn = ui.hitRegions.find((h) => h.id === 'tog_music_style');
-  const resetBtn = ui.hitRegions.find((h) => h.id === 'btn_reset_save');
-  assert.ok(sizeBtn && musicBtn && resetBtn, 'Missing expected Settings buttons');
-  assert.ok(sizeBtn.y >= musicBtn.y + musicBtn.h, 'tog_canon_size overlaps tog_music_style');
-  assert.ok(resetBtn.y >= sizeBtn.y + sizeBtn.h, 'tog_canon_size overlaps lower controls');
-
-  sizeBtn.onClick();
-  assert.equal(sizeState, 'orig');
-  ui.render(makeFakeCanvasCtx(), sim, false, { canonSpriteSize: sizeState });
-  ui.hitRegions.find((h) => h.id === 'tog_canon_size').onClick();
-  assert.equal(sizeState, 'small');
-  assert.deepEqual(changes, ['orig', 'small']);
 });
 
-runCheck('Dev Wings toggle previews all 7 regions reversibly without mutating save data', () => {
+runCheck('Settings omits dev/sprite toggles, keeps clean spacing & shows GAME_VERSION', () => {
+  assert.match(GAME_VERSION, /^v\d+\.\d+\.\d+$/);
+  const uiSrc = fs.readFileSync(path.join(ROOT, 'src/ui.js'), 'utf8');
+  assert.ok(uiSrc.includes('Version ${GAME_VERSION}'), 'Expected Settings modal to draw GAME_VERSION');
+
   const sim = new TavernSim(data);
-  const starterProps = sim.layout.props.length;
-  assert.equal(sim.state.unlockedRooms.size, 0);
-  assert.equal(sim.layout.beds.length, 0);
-
-  // Enable dev preview
-  sim.setDevUnlockAllRegions(true);
-  assert.ok(sim.layout.props.length > starterProps, 'Expected extra wing props when dev wings enabled');
-  assert.ok(sim.layout.beds.length > 0, 'Expected upstairs beds when dev wings enabled');
-  for (const r of ['kitchen', 'counter_shop', 'main_hall', 'upstairs', 'cellar', 'stage', 'garden']) {
-    assert.equal(sim.isRoomUnlocked(r), true);
-  }
-  // Real save data must remain unpolluted
-  assert.equal(sim.state.unlockedRooms.size, 0);
-  assert.deepEqual(sim.serializeSave(Date.now()).unlockedRooms, []);
-
-  // Place a synthetic guest in an upstairs-only bed and toggle OFF safely
-  const expBed = sim.layout.beds[0];
-  const ghostCust = { id: 'c_ghost', seat: null, bed: expBed, state: 'SLEEPING', anim: 'sit', path: [], target: null };
-  sim.customers.push(ghostCust);
-  sim.setDevUnlockAllRegions(false);
-  assert.equal(sim.layout.beds.length, 0);
-  assert.equal(ghostCust.bed, null);
-  assert.equal(ghostCust.state, 'LEAVING');
-
-  // Verify Settings UI exposes tog_dev_regions and enables Camera Jump buttons when active
-  const ui = new TavernUI(makeFakeAssets(), palette, {
-    onSettingsChange: (patch) => {
-      if (typeof patch.devUnlockAllRegions === 'boolean') sim.setDevUnlockAllRegions(patch.devUnlockAllRegions);
-    },
-  });
+  const ui = new TavernUI(makeFakeAssets(), palette, {});
   ui.mode = 'playing';
   ui.settingsOpen = true;
   ui.render(makeFakeCanvasCtx(), sim, false, {});
-  const devBtn = ui.hitRegions.find((h) => h.id === 'tog_dev_regions');
-  const resetBtn = ui.hitRegions.find((h) => h.id === 'btn_reset_save');
-  assert.ok(devBtn && resetBtn);
-  assert.ok(resetBtn.y >= devBtn.y + devBtn.h, 'tog_dev_regions overlaps lower controls');
-  assert.equal(Boolean(ui.hitRegions.find((h) => h.id === 'jmp_garden')?.onClick), false);
 
-  devBtn.onClick();
-  assert.equal(sim.devUnlockAllRegions, true);
-  ui.render(makeFakeCanvasCtx(), sim, false, {});
-  assert.equal(Boolean(ui.hitRegions.find((h) => h.id === 'jmp_garden')?.onClick), true);
+  assert.equal(ui.hitRegions.find((h) => h.id === 'tog_canon_size'), undefined);
+  assert.equal(ui.hitRegions.find((h) => h.id === 'tog_dev_regions'), undefined);
+
+  const musicBtn = ui.hitRegions.find((h) => h.id === 'tog_music_style');
+  const gardenJmp = ui.hitRegions.find((h) => h.id === 'jmp_garden');
+  const saveBtn = ui.hitRegions.find((h) => h.id === 'btn_save_now');
+  const resetBtn = ui.hitRegions.find((h) => h.id === 'btn_reset_save');
+  assert.ok(musicBtn && gardenJmp && saveBtn && resetBtn, 'Missing expected Settings controls');
+  assert.ok(gardenJmp.y >= musicBtn.y + musicBtn.h, 'Camera jump overlaps Music toggle');
+  assert.ok(saveBtn.y >= gardenJmp.y + gardenJmp.h, 'Save row overlaps Camera jump');
+  assert.ok(resetBtn.y >= saveBtn.y + saveBtn.h, 'Reset row overlaps Save row');
 });
 
 runCheck('Wing layouts (Upstairs/Kitchen/Cellar/Garden), sleeper crop/sort & warm SFX hold', () => {
   const sim = new TavernSim(data);
-  sim.setDevUnlockAllRegions(true);
+  sim.state.gold = 99999999;
+  sim.state.reputation = 99999;
+  for (let pass = 0; pass < 8; pass++) {
+    for (const u of data.upgrades.upgrades) {
+      for (let k = 0; k < 25 && sim.canBuyUpgrade(u.id); k++) sim.buyUpgrade(u.id);
+    }
+  }
   const l = sim.layout;
 
   // Kitchen: stone wall at tx=22 (no brown wall_corner_r window fragment) & warm stove/spit lighting

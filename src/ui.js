@@ -9,6 +9,8 @@
 import { drawPixelText, drawWrappedPixelText, measurePixelText, wrapPixelText } from './font.js';
 import { INTERNAL_W, INTERNAL_H, drawNineSlice, rgbaFromPalette } from './renderer.js';
 
+export const GAME_VERSION = 'v1.1.0';
+
 const SHOP_TABS = [
   { id: 'tables', label: 'Tables', icon: 'icon_upg_table' },
   { id: 'building', label: 'Build', icon: 'icon_upg_build' },
@@ -1163,7 +1165,7 @@ export class TavernUI {
     const woodSkin = this.assets.tavern.get('ui_panel_wood');
     const parchSkin = this.assets.tavern.get('ui_panel_parchment');
     const mw = 336;
-    const mh = 326;
+    const mh = 290;
     const mx = Math.floor((INTERNAL_W - mw) / 2);
     const my = Math.floor((INTERNAL_H - mh) / 2);
 
@@ -1259,50 +1261,8 @@ export class TavernUI {
       { color: this.pal.WOOD_SHADOW }
     );
 
-    // Nyah & Fifi Sprite Size A/B Toggle ('small' -14% vs 'orig' 100%)
-    const canonSpriteSize = audioState.canonSpriteSize === 'orig' ? 'orig' : 'small';
-    const isSmallMaids = canonSpriteSize === 'small';
-    this.drawButton(ctx, 'tog_canon_size', mx + 20, my + 156, 132, 20, isSmallMaids ? 'Maids: SMALL' : 'Maids: ORIG', {
-      gold: isSmallMaids,
-      tooltip: {
-        title: 'Nyah & Fifi Sprite Size',
-        body: 'Toggle live between slimmed (-14%) world sprites for Nyah & Fifi and original canon sizes. Other NPCs stay unchanged.',
-      },
-      onClick: () => {
-        const nextSize = isSmallMaids ? 'orig' : 'small';
-        this.callbacks.onSettingsChange?.({ canonSpriteSize: nextSize });
-      },
-    });
-    drawPixelText(
-      ctx,
-      isSmallMaids ? '-14% Nyah & Fifi sprites' : 'Original canon sprite size',
-      mx + 160,
-      my + 162,
-      { color: this.pal.WOOD_SHADOW }
-    );
-
-    // Dev Toggle: temporarily unlock all 7 wings without mutating save data
-    const devAll = Boolean(sim.devUnlockAllRegions);
-    this.drawButton(ctx, 'tog_dev_regions', mx + 20, my + 180, 132, 20, devAll ? 'Dev Wings: ALL' : 'Dev Wings: OFF', {
-      gold: devAll,
-      tooltip: {
-        title: 'Dev Region Preview',
-        body: 'Temporarily unlock all 7 tavern wings (Kitchen, Counter, Hall, Upstairs, Cellar, Stage, Garden) to compare without touching your save.',
-      },
-      onClick: () => {
-        this.callbacks.onSettingsChange?.({ devUnlockAllRegions: !devAll });
-      },
-    });
-    drawPixelText(
-      ctx,
-      devAll ? 'Previewing all 7 wings' : 'Unlock all wings to inspect',
-      mx + 160,
-      my + 186,
-      { color: this.pal.WOOD_SHADOW }
-    );
-
     // Camera Quick-Jumps (2 tidy rows covering all 6 wings, disabling unbuilt wings)
-    drawPixelText(ctx, 'Camera Jump:', mx + 20, my + 210, { color: this.pal.WOOD_SHADOW });
+    drawPixelText(ctx, 'Camera Jump:', mx + 20, my + 167, { color: this.pal.WOOD_SHADOW });
     const jumps = [
       ['Hall', 'center', null],
       ['Kitchen', 'kitchen', 'kitchen'],
@@ -1315,7 +1275,7 @@ export class TavernUI {
       const col = i % 3;
       const row = Math.floor(i / 3);
       const unlocked = !reqRoom || (typeof sim.isRoomUnlocked === 'function' ? sim.isRoomUnlocked(reqRoom) : sim.state.unlockedRooms.has(reqRoom));
-      this.drawButton(ctx, `jmp_${key}`, mx + 98 + col * 72, my + 205 + row * 21, 68, 18, lbl, {
+      this.drawButton(ctx, `jmp_${key}`, mx + 98 + col * 72, my + 162 + row * 21, 68, 18, lbl, {
         disabled: !unlocked,
         tooltip: unlocked ? null : { title: lbl, body: 'Unlock this wing under Shop -> Build first.' },
         onClick: () => {
@@ -1327,19 +1287,19 @@ export class TavernUI {
     });
 
     // Save Controls
-    this.drawButton(ctx, 'btn_save_now', mx + 20, my + 252, 92, 22, 'Save Now', {
+    this.drawButton(ctx, 'btn_save_now', mx + 20, my + 208, 92, 22, 'Save Now', {
       gold: true,
       onClick: () => {
         this.callbacks.onSaveNow?.();
         this.pushToast('Autosave', 'Tavern progress saved locally!');
       },
     });
-    this.drawButton(ctx, 'btn_exp_imp', mx + 120, my + 252, 102, 22, 'Export/Import', {
+    this.drawButton(ctx, 'btn_exp_imp', mx + 120, my + 208, 102, 22, 'Export/Import', {
       onClick: () => {
         this.callbacks.onOpenSaveDialog?.();
       },
     });
-    this.drawButton(ctx, 'btn_replay_intro', mx + 228, my + 252, 86, 22, 'Story Intro', {
+    this.drawButton(ctx, 'btn_replay_intro', mx + 228, my + 208, 86, 22, 'Story Intro', {
       onClick: () => {
         this.settingsOpen = false;
         this.resetConfirmArmed = false;
@@ -1352,7 +1312,7 @@ export class TavernUI {
       ctx,
       'btn_reset_save',
       mx + 20,
-      my + 282,
+      my + 236,
       118,
       20,
       this.resetConfirmArmed ? 'Confirm Wipe?' : 'Reset Save Data',
@@ -1380,9 +1340,14 @@ export class TavernUI {
       ctx,
       `Served: ${sim.stats.customersServed} | Rooms: ${sim.stats.roomsRented}`,
       mx + 148,
-      my + 288,
+      my + 242,
       { color: this.pal.WOOD_SHADOW }
     );
+
+    drawPixelText(ctx, `Version ${GAME_VERSION}`, INTERNAL_W / 2, my + 266, {
+      color: this.pal.WOOD_SHADOW,
+      align: 'center',
+    });
   }
 
   renderTooltip(ctx, tip) {

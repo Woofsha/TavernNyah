@@ -54,7 +54,6 @@ export class TavernSim {
     this.isDancerPerforming = false;
     this.doorOpenTimer = 0;
     this.isDoorOpen = false;
-    this.devUnlockAllRegions = false;
 
     this.layout = buildTavernLayout(this.state, this.data);
     this.banter = new BanterSystem(this.data.dialogue);
@@ -315,7 +314,7 @@ export class TavernSim {
     }
 
     // Room expansions also contribute natural prestige ambience & beverage quality
-    const rooms = this.getEffectiveUnlockedRooms();
+    const rooms = this.state.unlockedRooms;
     if (rooms.has('cellar')) drinkMult += 0.20;
     if (rooms.has('kitchen')) foodMult += 0.15;
     if (rooms.has('garden')) ambience += 12;
@@ -331,40 +330,15 @@ export class TavernSim {
     this.repGainMult = repMult;
   }
 
-  getEffectiveUnlockedRooms() {
-    if (!this.devUnlockAllRegions) return this.state.unlockedRooms;
-    return new Set([
-      ...this.state.unlockedRooms,
-      'kitchen',
-      'counter_shop',
-      'main_hall',
-      'upstairs',
-      'cellar',
-      'stage',
-      'garden',
-    ]);
-  }
-
   isRoomUnlocked(roomKey) {
-    return this.devUnlockAllRegions || this.state.unlockedRooms.has(roomKey);
-  }
-
-  setDevUnlockAllRegions(enabled) {
-    const next = Boolean(enabled);
-    if (this.devUnlockAllRegions === next) return;
-    this.devUnlockAllRegions = next;
-    this.recomputeModifiers();
-    this.rebuildLayoutPreservingOccupancy();
+    return this.state.unlockedRooms.has(roomKey);
   }
 
   rebuildLayoutPreservingOccupancy() {
     const prevTables = this.layout ? this.layout.tables : [];
     const prevBeds = this.layout ? this.layout.beds : [];
 
-    const layoutState = this.devUnlockAllRegions
-      ? { ...this.state, unlockedRooms: this.getEffectiveUnlockedRooms() }
-      : this.state;
-    const nextLayout = buildTavernLayout(layoutState, this.data);
+    const nextLayout = buildTavernLayout(this.state, this.data);
 
     for (let t = 0; t < Math.min(prevTables.length, nextLayout.tables.length); t++) {
       const oldT = prevTables[t];
@@ -705,7 +679,7 @@ export class TavernSim {
     rate += repBoost + ambienceBoost;
 
     // 3. Building Expansion traffic boosts
-    const rooms = this.getEffectiveUnlockedRooms();
+    const rooms = this.state.unlockedRooms;
     if (rooms.has('kitchen')) rate += 1.65;       // Pushes post-Kitchen into 5-8 guests/min
     if (rooms.has('counter_shop')) rate += 1.45;  // Supply counter attracts questing traffic
     if (rooms.has('main_hall')) rate += 2.4;

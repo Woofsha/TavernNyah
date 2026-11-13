@@ -66,7 +66,6 @@ export class TavernRenderer {
     this.camX = 84;
     this.camY = 92;
     this.atmosphereEnabled = true;
-    this.canonSpriteSize = 'small'; // 'small' (-14% Nyah/Fifi) | 'orig' (canon 100%)
     this.animClock = 0;
 
     // Pre-assemble multi-slice rugs onto offscreen canvases
@@ -268,8 +267,7 @@ export class TavernRenderer {
   }
 
   drawCanonCharacter(actor, sx, sy) {
-    const useSmall = this.canonSpriteSize !== 'orig';
-    const sheet = (useSmall && this.assets.chars.get(`${actor.id}_small`)) || this.assets.chars.get(actor.id);
+    const sheet = this.assets.chars.get(`${actor.id}_small`) || this.assets.chars.get(actor.id);
     if (!sheet) return;
     const cellW = 48;
     const cellH = 48;
@@ -605,7 +603,7 @@ export class TavernRenderer {
             const floatY = Math.round(Math.sin(this.animClock * 5.0 + (actor.seed || 0)) * 2);
             const emoteBaseY = actor.state === 'SLEEPING'
               ? 62
-              : (actor.isCanon && this.canonSpriteSize !== 'orig' ? 52 : 58);
+              : (actor.isCanon ? 52 : 58);
             ctx.drawImage(emImg, Math.round(sx - emImg.width / 2), Math.round(sy - emoteBaseY + floatY));
           }
         }
